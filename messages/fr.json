@@ -1,0 +1,190 @@
+{
+  "Navigation": {
+    "home": "Accueil",
+    "impact": "Impact",
+    "tounesna": "Tounesna",
+    "packs": "Packs",
+    "cart": "Panier",
+    "login": "Connexion",
+    "profile": "Profil",
+    "orders": "Commandes",
+    "adminDashboard": "Tableau de bord Admin",
+    "logout": "Déconnexion",
+    "search": "Rechercher..."
+  },
+  "Hero": {
+    "badge": "Découvrez la Tunisie",
+    "title": "Révélant les",
+    "titleHighlight": "Trésors Cachés",
+    "subtitle": "Médias premium pour votre prochain grand projet",
+    "startWatching": "Commencer à Regarder",
+    "exploreTounesna": "Explorer Tounesna"
+  },
+  "Features": {
+    "sectionTitle": "Sélectionné pour l'Excellence",
+    "sectionSubtitle": "Nous vous proposons la meilleure collection de médias numériques tunisiens, méticuleusement sélectionnés pour leur qualité et leur profondeur culturelle.",
+    "cinematicTitle": "Histoires Cinématographiques",
+    "cinematicDescription": "Documentaires et courts métrages immersifs qui capturent l'essence de notre patrimoine.",
+    "photographyTitle": "Photographie d'Art",
+    "photographyDescription": "Une galerie d'images haute résolution de chaque gouvernorat, prêtes pour vos projets.",
+    "collectionsTitle": "Collections Thématiques",
+    "collectionsDescription": "Packs expertement sélectionnés pour les créateurs, entreprises et éducateurs."
+  },
+  "CTA": {
+    "title": "Commencez Votre Voyage",
+    "subtitle": "Rejoignez une communauté de créateurs et d'explorateurs découvrant les trésors cachés de la Tunisie.",
+    "getStarted": "Commencer Gratuitement",
+    "browseGallery": "Parcourir la Galerie"
+  },
+  "FeaturedGrid": {
+    "badge": "Sélection Curatée",
+    "title": "Histoires à Impact",
+    "viewAll": "Voir Toute la Collection",
+    "viewAllStories": "Voir Toutes les Histoires"
+  },
+  "Impact": {
+    "badge": "Collection Vidéo",
+    "title": "Histoires à Impact",
+    "subtitle": "Explorez du contenu de haute qualité promouvant le patrimoine et la culture tunisiens.",
+    "searchPlaceholder": "Rechercher du contenu...",
+    "category": "Catégorie",
+    "allCategories": "Toutes les Catégories",
+    "documentary": "Documentaire",
+    "culture": "Culture",
+    "travel": "Voyage",
+    "history": "Histoire",
+    "gastronomy": "Gastronomie",
+    "access": "Accès",
+    "allAccess": "Tous les Accès",
+    "free": "Gratuit",
+    "premium": "Premium",
+    "noContent": "Aucun contenu trouvé correspondant à vos filtres."
+  },
+  "Tounesna": {
+    "badge": "Archive Photographique",
+    "title": "Tounesna",
+    "subtitle": "Une collection soigneusement sélectionnée des paysages, de l'histoire et de la culture les plus époustouflants de Tunisie, capturés par des photographes de renom.",
+    "searchPlaceholder": "Rechercher des photos...",
+    "governorate": "Gouvernorat",
+    "allGovernorates": "Tous les Gouvernorats",
+    "type": "Type",
+    "allTypes": "Tous les Types",
+    "urban": "Urbain",
+    "desert": "Désert",
+    "nature": "Nature",
+    "photos": "Photos",
+    "governorates": "Gouvernorats"
+  },
+  "Auth": {
+    "welcomeBack": "Bienvenue",
+    "enterEmail": "Entrez votre email pour vous connecter à votre compte",
+    "emailPlaceholder": "nom@exemple.com",
+    "password": "Mot de passe",
+    "signIn": "Se Connecter par Email",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "signUp": "S'inscrire",
+    "createAccount": "Créer un compte",
+    "enterDetails": "Entrez vos informations pour créer votre compte",
+    "name": "Nom Complet",
+    "namePlaceholder": "Jean Dupont",
+    "signUpButton": "S'inscrire",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signInLink": "Se connecter",
+    "welcomeSuccess": "Bienvenue",
+    "invalidCredentials": "Identifiants invalides",
+    "exploreUnseen": "Explore l'Invisible",
+    "joinPlatform": "Rejoignez la première plateforme pour les créateurs et conteurs numériques tunisiens.",
+    "roleLabel": "Je suis un",
+    "userRole": "Utilisateur",
+    "photographerRole": "Photographe",
+    "roleDescription": "Sélectionnez votre type de compte"
+  },
+  "Footer": {
+    "description": "Découvrez la beauté cachée de la Tunisie. Une plateforme premium pour les créateurs et passionnés de culture.",
+    "explore": "Explorer",
+    "company": "Entreprise",
+    "aboutUs": "À Propos",
+    "careers": "Carrières",
+    "contact": "Contact",
+    "connect": "Connecter",
+    "copyright": "CnBees Media. Tous droits réservés.",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "cookies": "Cookies"
+  },
+  "Common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "currency": "DT"
+  },
+  "Cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "total": "Total",
+    "checkout": "Passer à la Caisse",
+    "remove": "Supprimer",
+    "continueShopping": "Continuer les Achats"
+  },
+  "Checkout": {
+    "title": "Paiement",
+    "orderSummary": "Récapitulatif de Commande",
+    "paymentMethod": "Méthode de Paiement",
+    "placeOrder": "Passer la Commande",
+    "processing": "Traitement en cours..."
+  },
+  "Orders": {
+    "title": "Mes Commandes",
+    "noOrders": "Vous n'avez pas encore passé de commande.",
+    "orderNumber": "Commande #",
+    "date": "Date",
+    "status": "Statut",
+    "total": "Total",
+    "viewDetails": "Voir les Détails",
+    "paid": "Payé",
+    "pending": "En Attente",
+    "cancelled": "Annulé"
+  },
+  "Profile": {
+    "title": "Mon Profil",
+    "personalInfo": "Informations Personnelles",
+    "subscription": "Abonnement",
+    "updateProfile": "Mettre à Jour le Profil"
+  },
+  "Stats": {
+    "hoursFootage": "Heures de Séquences",
+    "activeCreators": "Créateurs Actifs",
+    "downloads": "Téléchargements Totaux",
+    "satisfaction": "Satisfaction Client"
+  },
+  "Testimonials": {
+    "title": "Approuvé par les Créateurs",
+    "subtitle": "Découvrez les témoignages des conteurs et entreprises qui font confiance à notre plateforme."
+  },
+  "FAQ": {
+    "title": "Questions Fréquemment Posées",
+    "subtitle": "Tout ce que vous devez savoir sur notre plateforme et les licences.",
+    "q1": "Comment fonctionne la licence ?",
+    "a1": "Nous proposons des licences simples et libres de redevances pour tout notre contenu. Une fois que vous achetez ou téléchargez, c'est à vous d'utiliser dans n'importe quel projet.",
+    "q2": "Puis-je contribuer du contenu ?",
+    "a2": "Oui ! Nous représentons une communauté croissante de créateurs tunisiens. Inscrivez-vous en tant que créateur pour commencer à télécharger.",
+    "q3": "Le contenu est-il exclusif ?",
+    "a3": "Notre collection Premium propose du contenu exclusif que vous ne trouverez nulle part ailleurs."
+  },
+  "Newsletter": {
+    "title": "Restez Inspiré",
+    "subtitle": "Recevez les dernières mises à jour, histoires en vedette et offres exclusives dans votre boîte de réception.",
+    "placeholder": "Entrez votre adresse email",
+    "button": "S'abonner",
+    "disclaimer": "Nous nous soucions de vos données dans notre politique de confidentialité."
+  }
+}

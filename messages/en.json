@@ -1,0 +1,190 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "impact": "Impact",
+    "tounesna": "Tounesna",
+    "packs": "Packs",
+    "cart": "Cart",
+    "login": "Login",
+    "profile": "Profile",
+    "orders": "Orders",
+    "adminDashboard": "Admin Dashboard",
+    "logout": "Log out",
+    "search": "Search..."
+  },
+  "Hero": {
+    "badge": "Experience Tunisia",
+    "title": "Unveiling the",
+    "titleHighlight": "Hidden Gems",
+    "subtitle": "Premium media for your next big project",
+    "startWatching": "Start Watching",
+    "exploreTounesna": "Explore Tounesna"
+  },
+  "Features": {
+    "sectionTitle": "Curated for Excellence",
+    "sectionSubtitle": "We bring you the finest collection of Tunisian digital media, meticulously selected for quality and cultural depth.",
+    "cinematicTitle": "Cinematic Stories",
+    "cinematicDescription": "Immersive documentaries and short films that capture the essence of our heritage.",
+    "photographyTitle": "Fine Photography",
+    "photographyDescription": "A gallery of high-resolution images from every governorate, ready for your projects.",
+    "collectionsTitle": "Thematic Collections",
+    "collectionsDescription": "Expertly curated packs for creators, businesses, and educators."
+  },
+  "CTA": {
+    "title": "Start Your Journey",
+    "subtitle": "Join a community of creators and explorers discovering the hidden gems of Tunisia.",
+    "getStarted": "Get Started Free",
+    "browseGallery": "Browse Gallery"
+  },
+  "FeaturedGrid": {
+    "badge": "Curated Selection",
+    "title": "Impact Stories",
+    "viewAll": "View All Collection",
+    "viewAllStories": "View All Stories"
+  },
+  "Impact": {
+    "badge": "Video Collection",
+    "title": "Impact Stories",
+    "subtitle": "Explore high-quality content promoting Tunisia's heritage and culture.",
+    "searchPlaceholder": "Search content...",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "documentary": "Documentary",
+    "culture": "Culture",
+    "travel": "Travel",
+    "history": "History",
+    "gastronomy": "Gastronomy",
+    "access": "Access",
+    "allAccess": "All Access",
+    "free": "Free",
+    "premium": "Premium",
+    "noContent": "No content found matching your filters."
+  },
+  "Tounesna": {
+    "badge": "Photography Archive",
+    "title": "Tounesna",
+    "subtitle": "A curated collection of Tunisia's most breathtaking landscapes, history, and culture, captured by top photographers.",
+    "searchPlaceholder": "Search photos...",
+    "governorate": "Governorate",
+    "allGovernorates": "All Governorates",
+    "type": "Type",
+    "allTypes": "All Types",
+    "urban": "Urban",
+    "desert": "Desert",
+    "nature": "Nature",
+    "photos": "Photos",
+    "governorates": "Governorates"
+  },
+  "Auth": {
+    "welcomeBack": "Welcome back",
+    "enterEmail": "Enter your email to sign in to your account",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "signIn": "Sign In with Email",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "createAccount": "Create an account",
+    "enterDetails": "Enter your details to create your account",
+    "name": "Full Name",
+    "namePlaceholder": "John Doe",
+    "signUpButton": "Sign Up",
+    "haveAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "welcomeSuccess": "Welcome back",
+    "invalidCredentials": "Invalid credentials",
+    "exploreUnseen": "Explore the Unseen",
+    "joinPlatform": "Join the premier platform for Tunisian digital creators and storytellers.",
+    "roleLabel": "I am a",
+    "userRole": "User",
+    "photographerRole": "Photographer",
+    "roleDescription": "Select your account type"
+  },
+  "Footer": {
+    "description": "Discover the unseen beauty of Tunisia. A premium platform for creators and culture enthusiasts.",
+    "explore": "Explore",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "careers": "Careers",
+    "contact": "Contact",
+    "connect": "Connect",
+    "copyright": "CnBees Media. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cookies": "Cookies"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "currency": "DT"
+  },
+  "Cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "remove": "Remove",
+    "continueShopping": "Continue Shopping"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "orderSummary": "Order Summary",
+    "paymentMethod": "Payment Method",
+    "placeOrder": "Place Order",
+    "processing": "Processing..."
+  },
+  "Orders": {
+    "title": "My Orders",
+    "noOrders": "You haven't placed any orders yet.",
+    "orderNumber": "Order #",
+    "date": "Date",
+    "status": "Status",
+    "total": "Total",
+    "viewDetails": "View Details",
+    "paid": "Paid",
+    "pending": "Pending",
+    "cancelled": "Cancelled"
+  },
+  "Profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "subscription": "Subscription",
+    "updateProfile": "Update Profile"
+  },
+  "Stats": {
+    "hoursFootage": "Hours of Footage",
+    "activeCreators": "Active Creators",
+    "downloads": "Total Downloads",
+    "satisfaction": "Client Satisfaction"
+  },
+  "Testimonials": {
+    "title": "Trusted by Creators",
+    "subtitle": "Hear from the storytellers and businesses who rely on our platform."
+  },
+  "FAQ": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about our platform and licensing.",
+    "q1": "How does the licensing work?",
+    "a1": "We offer simple, royalty-free licensing for all our content. Once you purchase or download, it's yours to use in any project.",
+    "q2": "Can I contribute content?",
+    "a2": "Yes! We represent a growing community of Tunisian creators. Sign up as a creator to start uploading.",
+    "q3": "Is the content exclusive?",
+    "a3": "Our Premium collection features exclusive content you won't find anywhere else."
+  },
+  "Newsletter": {
+    "title": "Stay Inspired",
+    "subtitle": "Get the latest updates, featured stories, and exclusive offers delivered to your inbox.",
+    "placeholder": "Enter your email address",
+    "button": "Subscribe",
+    "disclaimer": "We care about your data in our privacy policy."
+  }
+}

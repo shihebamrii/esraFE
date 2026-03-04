@@ -1,0 +1,243 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  FileText,
+  ShoppingBag,
+  ChevronDown,
+  Package,
+  Receipt,
+  Sparkles,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { UserService } from "@/features/user/api";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "@/i18n/navigation";
+
+export default function OrdersPage() {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await UserService.getMyOrders();
+        setOrders(response.data?.orders || []);
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const toggleExpand = (id: string) => {
+    setExpandedOrder(expandedOrder === id ? null : id);
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-16 min-h-screen max-w-4xl">
+      {/* Header */}
+      <div
+        className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8 animate-slide-up"
+      >
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Order History</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            View and manage your purchases
+          </p>
+        </div>
+        {orders.length > 0 && (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
+            <Receipt className="h-3.5 w-3.5 text-blue-500" />
+            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+              {orders.length} order{orders.length > 1 ? "s" : ""}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Orders List */}
+      <div className="space-y-4">
+        {loading ? (
+          Array(3)
+            .fill(0)
+            .map((_, i) => (
+              <Skeleton key={i} className="h-36 w-full rounded-2xl" />
+            ))
+        ) : orders.length === 0 ? (
+          <Card
+            className="border border-border/50"
+            style={{
+              animation: "scale-in 0.4s ease-out forwards",
+            }}
+          >
+            <CardContent className="flex flex-col items-center justify-center py-20">
+              <div className="relative mb-6">
+                <div className="h-20 w-20 rounded-3xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 flex items-center justify-center">
+                  <ShoppingBag className="h-10 w-10 text-blue-500/40" />
+                </div>
+                <div className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                  <Sparkles className="h-3 w-3 text-white" />
+                </div>
+              </div>
+              <h3 className="font-semibold text-lg mb-1.5">No orders yet</h3>
+              <p className="text-sm text-muted-foreground text-center max-w-sm mb-5">
+                When you purchase content, your order history will appear here.
+              </p>
+              <Button
+                variant="outline"
+                className="rounded-xl border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10"
+                asChild
+              >
+                <Link href="/tounesna">Browse Content</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="relative">
+            {/* Vertical timeline line */}
+            <div className="absolute left-6 top-6 bottom-6 w-px bg-gradient-to-b from-blue-500/30 via-violet-500/20 to-transparent hidden sm:block" />
+
+            <div className="space-y-4">
+              {orders.map((order, index) => {
+                const isExpanded = expandedOrder === order._id;
+                const isPaid = order.paymentStatus === "paid";
+
+                return (
+                  <div
+                    key={order._id}
+                    className="relative animate-slide-up"
+                  >
+                    {/* Timeline dot */}
+                    <div className="absolute left-[18px] top-7 hidden sm:flex">
+                      <div
+                        className={`h-4 w-4 rounded-full border-2 z-10 ${
+                          isPaid
+                            ? "bg-emerald-500 border-emerald-500/30 shadow-lg shadow-emerald-500/30"
+                            : "bg-amber-500 border-amber-500/30 shadow-lg shadow-amber-500/30"
+                        }`}
+                      />
+                    </div>
+
+                    <Card
+                      className={`sm:ml-14 overflow-hidden border transition-all duration-300 ${
+                        isExpanded
+                          ? "border-violet-500/30 shadow-lg shadow-violet-500/5"
+                          : "border-border/50 hover:border-violet-500/20 hover:shadow-md"
+                      }`}
+                    >
+                      {/* Order Header — clickable to expand */}
+                      <button
+                        className="w-full text-left"
+                        onClick={() => toggleExpand(order._id)}
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between p-4 sm:px-6 bg-gradient-to-r from-muted/50 to-transparent">
+                          <div className="flex items-center gap-3.5">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 text-blue-600 dark:text-blue-400 shrink-0">
+                              <ShoppingBag className="h-5 w-5" />
+                            </span>
+                            <div>
+                              <CardTitle className="text-sm font-semibold">
+                                Order #
+                                {order._id.substring(0, 8).toUpperCase()}
+                              </CardTitle>
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                {new Date(
+                                  order.createdAt
+                                ).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                                {" · "}
+                                {order.items?.length || 0} item
+                                {(order.items?.length || 0) > 1 ? "s" : ""}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right hidden sm:block">
+                              <span className="font-bold text-sm block">
+                                {order.total} {order.currency}
+                              </span>
+                            </div>
+                            <Badge
+                              className={`rounded-lg border-0 text-[11px] font-semibold px-2.5 py-0.5 ${
+                                isPaid
+                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20"
+                                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20"
+                              }`}
+                            >
+                              {order.paymentStatus}
+                            </Badge>
+                            <ChevronDown
+                              className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${
+                                isExpanded ? "rotate-180" : ""
+                              }`}
+                            />
+                          </div>
+                        </CardHeader>
+                      </button>
+
+                      {/* Expandable Items */}
+                      <div
+                        className={`overflow-hidden transition-all duration-400 ease-out ${
+                          isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                        }`}
+                      >
+                        <CardContent className="px-4 sm:px-6 pb-4 pt-0">
+                          <div className="border-t border-border/50 pt-4">
+                            {/* Mobile total */}
+                            <div className="flex items-center justify-between mb-3 sm:hidden">
+                              <span className="text-xs text-muted-foreground">
+                                Total
+                              </span>
+                              <span className="font-bold">
+                                {order.total} {order.currency}
+                              </span>
+                            </div>
+                            <ul className="space-y-2.5">
+                              {order.items.map((item: any, i: number) => (
+                                <li
+                                  key={i}
+                                  className="flex justify-between items-center p-3 rounded-xl bg-muted/40 hover:bg-muted/70 transition-colors group/item"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500/10 to-purple-500/10 text-violet-600 dark:text-violet-400 shrink-0 group-hover/item:from-violet-500/20 group-hover/item:to-purple-500/20 transition-colors">
+                                      <Package className="h-4 w-4" />
+                                    </span>
+                                    <div>
+                                      <p className="font-medium text-sm">
+                                        {item.title}
+                                      </p>
+                                      <p className="text-[11px] text-muted-foreground">
+                                        {item.type}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <span className="font-semibold text-sm">
+                                    {item.price} {order.currency}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </CardContent>
+                      </div>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
