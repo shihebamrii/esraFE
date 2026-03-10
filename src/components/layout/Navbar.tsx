@@ -231,7 +231,7 @@ export function Navbar() {
             >
               <ShoppingCart className="h-[18px] w-[18px]" />
               {cartItems.length > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-violet-500/30 animate-scale-in">
+                <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 bg-[#ffcc1a] text-primary text-[10px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-[#ffcc1a]/30 animate-scale-in">
                   {cartItems.length}
                 </span>
               )}

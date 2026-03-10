@@ -185,10 +185,10 @@ export function TounesnaHero() {
             Tounesna
           </span>
 
-          <span className="block mt-4 text-sm md:text-lg tracking-[0.3em] uppercase font-semibold text-[#ffcc1a]">
-            Photo prise lors de 
+          <span className="block mt-4 text-sm md:text-lg tracking-[0.3em] font-semibold text-[#ffcc1a]">
+            PHOTO PRISE LORS DE 
             <br />
-            la tournée CnBees
+            LA TOURNÉE CnBees
           </span>
         </h1>
 
