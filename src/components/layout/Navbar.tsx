@@ -116,7 +116,7 @@ export function Navbar() {
     >
       {/* Scroll Progress Bar */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 origin-left z-50"
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ffcc1a] origin-left z-50"
         style={{ scaleX }}
       />
       <div className="container mx-auto px-4 flex items-center justify-between gap-6 h-14">
@@ -151,7 +151,7 @@ export function Navbar() {
                   "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap",
                   textColorClass,
                   isActive
-                    ? (isHeroPage && !isScrolled ? "text-white" : "text-violet-600 dark:text-violet-400")
+                    ? "text-[#ffcc1a]"
                     : "opacity-80 hover:opacity-100"
                 )}
               >
@@ -175,10 +175,7 @@ export function Navbar() {
                 {isActive && (
                   <motion.span 
                     layoutId="nav-active-line"
-                    className={cn(
-                      "absolute bottom-1 left-4 right-4 h-0.5 rounded-full",
-                      isHeroPage && !isScrolled ? "bg-white" : "bg-gradient-to-r from-violet-500 to-purple-500"
-                    )} 
+                    className="absolute bottom-1 left-4 right-4 h-0.5 rounded-full bg-[#ffcc1a]"
                   />
                 )}
               </Link>
@@ -342,7 +339,7 @@ export function Navbar() {
                 className={cn(
                   "hidden md:flex rounded-xl px-5 font-medium transition-all duration-300 shadow-lg hover:-translate-y-0.5",
                   isScrolled || isDashboard
-                    ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 shadow-violet-500/20"
+                    ? "bg-[#ffcc1a] text-primary hover:bg-[#ffcc1a]/90 shadow-[#ffcc1a]/20"
                     : "bg-white text-primary hover:bg-white/90 shadow-white/20"
                 )}
               >
@@ -405,7 +402,7 @@ export function Navbar() {
                       className={cn(
                         "flex items-center justify-between px-6 py-5 rounded-2xl text-2xl font-bold transition-all duration-300",
                         isActive
-                          ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 shadow-sm"
+                          ? "bg-[#ffcc1a]/10 text-[#ffcc1a] shadow-sm"
                           : "text-foreground/80 hover:bg-accent/40"
                       )}
                       onClick={() => setIsMobileMenuOpen(false)}
@@ -417,7 +414,7 @@ export function Navbar() {
                       >
                         <ChevronRight className={cn(
                           "h-6 w-6",
-                          isActive ? "text-violet-500" : "text-muted-foreground/30"
+                          isActive ? "text-[#ffcc1a]" : "text-muted-foreground/30"
                         )} />
                       </motion.div>
                     </Link>
