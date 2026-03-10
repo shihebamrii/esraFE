@@ -41,7 +41,7 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
   };
 
   return (
-    <div className="relative group rounded-xl overflow-hidden bg-black aspect-video shadow-2xl">
+    <div className="relative group rounded-xl overflow-hidden bg-[#1f3a5f] aspect-video shadow-2xl">
       <video
         ref={videoRef}
         src={src}
@@ -52,28 +52,41 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
       />
       
       {/* Controls Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1f3a5f]/90 via-[#1f3a5f]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-[2px]">
         <div className="flex items-center justify-between text-white">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={togglePlay} className="text-white hover:bg-white/20">
-              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggleMute} className="text-white hover:bg-white/20">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={togglePlay} 
+              className="p-2 transition-all hover:scale-110"
+              style={{ color: isPlaying ? "#ffffff" : "#ffcc1a" }}
+            >
+              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 fill-current" />}
+            </button>
+            <button 
+              onClick={toggleMute} 
+              className="p-2 transition-all hover:scale-110 text-white/80 hover:text-white"
+            >
                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-            </Button>
+            </button>
           </div>
           
-          <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
+          <button 
+            onClick={toggleFullscreen} 
+            className="p-2 transition-all hover:scale-110 text-white/80 hover:text-white"
+          >
             <Maximize className="h-5 w-5" />
-          </Button>
+          </button>
         </div>
       </div>
 
        {/* Centered Play Button when paused */}
        {!isPlaying && (
          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="bg-white/20 backdrop-blur-md p-4 rounded-full">
-               <Play className="h-8 w-8 text-white fill-white" />
+            <div 
+              className="p-6 rounded-full shadow-2xl transform scale-100 transition-transform"
+              style={{ backgroundColor: "#ffcc1a", color: "#1f3a5f" }}
+            >
+               <Play className="h-8 w-8 fill-current ml-1" />
             </div>
          </div>
        )}

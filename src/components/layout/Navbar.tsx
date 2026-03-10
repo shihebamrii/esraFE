@@ -60,21 +60,22 @@ export function Navbar() {
     { href: "/packs", label: t("packs") },
   ];
 
-  // Check if we're inside a dashboard layout (user/admin/uploader)
+  const isImpact = pathname?.includes("/impact");
+  const isTounesna = pathname?.includes("/tounesna");
+  const isHeroPage = isImpact || isTounesna;
+
   const isDashboard =
     pathname?.includes("/user/") ||
-    pathname?.includes("/admin/") ||
-    pathname?.includes("/uploader/");
+    pathname?.includes("/admin/");
 
-  const textColorClass = "text-foreground";
+  const textColorClass = isHeroPage && !isScrolled ? "text-white" : "text-foreground";
 
   const getDashboardLink = () => {
     if (!user) return "/";
     switch (user.role) {
       case "admin": return "/admin/dashboard";
-      case "uploader": return "/uploader/dashboard";
       case "user": return "/user/dashboard";
-      default: return "/";
+      default: return "/user/dashboard";
     }
   };
 
@@ -82,7 +83,6 @@ export function Navbar() {
     if (!user) return "Dashboard";
     switch (user.role) {
       case "admin": return t("adminDashboard");
-      case "uploader": return "Uploader Dashboard";
       case "user": return "My Dashboard";
       default: return "Dashboard";
     }
@@ -100,10 +100,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-40 w-full transition-all duration-500 ease-out font-sans",
+        "fixed top-0 z-50 w-full transition-all duration-700 ease-out font-sans",
         isScrolled
-          ? "bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-[0_1px_3px_rgba(0,0,0,0.05)] py-2"
-          : "bg-background/95 backdrop-blur-xl border-b border-border/30 py-3"
+          ? "bg-background/80 backdrop-blur-2xl border-b border-border/50 py-2 shadow-lg shadow-black/5"
+          : "bg-transparent border-b border-transparent py-4"
       )}
     >
       <div className="container mx-auto px-4 flex items-center justify-between gap-6 h-14">
@@ -111,14 +111,18 @@ export function Navbar() {
         <Link
           href="/"
           className={cn(
-            "font-bold text-xl sm:text-2xl tracking-tight transition-all duration-300 hover:opacity-80",
+            "transition-all duration-500 hover:scale-105 flex items-center",
             textColorClass
           )}
         >
-          <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-            Cn
-          </span>
-          <span>Bees</span>
+          <img 
+            src="/logo-beestory.png" 
+            alt="Bee Story Logo" 
+            className={cn(
+              "h-32 object-contain transition-all duration-500",
+              isHeroPage && !isScrolled ? "brightness-0 invert" : "" // Make logo white if on hero and not scrolled
+            )} 
+          />
         </Link>
 
         {/* Desktop Nav Links */}
@@ -130,16 +134,19 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg",
+                  "relative px-4 py-2 text-sm font-medium transition-all duration-500 rounded-lg",
                   textColorClass,
                   isActive
-                    ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
-                    : "hover:bg-accent/60 hover:text-foreground"
+                    ? (isHeroPage && !isScrolled ? "bg-white/10 text-white" : "bg-violet-500/10 text-violet-600 dark:text-violet-400")
+                    : "hover:bg-white/5"
                 )}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-gradient-to-r from-violet-500 to-purple-500" />
+                  <span className={cn(
+                    "absolute bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full transition-all duration-500",
+                    isHeroPage && !isScrolled ? "bg-white" : "bg-gradient-to-r from-violet-500 to-purple-500"
+                  )} />
                 )}
               </Link>
             );

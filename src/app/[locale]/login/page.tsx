@@ -20,9 +20,6 @@ export default async function LoginPage() {
             <p className="text-lg text-white/90">{t("joinPlatform")}</p>
           </div>
         </div>
-        <div className="absolute top-8 left-8">
-           <Link href="/" className="font-bold text-xl text-white tracking-tight">CnBees</Link>
-        </div>
       </div>
 
       {/* Right Side - Form */}

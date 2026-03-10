@@ -36,5 +36,14 @@ export const PhotoService = {
   getPacks: async (params?: any) => {
     const response = await api.get('/photos/packs', { params });
     return response.data;
+  },
+
+  uploadPhoto: async (formData: FormData) => {
+    const response = await api.post('/photos/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
   }
 };

@@ -18,8 +18,8 @@ export function Hero() {
           style={{ backgroundImage: 'url("/images/placeholders/hero-bg.png")' }} 
         />
         {/* Sophisticated Overlay - Dark Navy tint for richness */}
-        <div className="absolute inset-0 bg-primary/40 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
+        <div className="absolute inset-0 bg-primary/90 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
       </div>
 
       {/* Main Content */}

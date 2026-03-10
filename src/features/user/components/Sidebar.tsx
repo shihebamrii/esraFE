@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Sparkles,
+  Camera,
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,12 @@ const sidebarNavItems = [
     href: "/profile",
     icon: User,
     gradient: "from-amber-500 to-orange-500",
+  },
+  {
+    title: "Upload Photo",
+    href: "/user/upload",
+    icon: Camera,
+    gradient: "from-fuchsia-500 to-pink-600",
   },
 ];
 

@@ -19,10 +19,6 @@ export default function UserLayout({
     if (!isAuthenticated) {
       router.replace("/login");
       return;
-    }
-
-    if (user?.role === 'uploader') {
-      router.replace("/uploader/dashboard");
     } else if (user?.role === 'admin') {
       router.replace("/admin/dashboard");
     } else if (user?.role !== 'user') {

@@ -47,8 +47,6 @@ export function LoginForm() {
       // Role-based redirect
       if (user.role === 'admin') {
         router.push("/admin/dashboard");
-      } else if (user.role === 'uploader') {
-        router.push("/uploader/dashboard");
       } else if (user.role === 'user') {
         router.push("/user/dashboard");
       } else {

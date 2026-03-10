@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ContentCard } from "@/features/content/components/ContentCard";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Search, Play, Volume2, VolumeX, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Mock Data
 const ALL_CONTENTS = [
@@ -42,25 +43,192 @@ const ALL_CONTENTS = [
     isPremium: true,
     category: "Travel"
   },
-  {
-    id: "4",
-    title: "Tunisian Gastronomy: Couscous Secrets",
-    thumbnail: "https://images.unsplash.com/photo-1621319796030-g3c2d1b9b1e9?q=80&w=800&auto=format&fit=crop",
-    duration: "10:30",
-    type: "video" as const,
-    isPremium: false,
-    category: "Gastronomy"
-  },
-    {
-    id: "5",
-    title: "Carthage: Ruins of an Empire",
-    thumbnail: "https://images.unsplash.com/photo-1532420958197-e81c7e96b301?q=80&w=800&auto=format&fit=crop",
-    duration: "22:15",
-    type: "video" as const,
-    isPremium: true,
-    category: "History"
-  },
 ];
+
+function HeroSection() {
+  const t = useTranslations("ImpactHero");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const scrollToContent = () => {
+    document.getElementById("impact-content")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <section className="relative w-full h-screen min-h-[600px] overflow-hidden">
+      {/* Video Background */}
+      <video
+        ref={videoRef}
+        src="/Impact.mp4"
+        className="absolute inset-0 w-full h-full object-cover"
+        muted
+        loop
+        playsInline
+        onCanPlay={() => setIsReady(true)}
+      />
+
+      {/* Multi-layered overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1f3a5f]/70 via-[#1f3a5f]/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#1f3a5f]/60 via-transparent to-transparent" />
+      
+      {/* Seamless transition to content - Fades to the background color #fff9e6 */}
+      <div className="absolute inset-x-0 bottom-0 h-34 bg-gradient-to-t from-[#fff9e6] via-[#fff9e6]/50 to-transparent" />
+
+      {/* Animated grain texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 lg:px-24">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 30 }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="max-w-4xl"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="inline-flex items-center gap-2 mb-6"
+          >
+            <span className="h-px w-8 bg-[#ffcc1a]" />
+            <span
+              className="text-[#ffcc1a] text-xs font-bold tracking-[0.25em] uppercase"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              {t("badge")}
+            </span>
+          </motion.div>
+
+          {/* Main Heading */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white leading-[0.95] tracking-tight mb-6"
+          >
+            {t("titleLine1")}
+            <br />
+            <span
+              className="relative inline-block"
+              style={{
+                WebkitTextStroke: "2px #ffcc1a",
+                color: "transparent",
+              }}
+            >
+              {t("titleHighlight")}
+            </span>
+            <motion.img
+              src="/logo-beestory.png"
+              alt="Bee Story Logo"
+              className="inline-block h-[200px] w-auto ml-4"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+            />
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="text-lg md:text-xl text-white/80 max-w-xl leading-relaxed mb-10 font-light"
+          >
+            {t("subtitle")}
+          </motion.p>
+
+          {/* CTA Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
+            className="flex items-center gap-4"
+          >
+            <button
+              onClick={scrollToContent}
+              className="group flex items-center gap-3 bg-[#ffcc1a] text-[#1f3a5f] px-7 py-3.5 rounded-full font-bold text-sm tracking-wide hover:bg-[#ffcc1a]/90 transition-all duration-300 hover:scale-105 shadow-lg shadow-[#ffcc1a]/20"
+            >
+              <Play className="h-4 w-4 fill-current" />
+              {t("exploreContent")}
+            </button>
+            <button
+              onClick={scrollToContent}
+              className="text-white/80 text-sm font-medium hover:text-white transition-colors underline underline-offset-4 decoration-[#ffcc1a]/60"
+            >
+              {t("browseAll")}
+            </button>
+          </motion.div>
+        </motion.div>
+
+        {/* Stats Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.8 }}
+          className="absolute bottom-24 left-6 md:left-16 lg:left-24 flex gap-10"
+        >
+          {[
+            { value: "120+", label: t("statVideos") },
+            { value: "4K", label: t("statQuality") },
+            { value: "5", label: t("statCategories") },
+          ].map((stat) => (
+            <div key={stat.label} className="text-white">
+              <div className="text-2xl font-bold text-[#ffcc1a]">{stat.value}</div>
+              <div className="text-xs text-white/60 uppercase tracking-wider">{stat.label}</div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Mute Button */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.3 }}
+        onClick={toggleMute}
+        className="absolute bottom-8 right-8 z-10 flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs px-4 py-2.5 rounded-full hover:bg-white/20 transition-all"
+      >
+        {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+        {isMuted ? t("unmute") : t("mute")}
+      </motion.button>
+
+      {/* Scroll Indicator */}
+      <motion.button
+        onClick={scrollToContent}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: [0, 8, 0] }}
+        transition={{
+          opacity: { delay: 1.5, duration: 0.5 },
+          y: { repeat: Infinity, duration: 2, ease: "easeInOut" },
+        }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-white/50 hover:text-white/80 transition-colors"
+      >
+        <ChevronDown className="h-5 w-5" />
+      </motion.button>
+    </section>
+  );
+}
 
 export default function ImpactPage() {
   const t = useTranslations("Impact");
@@ -71,78 +239,172 @@ export default function ImpactPage() {
   const filteredContent = ALL_CONTENTS.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
     const matchesType = filterType === "all" || item.category.toLowerCase() === filterType.toLowerCase();
-    const matchesAccess = filterAccess === "all" || 
-      (filterAccess === "free" && !item.isPremium) || 
+    const matchesAccess =
+      filterAccess === "all" ||
+      (filterAccess === "free" && !item.isPremium) ||
       (filterAccess === "premium" && item.isPremium);
-    
     return matchesSearch && matchesType && matchesAccess;
   });
 
   return (
-    <div className="min-h-screen pb-20 bg-background text-foreground">
-      {/* Header - Left Aligned, Clean */}
-      <div className="container mx-auto px-4 mb-16 pt-12">
-         <span className="text-xs font-bold text-primary tracking-widest uppercase mb-3 block">{t("badge")}</span>
-         <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-4">
-           {t("title")}
-         </h1>
-         <p className="text-lg text-muted-foreground max-w-2xl font-light">
-           {t("subtitle")}
-         </p>
-      </div>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "#fff9e6", color: "#1f3a5f" }}
+    >
+      {/* ─── Hero Section ─── */}
+      <HeroSection />
 
-      <div className="container mx-auto px-4">
-        {/* Filters - Minimal Bar */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-12 items-end border-b border-border pb-8">
-          <div className="relative flex-1 w-full lg:max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder={t("searchPlaceholder")} 
-              className="pl-9 h-11 bg-secondary/50 border-input"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-4 w-full lg:w-auto">
-            <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-full sm:w-[180px] h-11">
-                <SelectValue placeholder={t("category")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("allCategories")}</SelectItem>
-                <SelectItem value="documentary">{t("documentary")}</SelectItem>
-                <SelectItem value="culture">{t("culture")}</SelectItem>
-                <SelectItem value="travel">{t("travel")}</SelectItem>
-                <SelectItem value="history">{t("history")}</SelectItem>
-              </SelectContent>
-            </Select>
+      {/* ─── Content Section ─── */}
+      <div id="impact-content" className="relative z-10">
+        
+        {/* Architectural Overlay: Mashrabiya (Geometric Lattice) Pattern */}
+        <div 
+          className="absolute inset-x-0 top-0 h-full opacity-[0.05] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0l15 45 45 15-45 15-15 45-15-45-45-15 45-15z' fill='%231f3a5f' fill-opacity='1'/%3E%3Cpath d='M0 60l10-30 20-10 10 30-10 30-20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3Cpath d='M120 60l-10-30-20-10-10 30 10 30 20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3C/svg%3E")`,
+            backgroundSize: '120px 120px',
+            maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
+          }}
+        />
 
-            <Select value={filterAccess} onValueChange={setFilterAccess}>
-              <SelectTrigger className="w-full sm:w-[180px] h-11">
-                <SelectValue placeholder={t("access")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("allAccess")}</SelectItem>
-                <SelectItem value="free">{t("free")}</SelectItem>
-                <SelectItem value="premium">{t("premium")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <div className="container mx-auto px-4 py-32 relative">
+          
+          {/* ── Section Header: The Grand Entrance ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="mb-24 text-center relative"
+          >
+            {/* Hand-crafted Jasmine Flower Motif */}
+            <div className="mb-10 flex flex-col items-center">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 blur-2xl bg-[#ffcc1a]/20 rounded-full" />
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
+                  <path d="M24 4C24 4 28 16 36 16C44 16 44 24 36 24C44 24 44 32 36 32C28 32 24 44 24 44C24 44 20 32 12 32C4 32 4 24 12 24C4 24 4 16 12 16C20 16 24 4 24 4Z" fill="#ffcc1a" />
+                  <circle cx="24" cy="24" r="3" fill="#1f3a5f" />
+                </svg>
+              </div>
+              
+              <div className="flex items-center gap-8 px-4">
+                <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f20]" />
+                <span className="text-[#1f3a5f50] text-[10px] font-black uppercase tracking-[0.5em] whitespace-nowrap">
+                   {t("heritage")}
+                </span>
+                <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f20]" />
+              </div>
+            </div>
+            
+            <h2 className="text-6xl md:text-8xl font-serif font-bold text-[#1f3a5f] leading-none mb-8">
+              {t("sectionTitleLine1")} <span className="italic underline underline-offset-8 decoration-[#ffcc1a]/30 font-light">{t("sectionTitleHighlight")}</span>
+            </h2>
+            
+            <p className="text-xl max-w-2xl mx-auto font-light leading-relaxed text-[#1f3a5f/70]">
+              {t("subtitle")}
+            </p>
+          </motion.div>
+
+          {/* Filters: Floating Architectural Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-col lg:flex-row gap-8 mb-24 p-10 rounded-[48px] shadow-2xl shadow-[#1f3a5f08] border border-white/60 relative group overflow-hidden bg-white/60 backdrop-blur-3xl"
+          >
+            {/* Subtle corner motif for filters */}
+            <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-[#ffcc1a]/30 rounded-tl-[48px]" />
+            <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-[#ffcc1a]/30 rounded-br-[48px]" />
+            
+            <div className="relative flex-1 w-full lg:max-w-md">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#ffcc1a]"
+              />
+              <Input
+                placeholder={t("searchPlaceholder")}
+                className="pl-12 h-14 rounded-2xl border-[#1f3a5f08] bg-white/50 text-[#1f3a5f] placeholder:text-[#1f3a5f40] focus-visible:ring-[#ffcc1a] focus-visible:bg-white transition-all duration-300 shadow-inner"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+              <Select value={filterType} onValueChange={setFilterType}>
+                <SelectTrigger
+                  className="w-full sm:w-[200px] h-14 rounded-2xl bg-white/50 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
+                >
+                  <SelectValue placeholder={t("category")} />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
+                  <SelectItem value="all">{t("allCategories")}</SelectItem>
+                  <SelectItem value="documentary">{t("documentary")}</SelectItem>
+                  <SelectItem value="culture">{t("culture")}</SelectItem>
+                  <SelectItem value="travel">{t("travel")}</SelectItem>
+                  <SelectItem value="history">{t("history")}</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterAccess} onValueChange={setFilterAccess}>
+                <SelectTrigger
+                  className="w-full sm:w-[200px] h-14 rounded-2xl bg-white/50 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
+                >
+                  <SelectValue placeholder={t("access")} />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
+                  <SelectItem value="all">{t("allAccess")}</SelectItem>
+                  <SelectItem value="free">{t("free")}</SelectItem>
+                  <SelectItem value="premium">{t("premium")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </motion.div>
 
         {/* Grid */}
-        {filteredContent.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-            {filteredContent.map((item) => (
-               <ContentCard key={item.id} {...item} />
-            ))}
-          </div>
-        ) : (
-          <div className="py-20 text-center text-muted-foreground">
-            <p>{t("noContent")}</p>
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {filteredContent.length > 0 ? (
+            <motion.div
+              key="grid"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+            >
+              {filteredContent.map((item, i) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.07, duration: 0.5 }}
+                >
+                  <ContentCard {...item} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="py-24 text-center"
+              style={{ color: "#1f3a5f60" }}
+            >
+              <div className="text-5xl mb-4">🎬</div>
+              <p className="text-lg font-medium">{t("noContent")}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Decorative Motif Separator */}
+        <div className="mt-24 flex items-center justify-center gap-6 opacity-20">
+          <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f]" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L14.5 9.5H22L16 14L18.5 21.5L12 17L5.5 21.5L8 14L2 9.5H9.5L12 2Z" fill="#1f3a5f" />
+          </svg>
+          <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f]" />
+        </div>
       </div>
+     </div>
     </div>
   );
 }

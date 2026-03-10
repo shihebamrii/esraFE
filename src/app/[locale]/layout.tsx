@@ -9,12 +9,14 @@ import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CnBees Media Platform",
+  title: "Bee Story Media Platform",
   description: "Premium Digital Media & Content",
 };
 
 import { notFound, redirect } from 'next/navigation';
 import { locales, defaultLocale } from '@/i18n/settings';
+
+import { PushNotificationProvider } from "@/providers/PushNotificationProvider";
 
 export default async function RootLayout({
   children,
@@ -48,10 +50,11 @@ export default async function RootLayout({
              <div className="flex min-h-screen flex-col">
               {/* @ts-ignore - Dynamic import might be cleaner but direct is fine for client boundary */}
               <NavbarWrapper />
-              <main className="flex-1 pt-20">{children}</main>
+              <MainLayoutContent>{children}</MainLayoutContent>
               <FooterWrapper />
             </div>
             <Toaster position="bottom-right" theme="dark" />
+            <PushNotificationProvider />
           </Providers>
         </NextIntlClientProvider>
       </body>
@@ -61,6 +64,7 @@ export default async function RootLayout({
 // Client wrappers to avoid importing client components directly if RootLayout is server
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { MainLayoutContent } from "@/components/layout/MainLayoutContent";
 
 function NavbarWrapper() {
   return <Navbar />;

@@ -45,7 +45,7 @@
   "Impact": {
     "badge": "Video Collection",
     "title": "Impact Stories",
-    "subtitle": "Explore high-quality content promoting Tunisia's heritage and culture.",
+    "subtitle": "A selective immersion into the soul of Tunisia, captured to last.",
     "searchPlaceholder": "Search content...",
     "category": "Category",
     "allCategories": "All Categories",
@@ -58,7 +58,23 @@
     "allAccess": "All Access",
     "free": "Free",
     "premium": "Premium",
-    "noContent": "No content found matching your filters."
+    "noContent": "No content found matching your filters.",
+    "heritage": "Tunisian Heritage",
+    "sectionTitleLine1": "Impact in",
+    "sectionTitleHighlight": "Motion"
+  },
+  "ImpactHero": {
+    "badge": "Bee Story Impact",
+    "titleLine1": "Stories That",
+    "titleHighlight": "Matter",
+    "subtitle": "Discover Tunisia through cinematic storytelling — from ancient ruins to living traditions.",
+    "exploreContent": "Explore Content",
+    "browseAll": "Browse All",
+    "unmute": "Unmute",
+    "mute": "Mute",
+    "statVideos": "Videos",
+    "statQuality": "Quality",
+    "statCategories": "Categories"
   },
   "Tounesna": {
     "badge": "Photography Archive",
