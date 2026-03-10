@@ -31,7 +31,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 
 export function Navbar() {
   const t = useTranslations("Navigation");
@@ -39,7 +39,15 @@ export function Navbar() {
   const cartItems = useCartStore((state) => state.items);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const pathname = usePathname();
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,12 +108,17 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-700 ease-out font-sans",
+        "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out font-sans",
         isScrolled
-          ? "bg-background/80 backdrop-blur-2xl border-b border-border/50 py-2 shadow-lg shadow-black/5"
+          ? "bg-background/70 backdrop-blur-3xl border-b border-border/40 py-2 shadow-[0_4px_30px_rgba(0,0,0,0.03)]"
           : "bg-transparent border-b border-transparent py-4"
       )}
     >
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 origin-left z-50"
+        style={{ scaleX }}
+      />
       <div className="container mx-auto px-4 flex items-center justify-between gap-6 h-14">
         {/* Logo */}
         <Link
@@ -126,27 +139,47 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => {
+        <nav className="hidden md:flex items-center gap-1 relative" onMouseLeave={() => setHoveredIndex(null)}>
+          {navLinks.map((link, idx) => {
             const isActive = pathname?.includes(link.href);
             return (
               <Link
                 key={link.href}
                 href={link.href}
+                onMouseEnter={() => setHoveredIndex(idx)}
                 className={cn(
-                  "relative px-4 py-2 text-sm font-medium transition-all duration-500 rounded-lg",
+                  "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap",
                   textColorClass,
                   isActive
-                    ? (isHeroPage && !isScrolled ? "bg-white/10 text-white" : "bg-violet-500/10 text-violet-600 dark:text-violet-400")
-                    : "hover:bg-white/5"
+                    ? (isHeroPage && !isScrolled ? "text-white" : "text-violet-600 dark:text-violet-400")
+                    : "opacity-80 hover:opacity-100"
                 )}
               >
+                {/* Hover Highlight Pill */}
+                {hoveredIndex === idx && (
+                  <motion.div
+                    layoutId="nav-highlight"
+                    className={cn(
+                      "absolute inset-0 rounded-lg -z-10",
+                      isHeroPage && !isScrolled ? "bg-white/10" : "bg-violet-500/10"
+                    )}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                
                 {link.label}
+                
                 {isActive && (
-                  <span className={cn(
-                    "absolute bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full transition-all duration-500",
-                    isHeroPage && !isScrolled ? "bg-white" : "bg-gradient-to-r from-violet-500 to-purple-500"
-                  )} />
+                  <motion.span 
+                    layoutId="nav-active-line"
+                    className={cn(
+                      "absolute bottom-1 left-4 right-4 h-0.5 rounded-full",
+                      isHeroPage && !isScrolled ? "bg-white" : "bg-gradient-to-r from-violet-500 to-purple-500"
+                    )} 
+                  />
                 )}
               </Link>
             );
@@ -158,20 +191,20 @@ export function Navbar() {
           <div className="relative w-full group">
             <Search
               className={cn(
-                "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors duration-300",
+                "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300",
                 isScrolled || isDashboard
-                  ? "text-muted-foreground group-focus-within:text-violet-500"
-                  : "text-white/60 group-focus-within:text-white"
+                  ? "text-muted-foreground group-focus-within:text-violet-500 group-focus-within:scale-110"
+                  : "text-white/60 group-focus-within:text-white group-focus-within:scale-110"
               )}
             />
             <input
               type="text"
               placeholder={t("search")}
               className={cn(
-                "w-full rounded-xl py-2 pl-10 pr-4 text-sm transition-all duration-300 outline-none",
+                "w-full rounded-xl py-2 pl-10 pr-4 text-sm transition-all duration-500 outline-none border",
                 isScrolled || isDashboard
-                  ? "bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-violet-500/30 focus:ring-2 focus:ring-violet-500/10 focus:shadow-lg focus:shadow-violet-500/5"
-                  : "bg-white/10 border border-white/15 text-white placeholder:text-white/50 focus:bg-white/15 focus:border-white/40 backdrop-blur-sm"
+                  ? "bg-muted/30 border-border/50 text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
+                  : "bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/30 backdrop-blur-sm focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
               )}
             />
           </div>
@@ -351,42 +384,73 @@ export function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden bg-background/95 backdrop-blur-2xl border-t border-border/50 overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 top-[64px] md:hidden bg-background/98 backdrop-blur-3xl z-40"
           >
-            <nav className="container mx-auto px-4 py-4 flex flex-col gap-1">
+            <nav className="container mx-auto px-6 py-12 flex flex-col gap-4 h-full">
               {navLinks.map((link, index) => {
                 const isActive = pathname?.includes(link.href);
                 return (
-                  <Link
+                  <motion.div
                     key={link.href}
-                    href={link.href}
-                    className={cn(
-                      "flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-all duration-300",
-                      isActive
-                        ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
-                        : "text-foreground hover:bg-accent/60"
-                    )}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
                   >
-                    <span>{link.label}</span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
-                  </Link>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "flex items-center justify-between px-6 py-5 rounded-2xl text-2xl font-bold transition-all duration-300",
+                        isActive
+                          ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 shadow-sm"
+                          : "text-foreground/80 hover:bg-accent/40"
+                      )}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <span>{link.label}</span>
+                      <motion.div
+                        animate={{ x: isActive ? 5 : 0 }}
+                        transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
+                      >
+                        <ChevronRight className={cn(
+                          "h-6 w-6",
+                          isActive ? "text-violet-500" : "text-muted-foreground/30"
+                        )} />
+                      </motion.div>
+                    </Link>
+                  </motion.div>
                 );
               })}
 
-              {/* Mobile Search */}
-              <div className="relative mt-2">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder={t("search")}
-                  className="w-full rounded-xl py-2.5 pl-10 pr-4 text-sm bg-muted/50 border border-border/50 text-foreground placeholder:text-muted-foreground outline-none focus:border-violet-500/30 focus:ring-2 focus:ring-violet-500/10 transition-all duration-300"
-                />
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-8 pt-8 border-t border-border/50"
+              >
+                <div className="relative group">
+                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder={t("search")}
+                    className="w-full rounded-2xl py-4 pl-14 pr-6 text-lg bg-muted/30 border-border/50 text-foreground placeholder:text-muted-foreground outline-none focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 transition-all duration-300"
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="mt-auto py-12 flex justify-center gap-8"
+              >
+                <div className="p-4 rounded-full bg-violet-500/5 text-violet-500 hover:bg-violet-500/10 transition-colors">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+              </motion.div>
             </nav>
           </motion.div>
         )}

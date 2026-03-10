@@ -6,9 +6,17 @@ interface InteractiveMapProps {
   onGovernorateClick?: (gov: string) => void;
   photosByGov?: Record<string, string>; // Map of govId (e.g. 'TN-AR') to photo URL
   activeGov?: string | null;
+  primaryColor?: string;
+  secondaryColor?: string;
 }
 
-export function InteractiveMap({ onGovernorateClick, photosByGov = {}, activeGov }: InteractiveMapProps) {
+export function InteractiveMap({ 
+  onGovernorateClick, 
+  photosByGov = {}, 
+  activeGov,
+  primaryColor = "#6a0d2e",
+  secondaryColor = "#ffcc1a"
+}: InteractiveMapProps) {
   const mapRef = useRef<SVGSVGElement>(null);
   const [hoveredGov, setHoveredGov] = useState<string | null>(null);
 
@@ -43,7 +51,7 @@ export function InteractiveMap({ onGovernorateClick, photosByGov = {}, activeGov
     <div className="relative w-full h-full min-h-[600px] flex items-center justify-center bg-transparent overflow-hidden group">
       {/* Background Texture - Deep Maroon with subtle golden grid */}
       <div className="absolute inset-0 opacity-10 pointer-events-none" 
-           style={{ backgroundImage: 'radial-gradient(circle at center, #6a0d2e 1px, transparent 1px)', backgroundSize: '30px 30px' }} 
+           style={{ backgroundImage: `radial-gradient(circle at center, ${primaryColor} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} 
       />
 
       {/* Map Content */}
@@ -54,7 +62,8 @@ export function InteractiveMap({ onGovernorateClick, photosByGov = {}, activeGov
           height="100%" 
           viewBox="0 0 445 500" 
           preserveAspectRatio="xMidYMid meet"
-          className="drop-shadow-[0_20px_50px_rgba(106,13,46,0.08)] transition-transform duration-700 hover:scale-[1.02]"
+          style={{ filter: `drop-shadow(0 20px 50px ${primaryColor}14)` }}
+          className="transition-transform duration-700 hover:scale-[1.02]"
         >
           <defs>
             {Object.entries(photosByGov).map(([id, url]) => (
@@ -78,7 +87,7 @@ export function InteractiveMap({ onGovernorateClick, photosByGov = {}, activeGov
                   height="1" 
                   preserveAspectRatio="xMidYMid slice" 
                 />
-                <rect width="1" height="1" fill="#6a0d2e" opacity="0.1" />
+                <rect width="1" height="1" fill={primaryColor} opacity="0.1" />
               </pattern>
             ))}
           </defs>
@@ -89,21 +98,21 @@ export function InteractiveMap({ onGovernorateClick, photosByGov = {}, activeGov
               const isActive = activeGov === path.id;
               const hasPhoto = !!photosByGov[path.id];
 
-              let fillStyle = "#6a0d2eff"; // Soft cream base instead of stark white
-              let strokeStyle = "#ffcc1a";
+              let fillStyle = `${primaryColor}ff`; // Soft cream base instead of stark white
+              let strokeStyle = secondaryColor;
               let strokeOpacity = "2";
               
               if (isActive) {
-                 fillStyle = hasPhoto ? `url(#img-${path.id})` : "#6a0d2e";
-                 strokeStyle = "#ffcc1a"; // Bold maroon stroke when active
+                 fillStyle = hasPhoto ? `url(#img-${path.id})` : primaryColor;
+                 strokeStyle = secondaryColor; // Bold maroon stroke when active
                  strokeOpacity = "2";
               } else if (isHovered) {
                 if (hasPhoto) {
                   fillStyle = `url(#img-${path.id})`;
                 } else {
-                  fillStyle = "rgba(106, 13, 46, 0.1)"; // Soft maroon indicator
+                  fillStyle = `${primaryColor}1a`; // Soft maroon indicator
                 }
-                strokeStyle = "rgba(106, 13, 46, 0.4)";
+                strokeStyle = `${primaryColor}66`;
                 strokeOpacity = "1";
               }
 

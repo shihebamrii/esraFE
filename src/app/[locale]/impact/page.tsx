@@ -13,6 +13,8 @@ import {
 import { Search, Play, Volume2, VolumeX, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
+import { InteractiveMap } from "../tounesna/components/InteractiveMap";
+import { GOV_PHOTOS } from "../tounesna/constants";
 
 // Mock Data
 const ALL_CONTENTS = [
@@ -235,6 +237,39 @@ export default function ImpactPage() {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterAccess, setFilterAccess] = useState("all");
+  const [filterGov, setFilterGov] = useState("all");
+  const [visitedGovs, setVisitedGovs] = useState<Set<string>>(new Set());
+
+  const govNameToId: Record<string, string> = {
+    "Ariana": "TN-AR", "Beja": "TN-BE", "Ben Arous": "TN-BA", "Bizerte": "TN-BI",
+    "Gabes": "TN-GB", "Gafsa": "TN-GF", "Jendouba": "TN-JN", "Kairouan": "TN-KR",
+    "Kasserine": "TN-KS", "Kebili": "TN-KE", "Kef": "TN-KF", "Mahdia": "TN-MH",
+    "Manouba": "TN-MN", "Medenine": "TN-MD", "Monastir": "TN-MS", "Nabeul": "TN-NA",
+    "Sfax": "TN-SF", "Sidi Bouzid": "TN-SB", "Siliana": "TN-SI", "Sousse": "TN-SO",
+    "Tataouine": "TN-TT", "Tozeur": "TN-TZ", "Tunis": "TN-TN", "Zaghouan": "TN-ZG",
+  };
+
+  const activeGovId = filterGov !== "all" ? govNameToId[filterGov] : null;
+
+  useEffect(() => {
+    if (activeGovId) {
+      setVisitedGovs(prev => new Set(prev).add(activeGovId));
+    }
+  }, [activeGovId]);
+
+  const handleGovClick = (govId: string) => {
+    const idToName: Record<string, string> = Object.fromEntries(
+      Object.entries(govNameToId).map(([name, id]) => [id, name])
+    );
+    const selectedName = idToName[govId];
+    if (selectedName) {
+       if (filterGov === selectedName) {
+         setFilterGov("all");
+       } else {
+         setFilterGov(selectedName);
+       }
+    }
+  };
 
   const filteredContent = ALL_CONTENTS.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
@@ -254,157 +289,205 @@ export default function ImpactPage() {
       {/* ─── Hero Section ─── */}
       <HeroSection />
 
-      {/* ─── Content Section ─── */}
-      <div id="impact-content" className="relative z-10">
+      {/* ─── Main Content Layout ─── */}
+      <div id="impact-content" className="w-full flex flex-col lg:flex-row relative z-10 pt-4 lg:pt-0">
         
-        {/* Architectural Overlay: Mashrabiya (Geometric Lattice) Pattern */}
-        <div 
-          className="absolute inset-x-0 top-0 h-full opacity-[0.05] pointer-events-none"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0l15 45 45 15-45 15-15 45-15-45-45-15 45-15z' fill='%231f3a5f' fill-opacity='1'/%3E%3Cpath d='M0 60l10-30 20-10 10 30-10 30-20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3Cpath d='M120 60l-10-30-20-10-10 30 10 30 20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3C/svg%3E")`,
-            backgroundSize: '120px 120px',
-            maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
-          }}
-        />
+        {/* Dynamic Fading Background based on selected Governorate */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {Array.from(visitedGovs).map(id => (
+            <div 
+              key={id}
+              className={`absolute inset-0 bg-cover bg-center transition-opacity duration-[1500ms] ease-in-out ${activeGovId === id ? 'opacity-20' : 'opacity-0'}`}
+              style={{ backgroundImage: GOV_PHOTOS[id] ? `url(${GOV_PHOTOS[id]})` : undefined }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#fff9e6] via-transparent to-[#fff9e6]" />
+        </div>
 
-        <div className="container mx-auto px-4 py-32 relative">
-          
-          {/* ── Section Header: The Grand Entrance ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-24 text-center relative"
-          >
-            {/* Hand-crafted Jasmine Flower Motif */}
-            <div className="mb-10 flex flex-col items-center">
-              <div className="relative mb-6">
-                <div className="absolute inset-0 blur-2xl bg-[#ffcc1a]/20 rounded-full" />
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
-                  <path d="M24 4C24 4 28 16 36 16C44 16 44 24 36 24C44 24 44 32 36 32C28 32 24 44 24 44C24 44 20 32 12 32C4 32 4 24 12 24C4 24 4 16 12 16C20 16 24 4 24 4Z" fill="#ffcc1a" />
-                  <circle cx="24" cy="24" r="3" fill="#1f3a5f" />
-                </svg>
+        {/* Left: Sticky Map Sidebar - Adjusted widths for better proportions */}
+        <div className="w-full lg:w-[40%] xl:w-[35%] lg:sticky lg:top-0 lg:h-screen overflow-hidden z-10 flex flex-col items-center justify-center p-8 lg:p-12">
+           <div className="w-full max-w-lg aspect-square">
+              <InteractiveMap 
+                onGovernorateClick={handleGovClick}
+                photosByGov={GOV_PHOTOS}
+                activeGov={activeGovId}
+                primaryColor="#1f3a5f"
+                secondaryColor="#ffcc1a"
+              />
+              
+              {filterGov !== "all" && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mt-8 bg-[#1f3a5f] text-white p-6 rounded-3xl shadow-xl flex items-center justify-between w-full"
+                >
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest opacity-60 mb-1">Current Focus</p>
+                    <p className="text-2xl font-serif font-bold text-[#ffcc1a]">{filterGov}</p>
+                  </div>
+                  <button 
+                    onClick={() => setFilterGov("all")}
+                    className="px-4 py-2 border border-white/20 rounded-full text-xs hover:bg-white/10 transition-colors"
+                  >
+                    Reset Filter ✕
+                  </button>
+                </motion.div>
+              )}
+           </div>
+        </div>
+
+        {/* Right: Content Panel - Adjusted widths and added internal padding */}
+        <div className="w-full lg:w-[60%] xl:w-[65%] min-h-screen relative z-10 pb-32">
+        
+          {/* Architectural Overlay: Mashrabiya (Geometric Lattice) Pattern */}
+          <div 
+            className="absolute inset-x-0 top-0 h-full opacity-[0.05] pointer-events-none"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0l15 45 45 15-45 15-15 45-15-45-45-15 45-15z' fill='%231f3a5f' fill-opacity='1'/%3E%3Cpath d='M0 60l10-30 20-10 10 30-10 30-20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3Cpath d='M120 60l-10-30-20-10-10 30 10 30 20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3C/svg%3E")`,
+              backgroundSize: '120px 120px',
+              maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
+            }}
+          />
+
+          <div className="container mx-auto px-4 lg:px-12 xl:px-16 py-24 relative">
+            
+            {/* ── Section Header: The Grand Entrance ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="mb-16 text-center relative"
+            >
+              {/* Hand-crafted Jasmine Flower Motif */}
+              <div className="mb-10 flex flex-col items-center">
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 blur-2xl bg-[#ffcc1a]/20 rounded-full" />
+                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
+                    <path d="M24 4C24 4 28 16 36 16C44 16 44 24 36 24C44 24 44 32 36 32C28 32 24 44 24 44C24 44 20 32 12 32C4 32 4 24 12 24C4 24 4 16 12 16C20 16 24 4 24 4Z" fill="#ffcc1a" />
+                    <circle cx="24" cy="24" r="3" fill="#1f3a5f" />
+                  </svg>
+                </div>
+                
+                <div className="flex items-center gap-8 px-4">
+                  <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f20]" />
+                  <span className="text-[#1f3a5f50] text-[10px] font-black uppercase tracking-[0.5em] whitespace-nowrap">
+                     {t("heritage")}
+                  </span>
+                  <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f20]" />
+                </div>
               </div>
               
-              <div className="flex items-center gap-8 px-4">
-                <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f20]" />
-                <span className="text-[#1f3a5f50] text-[10px] font-black uppercase tracking-[0.5em] whitespace-nowrap">
-                   {t("heritage")}
-                </span>
-                <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f20]" />
+              <h2 className="text-5xl md:text-6xl font-serif font-bold text-[#1f3a5f] leading-none mb-8">
+                {t("sectionTitleLine1")} <span className="italic underline underline-offset-8 decoration-[#ffcc1a]/30 font-light">{t("sectionTitleHighlight")}</span>
+              </h2>
+              
+              <p className="text-xl max-w-2xl mx-auto font-light leading-relaxed text-[#1f3a5f]/70">
+                {t("subtitle")}
+              </p>
+            </motion.div>
+
+            {/* Filters: Sticky Floating Architectural Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="sticky top-8 z-30 flex flex-col lg:flex-row gap-6 mb-16 p-6 md:p-8 rounded-[36px] shadow-2xl shadow-[#1f3a5f08] border border-white/60 relative group overflow-hidden bg-white/80 backdrop-blur-2xl"
+            >
+              {/* Subtle corner motif for filters */}
+              <div className="absolute top-0 left-0 w-12 h-12 border-t border-l border-[#ffcc1a]/40 rounded-tl-[36px]" />
+              <div className="absolute bottom-0 right-0 w-12 h-12 border-b border-r border-[#ffcc1a]/40 rounded-br-[36px]" />
+              
+              <div className="relative flex-1 w-full lg:max-w-md">
+                <Search
+                  className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#ffcc1a]"
+                />
+                <Input
+                  placeholder={t("searchPlaceholder")}
+                  className="pl-12 h-14 rounded-2xl border-[#1f3a5f08] bg-white/60 text-[#1f3a5f] placeholder:text-[#1f3a5f40] focus-visible:ring-[#ffcc1a] focus-visible:bg-white transition-all duration-300 shadow-inner"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </div>
-            </div>
-            
-            <h2 className="text-6xl md:text-8xl font-serif font-bold text-[#1f3a5f] leading-none mb-8">
-              {t("sectionTitleLine1")} <span className="italic underline underline-offset-8 decoration-[#ffcc1a]/30 font-light">{t("sectionTitleHighlight")}</span>
-            </h2>
-            
-            <p className="text-xl max-w-2xl mx-auto font-light leading-relaxed text-[#1f3a5f/70]">
-              {t("subtitle")}
-            </p>
-          </motion.div>
+              <div className="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+                <Select value={filterType} onValueChange={setFilterType}>
+                  <SelectTrigger
+                    className="w-full sm:w-[180px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
+                  >
+                    <SelectValue placeholder={t("category")} />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
+                    <SelectItem value="all">{t("allCategories")}</SelectItem>
+                    <SelectItem value="documentary">{t("documentary")}</SelectItem>
+                    <SelectItem value="culture">{t("culture")}</SelectItem>
+                    <SelectItem value="travel">{t("travel")}</SelectItem>
+                    <SelectItem value="history">{t("history")}</SelectItem>
+                  </SelectContent>
+                </Select>
 
-          {/* Filters: Floating Architectural Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-8 mb-24 p-10 rounded-[48px] shadow-2xl shadow-[#1f3a5f08] border border-white/60 relative group overflow-hidden bg-white/60 backdrop-blur-3xl"
-          >
-            {/* Subtle corner motif for filters */}
-            <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-[#ffcc1a]/30 rounded-tl-[48px]" />
-            <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-[#ffcc1a]/30 rounded-br-[48px]" />
-            
-            <div className="relative flex-1 w-full lg:max-w-md">
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#ffcc1a]"
-              />
-              <Input
-                placeholder={t("searchPlaceholder")}
-                className="pl-12 h-14 rounded-2xl border-[#1f3a5f08] bg-white/50 text-[#1f3a5f] placeholder:text-[#1f3a5f40] focus-visible:ring-[#ffcc1a] focus-visible:bg-white transition-all duration-300 shadow-inner"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-wrap gap-4 w-full lg:w-auto items-center">
-              <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger
-                  className="w-full sm:w-[200px] h-14 rounded-2xl bg-white/50 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
-                >
-                  <SelectValue placeholder={t("category")} />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
-                  <SelectItem value="all">{t("allCategories")}</SelectItem>
-                  <SelectItem value="documentary">{t("documentary")}</SelectItem>
-                  <SelectItem value="culture">{t("culture")}</SelectItem>
-                  <SelectItem value="travel">{t("travel")}</SelectItem>
-                  <SelectItem value="history">{t("history")}</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filterAccess} onValueChange={setFilterAccess}>
-                <SelectTrigger
-                  className="w-full sm:w-[200px] h-14 rounded-2xl bg-white/50 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
-                >
-                  <SelectValue placeholder={t("access")} />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
-                  <SelectItem value="all">{t("allAccess")}</SelectItem>
-                  <SelectItem value="free">{t("free")}</SelectItem>
-                  <SelectItem value="premium">{t("premium")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </motion.div>
-
-        {/* Grid */}
-        <AnimatePresence mode="wait">
-          {filteredContent.length > 0 ? (
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
-            >
-              {filteredContent.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.07, duration: 0.5 }}
-                >
-                  <ContentCard {...item} />
-                </motion.div>
-              ))}
+                <Select value={filterAccess} onValueChange={setFilterAccess}>
+                  <SelectTrigger
+                    className="w-full sm:w-[180px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
+                  >
+                    <SelectValue placeholder={t("access")} />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
+                    <SelectItem value="all">{t("allAccess")}</SelectItem>
+                    <SelectItem value="free">{t("free")}</SelectItem>
+                    <SelectItem value="premium">{t("premium")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="py-24 text-center"
-              style={{ color: "#1f3a5f60" }}
-            >
-              <div className="text-5xl mb-4">🎬</div>
-              <p className="text-lg font-medium">{t("noContent")}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* Decorative Motif Separator */}
-        <div className="mt-24 flex items-center justify-center gap-6 opacity-20">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f]" />
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L14.5 9.5H22L16 14L18.5 21.5L12 17L5.5 21.5L8 14L2 9.5H9.5L12 2Z" fill="#1f3a5f" />
-          </svg>
-          <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f]" />
+          {/* Grid - Adjusted for better responsiveness */}
+          <AnimatePresence mode="wait">
+            {filteredContent.length > 0 ? (
+              <motion.div
+                key="grid"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-12"
+              >
+                {filteredContent.map((item, i) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.07, duration: 0.5 }}
+                  >
+                    <ContentCard {...item} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="py-24 text-center"
+                style={{ color: "#1f3a5f60" }}
+              >
+                <div className="text-5xl mb-4">🎬</div>
+                <p className="text-lg font-medium">{t("noContent")}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Decorative Motif Separator */}
+          <div className="mt-24 flex items-center justify-center gap-6 opacity-20">
+            <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f]" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L14.5 9.5H22L16 14L18.5 21.5L12 17L5.5 21.5L8 14L2 9.5H9.5L12 2Z" fill="#1f3a5f" />
+            </svg>
+            <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f]" />
+          </div>
         </div>
       </div>
-     </div>
     </div>
+  </div>
   );
 }

@@ -108,7 +108,7 @@ export function TounesnaHero() {
   return (
     <section
       ref={heroRef}
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#fff9e6]"
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#6a0d2e]"
     >
       {/* VIDEO BACKGROUND */}
 
@@ -124,7 +124,7 @@ export function TounesnaHero() {
 
       {/* CINEMATIC GRADIENT OVERLAY */}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#fff9e6] z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#6a0d2e] z-[1]" />
 
       {/* PARALLAX IMAGE */}
 
@@ -169,26 +169,26 @@ export function TounesnaHero() {
         {/* DECORATIVE DIVIDER */}
 
         <div className="flex items-center gap-4 mb-6 hero-fade-1">
-          <div className="w-16 h-px bg-gradient-to-r from-transparent to-[#6a0d2e]/50" />
+          <div className="w-16 h-px bg-gradient-to-r from-transparent to-[#fff9e6]/30" />
           <span className="text-[#ffcc1a] text-xl">✦</span>
-          <span className="text-[12px] tracking-[0.55em] uppercase text-[#6a0d2e] font-bold">
+          <span className="text-[12px] tracking-[0.55em] uppercase text-[#fff9e6] font-bold">
             تونسنا
           </span>
           <span className="text-[#ffcc1a] text-xl">✦</span>
-          <div className="w-16 h-px bg-gradient-to-l from-transparent to-[#6a0d2e]/50" />
+          <div className="w-16 h-px bg-gradient-to-l from-transparent to-[#fff9e6]/30" />
         </div>
 
         {/* TITLE */}
 
         <h1 className="font-serif leading-[1.1] mb-6 hero-fade-2">
-          <span className="block text-[#6a0d2e] text-6xl md:text-8xl font-light drop-shadow-md">
+          <span className="block text-[#fff9e6] text-6xl md:text-8xl font-light drop-shadow-md">
             Tounesna
           </span>
 
           <span className="block mt-4 text-sm md:text-lg tracking-[0.3em] uppercase font-semibold text-[#ffcc1a]">
             Photo prise lors de 
             <br />
-            la tournée Bee Story
+            la tournée CnBees
           </span>
         </h1>
 
@@ -197,7 +197,7 @@ export function TounesnaHero() {
         <div className="flex flex-col sm:flex-row gap-5 hero-fade-4">
 
           <button
-            className="group relative overflow-hidden bg-[#6a0d2e] text-[#fff9e6] font-bold py-4 px-10 rounded-full text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-[#ffcc1a] hover:text-[#6a0d2e]"
+            className="group relative overflow-hidden bg-[#ffcc1a] text-[#6a0d2e] font-bold py-4 px-10 rounded-full text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-white hover:scale-105"
             onClick={() =>
               document
                 .getElementById("tounesna-content")
@@ -208,7 +208,7 @@ export function TounesnaHero() {
           </button>
 
           <button
-            className="text-[#6a0d2e] font-semibold text-xs tracking-[0.25em] uppercase py-4 px-8 border-2 border-[#6a0d2e]/20 rounded-full hover:border-[#ffcc1a]"
+            className="text-[#fff9e6] font-semibold text-xs tracking-[0.25em] uppercase py-4 px-8 border-2 border-[#fff9e6]/20 rounded-full hover:border-[#ffcc1a] transition-colors"
             onClick={() =>
               document
                 .getElementById("gallery-section")
@@ -245,13 +245,13 @@ export function TounesnaHero() {
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 hero-fade-5">
 
-        <span className="text-[#6a0d2e]/60 text-[10px] tracking-[0.3em] uppercase">
+        <span className="text-[#fff9e6]/60 text-[10px] tracking-[0.3em] uppercase">
           Scroll
         </span>
 
-        <div className="w-6 h-10 border-2 border-[#6a0d2e]/20 rounded-full flex justify-center p-1.5">
+        <div className="w-6 h-10 border-2 border-[#fff9e6]/20 rounded-full flex justify-center p-1.5">
 
-          <div className="w-1.5 h-3 bg-[#6a0d2e] rounded-full animate-bounce" />
+          <div className="w-1.5 h-3 bg-[#ffcc1a] rounded-full animate-bounce" />
 
         </div>
       </div>

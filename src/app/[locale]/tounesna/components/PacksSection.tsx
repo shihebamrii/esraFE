@@ -7,27 +7,27 @@ import { Check, Sparkles } from "lucide-react";
 const PACKS = [
   {
     id: "1",
-    title: "Starter Creator Pack",
+    title: "Silver",
     price: 49,
     features: ["5 High-Res Photos", "1 HD Video", "Commercial License"],
     popular: false,
-    arabicTitle: "باقة المبدع المبتدئ"
+    arabicTitle: "الباقة الفضية"
   },
   {
     id: "2",
-    title: "Pro Media Bundle",
+    title: "Gold",
     price: 199,
     features: ["50 High-Res Photos", "10 4K Videos", "2 Audio Tracks", "Extended License", "Priority Support"],
     popular: true,
-    arabicTitle: "حزمة الميديا الاحترافية"
+    arabicTitle: "الباقة الذهبية"
   },
   {
     id: "3",
-    title: "Enterprise Collection",
+    title: "Premium",
     price: 499,
     features: ["Unlimited Access", "ALL Tounesna Photos", "ALL Impact Videos", "Global License", "Custom Edits"],
     popular: false,
-    arabicTitle: "مجموعة المؤسسات"
+    arabicTitle: "الباقة الممتازة"
   }
 ];
 
