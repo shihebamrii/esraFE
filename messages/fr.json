@@ -61,7 +61,17 @@
     "noContent": "Aucun contenu trouvé correspondant à vos filtres.",
     "heritage": "Héritage Tunisien",
     "sectionTitleLine1": "L'Impact en",
-    "sectionTitleHighlight": "Mouvement"
+    "sectionTitleHighlight": "Mouvement",
+    "youth": "Jeunesse",
+    "womenArtisans": "Femme Artisante",
+    "environment": "Environnement",
+    "podcast": "Podcast",
+    "videoStr": "Vidéo",
+    "reels": "Réels",
+    "theme": "Thème",
+    "allThemes": "Tous les Thèmes",
+    "type": "Type",
+    "allTypes": "Tous les Types"
   },
   "ImpactHero": {
     "badge": "Bee Story Impact",

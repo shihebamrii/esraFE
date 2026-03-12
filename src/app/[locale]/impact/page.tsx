@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { InteractiveMap } from "../tounesna/components/InteractiveMap";
 import { GOV_PHOTOS } from "../tounesna/constants";
+import { InstagramReelsViewer } from "@/features/content/components/InstagramReelsViewer";
 
 // Mock Data
 const ALL_CONTENTS = [
@@ -23,29 +24,84 @@ const ALL_CONTENTS = [
     title: "Discovering the Sahara: A Journey Through Time",
     thumbnail: "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
     duration: "12:45",
-    type: "video" as const,
+    type: "documentary" as const,
     isPremium: true,
-    category: "Documentary"
+    category: "culture",
+    theme: "environment"
   },
   {
     id: "2",
     title: "Traditional Crafts of Tunis Medina",
     thumbnail: "https://images.unsplash.com/photo-1580237072617-771c3ecc4a24?q=80&w=800&auto=format&fit=crop",
     duration: "08:20",
-    type: "video" as const,
+    type: "reels" as const,
     isPremium: false,
-    category: "Culture"
+    category: "culture",
+    theme: "womenArtisans"
   },
   {
     id: "3",
     title: "The Blue City: Sidi Bou Said Guide",
     thumbnail: "https://i1.pickpik.com/photos/176/752/965/59687782937d9-preview.jpg",
     duration: "15:00",
-    type: "video" as const,
+    type: "podcast" as const,
     isPremium: true,
-    category: "Travel"
+    category: "travel",
+    theme: "youth"
   },
+  {
+    id: "4",
+    title: "Eco-farming in Testour",
+    thumbnail: "https://images.unsplash.com/photo-1506102383123-c8ce1d5ea80d?q=80&w=800&auto=format&fit=crop",
+    duration: "05:30",
+    type: "videoStr" as const,
+    isPremium: false,
+    category: "documentary",
+    theme: "environment"
+  }
 ];
+
+// Abstract Golden Bee Component
+const GoldenBee = ({ delay, className }: { delay: number, className: string }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -50, y: 50 }}
+    animate={{ 
+      opacity: [0, 0.8, 0.8, 0],
+      x: ["-10vw", "30vw", "70vw", "110vw"],
+      y: ["10vh", "-15vh", "20vh", "-10vh"],
+      rotate: [15, -10, 20, -5]
+    }}
+    transition={{
+      duration: 25,
+      delay: delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+      times: [0, 0.3, 0.7, 1]
+    }}
+    className={`absolute z-10 pointer-events-none drop-shadow-[0_0_15px_rgba(255,204,26,0.6)] ${className}`}
+  >
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 md:w-12 md:h-12">
+      {/* Body */}
+      <ellipse cx="32" cy="32" rx="10" ry="16" fill="url(#honey-gradient)" />
+      <path d="M22 32C22 26 26 22 32 22C38 22 42 26 42 32" stroke="#1f3a5f" strokeWidth="2" strokeLinecap="round" />
+      <path d="M22 36C22 30 26 26 32 26C38 26 42 30 42 36" stroke="#1f3a5f" strokeWidth="2" strokeLinecap="round" />
+      {/* Wings - Left */}
+      <path d="M25 25C15 15 5 20 15 30C20 35 25 25 25 25Z" fill="white" fillOpacity="0.4" stroke="#ffcc1a" strokeWidth="1" />
+      <path d="M22 30C12 25 5 35 15 42C20 45 22 30 22 30Z" fill="white" fillOpacity="0.2" stroke="#ffcc1a" strokeWidth="1" />
+      {/* Wings - Right */}
+      <path d="M39 25C49 15 59 20 49 30C44 35 39 25 39 25Z" fill="white" fillOpacity="0.4" stroke="#ffcc1a" strokeWidth="1" />
+      <path d="M42 30C52 25 59 35 49 42C44 45 42 30 42 30Z" fill="white" fillOpacity="0.2" stroke="#ffcc1a" strokeWidth="1" />
+      {/* Glow Definition */}
+      <defs>
+        <radialGradient id="honey-gradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(32 32) rotate(90) scale(16 10)">
+          <stop stopColor="#ffea99"/>
+          <stop offset="0.6" stopColor="#ffcc1a"/>
+          <stop offset="1" stopColor="#cc9900"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </motion.div>
+);
 
 function HeroSection() {
   const t = useTranslations("ImpactHero");
@@ -54,6 +110,8 @@ function HeroSection() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    // Trigger animation independently of video load so text appears immediately
+    setIsReady(true);
     if (videoRef.current) {
       videoRef.current.play().catch(() => {});
     }
@@ -71,51 +129,60 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative w-full h-screen min-h-[600px] overflow-hidden">
+    <section className="relative w-full h-screen min-h-[600px] overflow-hidden flex items-center justify-center">
       {/* Video Background */}
       <video
         ref={videoRef}
-        src="/Impact.mp4"
+        src="/hq-impact.mp4"
         className="absolute inset-0 w-full h-full object-cover"
         muted
         loop
         playsInline
-        onCanPlay={() => setIsReady(true)}
       />
 
-      {/* Multi-layered overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1f3a5f]/70 via-[#1f3a5f]/30 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1f3a5f]/60 via-transparent to-transparent" />
-      
-      {/* Seamless transition to content - Fades to the background color #fff9e6 */}
-      <div className="absolute inset-x-0 bottom-0 h-34 bg-gradient-to-t from-[#fff9e6] via-[#fff9e6]/50 to-transparent" />
+      {/* Multi-layered overlay for cinematic depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1f3a5f]/80 via-[#1f3a5f]/40 to-[#1f3a5f]/80" />
 
-      {/* Animated grain texture overlay */}
+      {/* Premium Honeycomb Pattern Overlay */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 opacity-[0.07] pointer-events-none mix-blend-overlay"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='103.923' viewBox='0 0 60 103.923' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 17.32v34.64l-30 17.32-30-17.32v-34.64zM30 103.923l30-17.32v-34.64l-30-17.32-30 17.32v34.64z' fill='none' stroke='%23ffcc1a' stroke-width='1.5'/%3E%3C/svg%3E")`,
+          backgroundSize: '90px 155.88px',
         }}
       />
+      
+      {/* Floating Golden Bees */}
+      <GoldenBee delay={0} className="top-1/4 left-0 scale-75 blur-[1px] opacity-60" />
+      <GoldenBee delay={8} className="top-1/3 left-0 scale-125 z-20" />
+      <GoldenBee delay={15} className="top-2/3 left-0 scale-100 z-10" />
+      <GoldenBee delay={22} className="top-1/2 left-0 scale-90 blur-[2px] opacity-40" />
+
+      {/* Seamless transition to content - Fades to the background color #fff9e6 */}
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#fff9e6] to-transparent z-10" />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-16 lg:px-24">
+      <div className="relative z-20 w-full px-6 flex flex-col justify-center items-start lg:items-center text-left lg:text-center mt-20 max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 30 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="max-w-4xl"
+          initial={{ opacity: 0, scale: 0.95, y: 40 }}
+          animate={{ opacity: isReady ? 1 : 0, scale: isReady ? 1 : 0.95, y: isReady ? 0 : 40 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="flex flex-col items-start lg:items-center w-full relative"
         >
+          {/* Subtle Accent Line Instead of Box */}
+          <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-32 h-px bg-gradient-to-r from-transparent to-[#ffcc1a]/40" />
+          <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-32 h-px bg-gradient-to-l from-transparent to-[#ffcc1a]/40" />
+
           {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="inline-flex items-center gap-2 mb-6"
+            className="inline-flex items-center gap-3 mb-8 px-4 py-2"
           >
-            <span className="h-px w-8 bg-[#ffcc1a]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ffcc1a] shadow-[0_0_12px_#ffcc1a] animate-pulse" />
             <span
-              className="text-[#ffcc1a] text-xs font-bold tracking-[0.25em] uppercase"
+              className="text-[#ffcc1a] text-xs font-black tracking-[0.3em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {t("badge")}
@@ -127,27 +194,14 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white leading-[0.95] tracking-tight mb-6"
+            className="text-6xl md:text-8xl lg:text-[7.5rem] font-serif font-black text-white leading-[0.95] tracking-tight mb-8 drop-shadow-[0_4px_32px_rgba(0,0,0,0.9)] max-w-4xl"
           >
-            {t("titleLine1")}
-            <br />
+            {t("titleLine1")}{" "}
             <span
-              className="relative inline-block"
-              style={{
-                WebkitTextStroke: "2px #ffcc1a",
-                color: "transparent",
-              }}
+              className="text-transparent bg-clip-text bg-gradient-to-br from-[#ffcc1a] via-[#ffe066] to-[#cc9900] italic drop-shadow-[0_0_30px_rgba(255,204,26,0.3)] bg-[length:200%_auto] animate-gradient"
             >
               {t("titleHighlight")}
             </span>
-            <motion.img
-              src="/logo-beestory.png"
-              alt="Bee Story Logo"
-              className="inline-block h-[200px] w-auto ml-4"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            />
           </motion.h1>
 
           {/* Subtitle */}
@@ -155,7 +209,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-lg md:text-xl text-white/80 max-w-xl leading-relaxed mb-10 font-light"
+            className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed mb-12 font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
           >
             {t("subtitle")}
           </motion.p>
@@ -165,69 +219,45 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="flex items-center gap-4"
+            className="flex flex-col sm:flex-row items-center gap-6 mt-4 relative"
           >
             <button
-              onClick={scrollToContent}
-              className="group flex items-center gap-3 bg-[#ffcc1a] text-[#1f3a5f] px-7 py-3.5 rounded-full font-bold text-sm tracking-wide hover:bg-[#ffcc1a]/90 transition-all duration-300 hover:scale-105 shadow-lg shadow-[#ffcc1a]/20"
+               onClick={scrollToContent}
+               className="relative flex items-center gap-3 bg-gradient-to-r from-[#ffcc1a] to-[#ffda66] text-[#1f3a5f] border border-[#ffcc1a] px-10 py-4 font-bold text-sm tracking-wide rounded-full overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-95 shadow-[0_4px_24px_rgba(255,204,26,0.3)] hover:shadow-[0_8px_32px_rgba(255,204,26,0.5)] group"
             >
-              <Play className="h-4 w-4 fill-current" />
-              {t("exploreContent")}
+               <span className="absolute inset-0 bg-white/30 translate-y-[100%] group-hover:translate-y-[0%] transition-transform duration-500 ease-out z-0" />
+               <Play className="h-5 w-5 fill-current text-[#1f3a5f] relative z-10" />
+               <span className="relative z-10 text-[#1f3a5f]">
+                  {t("exploreContent")}
+               </span>
             </button>
             <button
               onClick={scrollToContent}
-              className="text-white/80 text-sm font-medium hover:text-white transition-colors underline underline-offset-4 decoration-[#ffcc1a]/60"
+              className="text-white/90 text-sm font-bold hover:text-[#ffcc1a] transition-colors flex items-center gap-2 group px-8 py-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
             >
               {t("browseAll")}
+              <ChevronDown className="h-4 w-4 group-hover:translate-y-1 transition-transform" />
             </button>
           </motion.div>
         </motion.div>
-
-        {/* Stats Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
-          className="absolute bottom-24 left-6 md:left-16 lg:left-24 flex gap-10"
-        >
-          {[
-            { value: "120+", label: t("statVideos") },
-            { value: "4K", label: t("statQuality") },
-            { value: "5", label: t("statCategories") },
-          ].map((stat) => (
-            <div key={stat.label} className="text-white">
-              <div className="text-2xl font-bold text-[#ffcc1a]">{stat.value}</div>
-              <div className="text-xs text-white/60 uppercase tracking-wider">{stat.label}</div>
-            </div>
-          ))}
-        </motion.div>
       </div>
 
-      {/* Mute Button */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.3 }}
-        onClick={toggleMute}
-        className="absolute bottom-8 right-8 z-10 flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs px-4 py-2.5 rounded-full hover:bg-white/20 transition-all"
-      >
-        {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-        {isMuted ? t("unmute") : t("mute")}
-      </motion.button>
-
-      {/* Scroll Indicator */}
-      <motion.button
-        onClick={scrollToContent}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{
-          opacity: { delay: 1.5, duration: 0.5 },
-          y: { repeat: Infinity, duration: 2, ease: "easeInOut" },
-        }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-white/50 hover:text-white/80 transition-colors"
-      >
-        <ChevronDown className="h-5 w-5" />
-      </motion.button>
+      {/* Right side controls */}
+      <div className="absolute bottom-12 right-12 z-20 flex flex-col items-center gap-4">
+        {/* Mute Button */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          onClick={toggleMute}
+          className="flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 hover:border-[#ffcc1a]/50 transition-all hover:scale-110 shadow-lg"
+          style={{
+             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+          }}
+        >
+          {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+        </motion.button>
+      </div>
     </section>
   );
 }
@@ -236,9 +266,18 @@ export default function ImpactPage() {
   const t = useTranslations("Impact");
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
+  const [filterTheme, setFilterTheme] = useState("all");
   const [filterAccess, setFilterAccess] = useState("all");
   const [filterGov, setFilterGov] = useState("all");
   const [visitedGovs, setVisitedGovs] = useState<Set<string>>(new Set());
+
+  const [reelsModalOpen, setReelsModalOpen] = useState(false);
+  const [activeReel, setActiveReel] = useState<any>(null);
+
+  const handleReelClick = (item: any) => {
+    setActiveReel(item);
+    setReelsModalOpen(true);
+  };
 
   const govNameToId: Record<string, string> = {
     "Ariana": "TN-AR", "Beja": "TN-BE", "Ben Arous": "TN-BA", "Bizerte": "TN-BI",
@@ -273,12 +312,13 @@ export default function ImpactPage() {
 
   const filteredContent = ALL_CONTENTS.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
-    const matchesType = filterType === "all" || item.category.toLowerCase() === filterType.toLowerCase();
+    const matchesType = filterType === "all" || item.type.toLowerCase() === filterType.toLowerCase() || item.category.toLowerCase() === filterType.toLowerCase();
+    const matchesTheme = filterTheme === "all" || item.theme?.toLowerCase() === filterTheme.toLowerCase();
     const matchesAccess =
       filterAccess === "all" ||
       (filterAccess === "free" && !item.isPremium) ||
       (filterAccess === "premium" && item.isPremium);
-    return matchesSearch && matchesType && matchesAccess;
+    return matchesSearch && matchesType && matchesAccess && matchesTheme;
   });
 
   return (
@@ -412,24 +452,34 @@ export default function ImpactPage() {
                 />
               </div>
               <div className="flex flex-wrap gap-4 w-full lg:w-auto items-center">
-                <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger
-                    className="w-full sm:w-[180px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
-                  >
-                    <SelectValue placeholder={t("category")} />
+                <Select value={filterTheme} onValueChange={setFilterTheme}>
+                  <SelectTrigger className="w-full sm:w-[150px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]">
+                    <SelectValue placeholder={t("theme")} />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
-                    <SelectItem value="all">{t("allCategories")}</SelectItem>
+                    <SelectItem value="all">{t("allThemes")}</SelectItem>
+                    <SelectItem value="youth">{t("youth")}</SelectItem>
+                    <SelectItem value="womenArtisans">{t("womenArtisans")}</SelectItem>
+                    <SelectItem value="environment">{t("environment")}</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={filterType} onValueChange={setFilterType}>
+                  <SelectTrigger className="w-full sm:w-[150px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]">
+                    <SelectValue placeholder={t("type")} />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
+                    <SelectItem value="all">{t("allTypes")}</SelectItem>
+                    <SelectItem value="podcast">{t("podcast")}</SelectItem>
+                    <SelectItem value="videoStr">{t("videoStr")}</SelectItem>
                     <SelectItem value="documentary">{t("documentary")}</SelectItem>
-                    <SelectItem value="culture">{t("culture")}</SelectItem>
-                    <SelectItem value="travel">{t("travel")}</SelectItem>
-                    <SelectItem value="history">{t("history")}</SelectItem>
+                    <SelectItem value="reels">{t("reels")}</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={filterAccess} onValueChange={setFilterAccess}>
                   <SelectTrigger
-                    className="w-full sm:w-[180px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
+                    className="w-full sm:w-[150px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
                   >
                     <SelectValue placeholder={t("access")} />
                   </SelectTrigger>
@@ -459,7 +509,10 @@ export default function ImpactPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.07, duration: 0.5 }}
                   >
-                    <ContentCard {...item} />
+                    <ContentCard 
+                        {...item} 
+                        onClick={item.type === "reels" ? () => handleReelClick(item) : undefined} 
+                    />
                   </motion.div>
                 ))}
               </motion.div>
@@ -477,7 +530,6 @@ export default function ImpactPage() {
             )}
           </AnimatePresence>
 
-          {/* Decorative Motif Separator */}
           <div className="mt-24 flex items-center justify-center gap-6 opacity-20">
             <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f]" />
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -485,9 +537,17 @@ export default function ImpactPage() {
             </svg>
             <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f]" />
           </div>
+          </div>
         </div>
       </div>
+
+      <InstagramReelsViewer
+        isOpen={reelsModalOpen}
+        onClose={() => setReelsModalOpen(false)}
+        videoSrc="/Impact.mp4"
+        thumbnail={activeReel?.thumbnail}
+        title={activeReel?.title}
+      />
     </div>
-  </div>
   );
 }

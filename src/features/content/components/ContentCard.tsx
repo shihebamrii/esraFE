@@ -12,9 +12,10 @@ interface ContentCardProps {
   title: string;
   thumbnail: string;
   duration: string;
-  type: "video" | "audio" | "article";
+  type: "video" | "audio" | "article" | "podcast" | "documentary" | "reels" | string;
   isPremium: boolean;
   category: string;
+  onClick?: () => void;
 }
 
 export function ContentCard({
@@ -25,9 +26,27 @@ export function ContentCard({
   type,
   isPremium,
   category,
+  onClick,
 }: ContentCardProps) {
+  const isReel = type === "reels";
+  
+  const CardWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (onClick) {
+       return (
+         <div onClick={(e) => { e.preventDefault(); onClick(); }} className="group block cursor-pointer">
+            {children}
+         </div>
+       );
+    }
+    return (
+      <Link href={`/impact/${id}`} className="group block">
+        {children}
+      </Link>
+    );
+  };
+
   return (
-    <Link href={`/impact/${id}`} className="group block">
+    <CardWrapper>
       <motion.div
         className="relative flex flex-col gap-5 p-3 rounded-[32px] transition-all duration-700 hover:bg-white hover:shadow-2xl hover:shadow-[#1f3a5f0a] border border-transparent hover:border-[#1f3a5f05] bg-white/40 backdrop-blur-sm"
         whileHover={{ y: -10 }}
@@ -95,6 +114,6 @@ export function ContentCard({
           </h3>
         </div>
       </motion.div>
-    </Link>
+    </CardWrapper>
   );
 }

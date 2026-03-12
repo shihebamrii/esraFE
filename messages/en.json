@@ -61,7 +61,17 @@
     "noContent": "No content found matching your filters.",
     "heritage": "Tunisian Heritage",
     "sectionTitleLine1": "Impact in",
-    "sectionTitleHighlight": "Motion"
+    "sectionTitleHighlight": "Motion",
+    "youth": "Youth",
+    "womenArtisans": "Women Artisans",
+    "environment": "Environment",
+    "podcast": "Podcast",
+    "videoStr": "Video",
+    "reels": "Reels",
+    "theme": "Theme",
+    "allThemes": "All Themes",
+    "type": "Type",
+    "allTypes": "All Types"
   },
   "ImpactHero": {
     "badge": "Bee Story Impact",
