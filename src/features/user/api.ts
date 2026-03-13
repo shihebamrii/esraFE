@@ -42,7 +42,24 @@ export interface FavoriteItem {
   createdAt: string;
 }
 
+export interface UserStats {
+  totalOrders: number;
+  totalSpent: string;
+  downloadCount: number;
+  recentOrders: {
+    orderNumber: string;
+    items: number;
+    date: string;
+    total: string;
+    status: string;
+  }[];
+}
+
 export const UserService = {
+  getUserStats: async (): Promise<UserStats> => {
+    const response = await api.get('/dashboard/user-stats');
+    return response.data.data || response.data;
+  },
   getMyOrders: async (params?: any) => {
     const response = await api.get('/checkout/orders', { params });
     return response.data;

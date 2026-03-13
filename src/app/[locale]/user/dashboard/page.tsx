@@ -6,7 +6,7 @@ import {
   ShoppingBag,
   Download,
   DollarSign,
-  Package,
+  Image as ImageIcon,
   ArrowUpRight,
   Clock,
   Sparkles,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { UploaderService, UserStats } from "@/features/uploader/api";
+import { UserService, UserStats } from "@/features/user/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/store/authStore";
 
@@ -53,15 +53,6 @@ const statCards = [
     shadow: "shadow-violet-500/10",
     subtitle: "Photos & videos",
   },
-  {
-    key: "packsOwned",
-    title: "Packs Owned",
-    icon: Package,
-    gradient: "from-amber-500 to-orange-500",
-    bgGradient: "from-amber-500/10 to-orange-500/5",
-    shadow: "shadow-amber-500/10",
-    subtitle: "Premium collections",
-  },
 ];
 
 export default function UserDashboardPage() {
@@ -72,7 +63,7 @@ export default function UserDashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await UploaderService.getUserStats();
+        const data = await UserService.getUserStats();
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch user stats:", error);
@@ -89,7 +80,6 @@ export default function UserDashboardPage() {
       case "totalOrders": return stats.totalOrders || 0;
       case "totalSpent": return stats.totalSpent || "0.00 TND";
       case "downloadCount": return stats.downloadCount || 0;
-      case "packsOwned": return 0;
       default: return 0;
     }
   };
@@ -289,7 +279,7 @@ export default function UserDashboardPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <CardContent className="relative flex items-center gap-4 p-6">
               <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 group-hover:scale-110 transition-all duration-300">
-                <Package className="h-6 w-6" />
+                <ImageIcon className="h-6 w-6" />
               </span>
               <div className="flex-1">
                 <h3 className="font-semibold">Browse Tounesna</h3>

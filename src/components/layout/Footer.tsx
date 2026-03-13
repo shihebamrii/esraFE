@@ -16,105 +16,119 @@ export function Footer() {
 
   // Shared color values
   const bgColor = "#fff9e6";
-  const mainColor = isTounesna ? "#6a0d2e" : (isImpact ? "#1f3a5f" : "#1f3a5f"); // Default to navy if not Tounesna
+  const mainColor = isTounesna ? "#6a0d2e" : (isImpact ? "#1f3a5f" : "#1f3a5f"); 
   
   // Shared styles
   const footerStyle = isTounesna 
     ? {
-        background: `linear-gradient(to bottom, ${bgColor}, #6a0d2e67)`, // Extremely subtle burgundy-hinted cream
-        color: `${mainColor}cc`,
-        borderColor: `${mainColor}1a`
+        background: `linear-gradient(to bottom, ${bgColor}, #6a0d2e67)`, 
+        color: `${mainColor}`,
       }
     : { 
         backgroundColor: bgColor, 
-        color: `${mainColor}cc`,
-        borderColor: `${mainColor}1a`
+        color: `${mainColor}`,
       };
   
   return (
     <footer 
-      className="w-full pt-20 pb-12 text-sm transition-colors duration-300 relative z-10 border-t"
-      style={footerStyle}
+      className="w-full pt-20 pb-8 text-sm transition-colors duration-500 relative z-10 border-t"
+      style={{ ...footerStyle, borderColor: `${mainColor}20` }}
     >
-      <div className="container mx-auto px-4">
-        {/* Top Section: Brand + Links */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-1">
-             <Link href="/" className="font-bold text-2xl tracking-tight block mb-1">
-               <img src="/logo-beestory.png" alt="Bee Story" className="h-40" />
+      <div className="max-w-7xl mx-auto px-6 md:px-8">
+        
+        {/* Main Grid: 5 Columns on Desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-12 gap-y-16 mb-20">
+          
+          {/* Brand Area */}
+          <div className="col-span-2 pr-8 flex flex-col justify-start">
+             {/* Changed mb-6 to mb-1 and tweaked height to tighten the gap */}
+             <Link href="/" className="inline-block mb-1 group">
+               <img 
+                 src="/logo-beestory.png" 
+                 alt="Bee Story" 
+                 className="h-18 object-contain transition-transform duration-300 group-hover:scale-105" 
+               />
              </Link>
-             <p className="leading-relaxed max-w-xs opacity-70">
+             <p className="leading-relaxed text-base -mt-4">
                {f("description")}
              </p>
           </div>
           
-          <div>
-            <h4 className="font-semibold mb-4" style={{ color: mainColor }}>
+          {/* Explore */}
+          <div className="col-span-1">
+            <h4 className="font-semibold text-base mb-6 tracking-wide">
               {f("explore")}
             </h4>
-            <div className="flex flex-col gap-3">
-              <Link href="/impact" className="transition-all hover:opacity-100 opacity-70" style={{ color: mainColor }}>
-                {t("impact")}
-              </Link>
-              <Link href="/tounesna" className="transition-all hover:opacity-100 opacity-70" style={{ color: mainColor }}>
-                {t("tounesna")}
-              </Link>
-              <Link href="/packs" className="transition-all hover:opacity-100 opacity-70" style={{ color: mainColor }}>
-                {t("packs")}
-              </Link>
-            </div>
+            <ul className="flex flex-col gap-4">
+              <li>
+                <Link href="/impact" className="relative opacity-70 hover:opacity-100 transition-opacity after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 hover:after:w-full">
+                  {t("impact")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/tounesna" className="relative opacity-70 hover:opacity-100 transition-opacity after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 hover:after:w-full">
+                  {t("tounesna")}
+                </Link>
+              </li>
+            </ul>
           </div>
 
-          <div>
-             <h4 className="font-semibold mb-4" style={{ color: mainColor }}>
+          {/* Company */}
+          <div className="col-span-1">
+             <h4 className="font-semibold text-base mb-6 tracking-wide">
                {f("company")}
              </h4>
-             <div className="flex flex-col gap-3">
-                <Link href="#" className="transition-all hover:opacity-100 opacity-70" style={{ color: mainColor }}>
-                  {f("aboutUs")}
-                </Link>
-                <Link href="#" className="transition-all hover:opacity-100 opacity-70" style={{ color: mainColor }}>
-                  {f("careers")}
-                </Link>
-                <Link href="#" className="transition-all hover:opacity-100 opacity-70" style={{ color: mainColor }}>
-                  {f("contact")}
-                </Link>
-             </div>
+             <ul className="flex flex-col gap-4">
+               <li>
+                 <Link href="#" className="relative opacity-70 hover:opacity-100 transition-opacity after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 hover:after:w-full">
+                   {f("aboutUs")}
+                 </Link>
+               </li>
+               <li>
+                 <Link href="#" className="relative opacity-70 hover:opacity-100 transition-opacity after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 hover:after:w-full">
+                   {f("careers")}
+                 </Link>
+               </li>
+               <li>
+                 <Link href="#" className="relative opacity-70 hover:opacity-100 transition-opacity after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 hover:after:w-full">
+                   {f("contact")}
+                 </Link>
+               </li>
+             </ul>
           </div>
 
-           <div>
-             <h4 className="font-semibold mb-4" style={{ color: mainColor }}>
+          {/* Connect */}
+          <div className="col-span-1">
+             <h4 className="font-semibold text-base mb-6 tracking-wide">
                {f("connect")}
              </h4>
-             <div className="flex gap-4">
-                <a href="#" className="transition-all hover:scale-110 opacity-70 hover:opacity-100" style={{ color: mainColor }}>
+             <div className="flex gap-5">
+                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="transition-all hover:scale-110 opacity-70 hover:opacity-100" style={{ color: mainColor }}>
+                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Twitter className="w-5 h-5" />
                 </a>
-                <a href="#" className="transition-all hover:scale-110 opacity-70 hover:opacity-100" style={{ color: mainColor }}>
+                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="transition-all hover:scale-110 opacity-70 hover:opacity-100" style={{ color: mainColor }}>
+                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Youtube className="w-5 h-5" />
                 </a>
              </div>
-           </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px w-full mb-8 opacity-10" style={{ backgroundColor: mainColor }} />
-
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-60">
-          <p>&copy; {new Date().getFullYear()} {f("copyright")}</p>
-          <div className="flex gap-6">
-             <Link href="#" className="transition-colors hover:opacity-100">{f("privacy")}</Link>
-             <Link href="#" className="transition-colors hover:opacity-100">{f("terms")}</Link>
-             <Link href="#" className="transition-colors hover:opacity-100">{f("cookies")}</Link>
           </div>
         </div>
+
+        {/* Sub-footer Layout */}
+        <div className="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-sm opacity-80" style={{ borderColor: `${mainColor}20` }}>
+          <p>&copy; {new Date().getFullYear()} {f("copyright")}</p>
+          <div className="flex gap-8">
+             <Link href="#" className="hover:opacity-100 transition-opacity">{f("privacy")}</Link>
+             <Link href="#" className="hover:opacity-100 transition-opacity">{f("terms")}</Link>
+             <Link href="#" className="hover:opacity-100 transition-opacity">{f("cookies")}</Link>
+          </div>
+        </div>
+        
       </div>
     </footer>
   );

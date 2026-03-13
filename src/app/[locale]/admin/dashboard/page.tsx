@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, DollarSign, Video, Image as ImageIcon } from "lucide-react";
-import { UploaderService, AdminStats } from "@/features/uploader/api";
+import { AdminService, AdminStats } from "@/features/admin/api";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboardPage() {
@@ -13,7 +13,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await UploaderService.getAdminStats();
+        const data = await AdminService.getAdminStats();
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch admin stats:", error);

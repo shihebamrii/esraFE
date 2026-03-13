@@ -4,44 +4,50 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function NewsletterSection() {
   const t = useTranslations("Newsletter");
 
   return (
-    <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-      {/* Abstract Background Shapes */}
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-60 h-60 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-
-      <div className="container mx-auto px-4 relative z-10 text-center">
-        <div className="max-w-2xl mx-auto">
-          <div className="mb-6 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm mx-auto">
-            <Mail className="w-6 h-6 text-white" />
+    <section className="py-32 bg-[#fff9e6] relative overflow-hidden border-t border-[#1f3a5f]/10">
+      <div className="container mx-auto px-6 relative z-10 text-center">
+        <motion.div 
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.8 }}
+           className="max-w-3xl mx-auto bg-[#1f3a5f] rounded-3xl p-10 md:p-16 shadow-2xl border border-white/10"
+        >
+          <div className="mb-8 inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#ffcc1a] text-[#1f3a5f] shadow-lg">
+            <Mail className="w-8 h-8" />
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-serif mb-6 text-white tracking-tight">
-            {t("title")}
+          <h2 className="text-4xl md:text-5xl font-black mb-6 text-white tracking-tight leading-tight">
+             Stay Connected<br/>
+             <span className="text-[#ffcc1a] font-light text-3xl md:text-4xl">with BeeStory</span>
           </h2>
-          <p className="text-xl text-primary-foreground/80 mb-10 font-light leading-relaxed">
+          <p className="text-xl text-white/80 mb-10 leading-relaxed max-w-xl mx-auto">
             {t("subtitle")}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto relative">
-            <Input 
-              type="email" 
-              placeholder={t("placeholder")} 
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-12 rounded-full px-6 focus-visible:ring-offset-0 focus-visible:ring-white/30 backdrop-blur-sm"
-            />
-            <Button className="bg-white text-primary hover:bg-white/90 rounded-full px-8 h-12 font-medium">
+          <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+            <div className="flex-1">
+               <Input 
+                 type="email" 
+                 placeholder={t("placeholder")} 
+                 className="bg-white border-transparent text-[#1f3a5f] placeholder:text-[#1f3a5f]/40 h-14 rounded-full px-6 focus-visible:ring-[#ffcc1a] shadow-inner text-base"
+               />
+            </div>
+            <Button className="w-full sm:w-auto bg-[#ffcc1a] text-[#1f3a5f] hover:bg-white rounded-full px-10 h-14 font-bold text-base shadow-md hover:-translate-y-1 transition-all">
               {t("button")}
             </Button>
-          </div>
+          </form>
           
-          <p className="mt-6 text-xs text-white/50">
+          <p className="mt-8 text-xs font-semibold uppercase tracking-wider text-white/40">
             {t("disclaimer")}
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -3,7 +3,6 @@
     "home": "الرئيسية",
     "impact": "التأثير",
     "tounesna": "تونسنا",
-    "packs": "الباقات",
     "cart": "السلة",
     "login": "تسجيل الدخول",
     "profile": "الملف الشخصي",
@@ -28,7 +27,7 @@
     "photographyTitle": "تصوير فني",
     "photographyDescription": "معرض من الصور عالية الدقة من كل ولاية، جاهزة لمشاريعك.",
     "collectionsTitle": "مجموعات موضوعية",
-    "collectionsDescription": "باقات مختارة بخبرة للمبدعين والشركات والمعلمين."
+    "collectionsDescription": "مجموعات مختارة بعناية للمبدعين والشركات والمعلمين."
   },
   "CTA": {
     "title": "ابدأ رحلتك",

@@ -10,7 +10,8 @@ import {
   Package,
   ShoppingCart,
   Settings,
-  LogOut
+  LogOut,
+  Upload
 } from "lucide-react";
 
 const sidebarNavItems = [
@@ -18,6 +19,11 @@ const sidebarNavItems = [
     title: "Dashboard",
     href: "/admin/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Upload",
+    href: "/admin/upload",
+    icon: Upload,
   },
   {
     title: "Content (Impact)",
@@ -28,11 +34,6 @@ const sidebarNavItems = [
     title: "Photos (Tounesna)",
     href: "/admin/photos",
     icon: ImageIcon,
-  },
-  {
-    title: "Packs",
-    href: "/admin/packs",
-    icon: Package,
   },
   {
     title: "Orders",

@@ -3,7 +3,6 @@
     "home": "Home",
     "impact": "Impact",
     "tounesna": "Tounesna",
-    "packs": "Packs",
     "cart": "Cart",
     "login": "Login",
     "profile": "Profile",
@@ -28,7 +27,7 @@
     "photographyTitle": "Fine Photography",
     "photographyDescription": "A gallery of high-resolution images from every governorate, ready for your projects.",
     "collectionsTitle": "Thematic Collections",
-    "collectionsDescription": "Expertly curated packs for creators, businesses, and educators."
+    "collectionsDescription": "Expertly curated collections for creators, businesses, and educators."
   },
   "CTA": {
     "title": "Start Your Journey",
@@ -212,5 +211,35 @@
     "placeholder": "Enter your email address",
     "button": "Subscribe",
     "disclaimer": "We care about your data in our privacy policy."
+  },
+  "MissionSection": {
+    "titleLine1": "Unveiling the",
+    "titleHighlight": "Hidden Gems",
+    "subtitle": "OUR MISSION",
+    "paragraph1": "We are a digital media library dedicated to sharing impact content capturing the stunning stories, cultural depth, and breathtaking landscapes of Tunisia.",
+    "paragraph2": "Join a passionate community of creators and explorers dedicated to showcasing the authentic beauty and heritage of Tunisia.",
+    "statRegions": "Regions Covered",
+    "statStories": "Stories Shared"
+  },
+  "RegionsPreview": {
+    "sectionBadge": "Explore Tounesna",
+    "titleLine1": "Tunisian",
+    "titleHighlight": "landscapes",
+    "subtitle": "Discover the diverse beauty of Tunisia's distinct regions, from the golden desert to the coastal pearls.",
+    "cta": "Explore the Map",
+    "explore": "Explore"
+  },
+  "ImpactPreview": {
+    "sectionBadge": "Featured Impact",
+    "titleLine1": "Curated",
+    "titleHighlight": "Collections",
+    "viewAll": "View All Collection",
+    "documentaryBadge": "Documentary",
+    "featuredTitle": "Cinematic Journey: The Golden Dunes",
+    "featuredDesc": "An immersive documentary that takes you deep into the heart of the Tunisian Sahara.",
+    "sideTitle1": "Artisanal Legacy of the Medina",
+    "reelsBadge": "Reels",
+    "sideTitle2": "Echoes of Carthage: A Visual Guide",
+    "podcastBadge": "Video"
   }
 }

@@ -3,7 +3,6 @@
     "home": "Accueil",
     "impact": "Impact",
     "tounesna": "Tounesna",
-    "packs": "Packs",
     "cart": "Panier",
     "login": "Connexion",
     "profile": "Profil",
@@ -28,7 +27,7 @@
     "photographyTitle": "Photographie d'Art",
     "photographyDescription": "Une galerie d'images haute résolution de chaque gouvernorat, prêtes pour vos projets.",
     "collectionsTitle": "Collections Thématiques",
-    "collectionsDescription": "Packs expertement sélectionnés pour les créateurs, entreprises et éducateurs."
+    "collectionsDescription": "Collections sélectionnées avec soin pour les créateurs, les entreprises et les éducateurs."
   },
   "CTA": {
     "title": "Commencez Votre Voyage",
@@ -212,5 +211,35 @@
     "placeholder": "Entrez votre adresse email",
     "button": "S'abonner",
     "disclaimer": "Nous nous soucions de vos données dans notre politique de confidentialité."
+  },
+  "MissionSection": {
+    "titleLine1": "Révéler les",
+    "titleHighlight": "Trésors Cachés",
+    "subtitle": "NOTRE MISSION",
+    "paragraph1": "Nous sommes une médiathèque numérique dédiée au partage de contenus à impact capturant les histoires fascinantes, la profondeur culturelle et les paysages à couper le souffle de la Tunisie.",
+    "paragraph2": "Rejoignez une communauté passionnée de créateurs et d'explorateurs dédiés à la mise en valeur de la beauté authentique et de l'héritage de la Tunisie.",
+    "statRegions": "Régions Couvertes",
+    "statStories": "Histoires Partagées"
+  },
+  "RegionsPreview": {
+    "sectionBadge": "Explorer Tounesna",
+    "titleLine1": "Paysages",
+    "titleHighlight": "tunisiens",
+    "subtitle": "Découvrez la beauté diversifiée des régions distinctes de la Tunisie, du désert doré aux perles côtières.",
+    "cta": "Explorer la Carte",
+    "explore": "Explorer"
+  },
+  "ImpactPreview": {
+    "sectionBadge": "Impact en Vedette",
+    "titleLine1": "Collections",
+    "titleHighlight": "Curatées",
+    "viewAll": "Voir Toute la Collection",
+    "documentaryBadge": "Documentaire",
+    "featuredTitle": "Voyage Cinématographique: Les Dunes Dorées",
+    "featuredDesc": "Un documentaire immersif qui vous emmène au cœur du Sahara tunisien.",
+    "sideTitle1": "Héritage Artisanal de la Médina",
+    "reelsBadge": "Réels",
+    "sideTitle2": "Échos de Carthage: Un Guide Visuel",
+    "podcastBadge": "Vidéo"
   }
 }

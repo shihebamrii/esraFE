@@ -46,7 +46,7 @@ export function PhotoCard({ id, title, url, location, price, width, height }: Ph
         viewport={{ once: true }}
       >
         <div className="relative w-full rounded-lg overflow-hidden bg-secondary mb-3">
-          {url?.startsWith('http') ? (
+          {url?.startsWith('http') || url?.startsWith('/api') ? (
             <img
               src={url}
               alt={title}
@@ -54,12 +54,11 @@ export function PhotoCard({ id, title, url, location, price, width, height }: Ph
               loading="lazy"
             />
           ) : (
-            <Image
+            <img
               src={url}
               alt={title}
-              width={width}
-              height={height}
               className="w-full h-auto object-cover transition-opacity duration-300 group-hover:opacity-90"
+              loading="lazy"
             />
           )}
           

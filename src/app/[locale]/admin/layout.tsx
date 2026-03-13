@@ -32,8 +32,6 @@ export default function AdminLayout({
     // Redirect users with wrong role to their correct dashboard
     if (user?.role === 'user') {
       router.replace("/user/dashboard");
-    } else if (user?.role === 'uploader') {
-      router.replace("/uploader/dashboard");
     } else if (user?.role !== 'admin') {
       // If no valid role, go home
       router.replace("/");

@@ -19,6 +19,7 @@ import { format } from "date-fns";
 import { AdminService } from "@/features/admin/api";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { ShieldAlert, User } from "lucide-react";
 
 export default function AdminContentPage() {
   const [contents, setContents] = useState<any[]>([]);
@@ -57,9 +58,12 @@ export default function AdminContentPage() {
     c.title.toLowerCase().includes(search.toLowerCase())
   );
   
-  const pendingContent = filteredContent.filter(c => c.approvalStatus === 'pending');
-  const approvedContent = filteredContent.filter(c => (!c.approvalStatus || c.approvalStatus === 'approved'));
-  const rejectedContent = filteredContent.filter(c => c.approvalStatus === 'rejected');
+  const officialContent = filteredContent.filter(c => c.createdBy?.role === 'admin');
+  const communityContent = filteredContent.filter(c => c.createdBy?.role !== 'admin');
+
+  const pendingContent = communityContent.filter(c => c.approvalStatus === 'pending');
+  const approvedContent = communityContent.filter(c => (!c.approvalStatus || c.approvalStatus === 'approved'));
+  const rejectedContent = communityContent.filter(c => c.approvalStatus === 'rejected');
 
   const ContentTable = ({ data, showApprovalActions = false }: { data: any[], showApprovalActions?: boolean }) => (
     <div className="rounded-md border bg-card">
@@ -67,6 +71,7 @@ export default function AdminContentPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Title</TableHead>
+            <TableHead>User</TableHead>
             <TableHead>User</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Status</TableHead>
@@ -86,6 +91,7 @@ export default function AdminContentPage() {
               <TableRow key={item._id}>
                 <TableCell className="font-medium truncate max-w-[200px]">{item.title}</TableCell>
                 <TableCell>{item.createdBy?.name || 'Unknown'}</TableCell>
+
                 <TableCell className="capitalize">{item.type}</TableCell>
                 <TableCell>
                   <Badge variant={item.approvalStatus === 'approved' ? "default" : "secondary"}>
@@ -140,28 +146,57 @@ export default function AdminContentPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="pending" className="w-full">
+      <Tabs defaultValue="official" className="w-full mt-6">
         <TabsList className="mb-4">
-          <TabsTrigger value="pending" className="flex gap-2">
-            <Clock className="h-4 w-4" /> Pending Approvals 
-            <Badge variant="secondary" className="ml-1">{pendingContent.length}</Badge>
+          <TabsTrigger value="official" className="flex gap-2 text-base px-6 py-3">
+            <ShieldAlert className="h-5 w-5 text-amber-500" /> Official Content
+             <Badge variant="secondary" className="ml-1">{officialContent.length}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="approved" className="flex gap-2">
-            <CheckCircle className="h-4 w-4" /> Approved
-          </TabsTrigger>
-          <TabsTrigger value="rejected" className="flex gap-2">
-            <XCircle className="h-4 w-4" /> Rejected
+          <TabsTrigger value="community" className="flex gap-2 text-base px-6 py-3">
+            <User className="h-5 w-5 text-slate-500" /> Community Submissions
+            {pendingContent.length > 0 && (
+              <Badge variant="destructive" className="ml-1">{pendingContent.length} pending</Badge>
+            )}
+            {pendingContent.length === 0 && (
+              <Badge variant="secondary" className="ml-1">{communityContent.length}</Badge>
+            )}
           </TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="official" className="mt-6">
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">Content uploaded by system administrators. Automatically approved.</p>
+          </div>
+          {loading ? <div>Loading...</div> : <ContentTable data={officialContent} />}
+        </TabsContent>
 
-        <TabsContent value="pending">
-          {loading ? <div>Loading...</div> : <ContentTable data={pendingContent} showApprovalActions={true} />}
-        </TabsContent>
-        <TabsContent value="approved">
-          {loading ? <div>Loading...</div> : <ContentTable data={approvedContent} />}
-        </TabsContent>
-        <TabsContent value="rejected">
-          {loading ? <div>Loading...</div> : <ContentTable data={rejectedContent} />}
+        <TabsContent value="community" className="mt-6">
+          <div className="bg-slate-50 border rounded-lg p-4 mb-6">
+            <Tabs defaultValue="pending" className="w-full">
+              <TabsList className="mb-4 bg-white border">
+                <TabsTrigger value="pending" className="flex gap-2">
+                  <Clock className="h-4 w-4" /> Pending Approvals 
+                  <Badge variant="secondary" className="ml-1">{pendingContent.length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value="approved" className="flex gap-2">
+                  <CheckCircle className="h-4 w-4" /> Approved
+                </TabsTrigger>
+                <TabsTrigger value="rejected" className="flex gap-2">
+                  <XCircle className="h-4 w-4" /> Rejected
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="pending">
+                {loading ? <div>Loading...</div> : <ContentTable data={pendingContent} showApprovalActions={true} />}
+              </TabsContent>
+              <TabsContent value="approved">
+                {loading ? <div>Loading...</div> : <ContentTable data={approvedContent} />}
+              </TabsContent>
+              <TabsContent value="rejected">
+                {loading ? <div>Loading...</div> : <ContentTable data={rejectedContent} />}
+              </TabsContent>
+            </Tabs>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

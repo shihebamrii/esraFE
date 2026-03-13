@@ -14,7 +14,6 @@ import {
   Filter,
   Image as ImageIcon,
   Video,
-  Package,
   Eye,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -51,14 +50,6 @@ const typeConfig: Record<
     label: "Videos",
     emoji: "🎬",
     link: "/impact",
-  },
-  Pack: {
-    icon: Package,
-    gradient: "from-purple-500 to-fuchsia-500",
-    bg: "from-purple-500/10 to-fuchsia-500/5",
-    label: "Packs",
-    emoji: "📦",
-    link: "/packs",
   },
 };
 
@@ -129,13 +120,12 @@ export default function UserFavoritesPage() {
     all: favorites.length,
     Photo: favorites.filter((f) => f.itemType === "Photo").length,
     Content: favorites.filter((f) => f.itemType === "Content").length,
-    Pack: favorites.filter((f) => f.itemType === "Pack").length,
   };
 
   const getItemLink = (fav: FavoriteItem) => {
     if (fav.itemType === "Photo") return `/tounesna/${fav.itemId._id}`;
     if (fav.itemType === "Content") return `/impact/${fav.itemId._id}`;
-    return `/packs`;
+    return "/";
   };
 
   const getItemThumbnail = (item: FavoriteItem["itemId"]) => {

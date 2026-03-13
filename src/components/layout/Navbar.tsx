@@ -65,7 +65,6 @@ export function Navbar() {
   const navLinks = [
     { href: "/impact", label: t("impact") },
     { href: "/tounesna", label: t("tounesna") },
-    { href: "/packs", label: t("packs") },
   ];
 
   const isImpact = pathname?.includes("/impact");
