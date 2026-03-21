@@ -23,8 +23,21 @@ export function UploadVideoForm() {
     language: "ar",
     rights: "free",
     price: "0",
-    visibility: "public"
+    visibility: "public",
+    instagramUsername: ""
   });
+
+  const governorates = [
+    "Ariana", "Beja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", 
+    "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", 
+    "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", 
+    "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"
+  ];
+  const themesList = [
+    { label: "Youth", value: "youth" },
+    { label: "Women Artisans", value: "womenArtisans" },
+    { label: "Environment", value: "environment" }
+  ];
 
   const [files, setFiles] = useState<{
     file: File | null;
@@ -56,8 +69,13 @@ export function UploadVideoForm() {
       setLoading(true);
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
+        if (key !== "instagramUsername") {
+          data.append(key, value);
+        }
       });
+      if (formData.instagramUsername) {
+        data.append("metadata", JSON.stringify({ instagramUsername: formData.instagramUsername }));
+      }
       data.append("file", files.file);
       if (files.thumbnail) {
         data.append("thumbnail", files.thumbnail);
@@ -84,13 +102,65 @@ export function UploadVideoForm() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="video-region">Region</Label>
-          <Input id="video-region" name="region" value={formData.region} onChange={handleChange} placeholder="e.g., Tunis" />
+          <select 
+            id="video-region" 
+            name="region" 
+            value={formData.region} 
+            onChange={handleChange}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+          >
+            <option value="">Select Region</option>
+            {governorates.map((gov) => (
+              <option key={gov} value={gov}>{gov}</option>
+            ))}
+          </select>
         </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="video-desc">Description *</Label>
         <Textarea id="video-desc" name="description" required value={formData.description} onChange={handleChange} placeholder="Video description..." rows={4} />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="video-type">Content Type *</Label>
+          <select 
+            id="video-type" 
+            name="type" 
+            required
+            value={formData.type} 
+            onChange={handleChange}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+          >
+            <option value="video">Standard Video</option>
+            <option value="audio">Podcast (Audio)</option>
+            <option value="reel">Reel (Shorts)</option>
+            <option value="documentary">Documentary</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="video-theme">Theme *</Label>
+          <select 
+            id="video-theme" 
+            name="themes" 
+            required
+            value={formData.themes !== "[]" ? JSON.parse(formData.themes)[0] : ""} 
+            onChange={(e) => {
+              const selectedValue = e.target.value;
+              setFormData(prev => ({
+                ...prev,
+                themes: selectedValue ? JSON.stringify([selectedValue]) : "[]"
+              }));
+            }}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+          >
+            <option value="">Select Theme</option>
+            {themesList.map((theme) => (
+              <option key={theme.value} value={theme.value}>{theme.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -113,6 +183,30 @@ export function UploadVideoForm() {
           </select>
         </div>
       </div>
+
+      {formData.type === "reel" && (
+        <div className="space-y-2 border border-violet-200/50 bg-violet-50/50 p-4 rounded-xl dark:bg-violet-900/10 dark:border-violet-800/50">
+          <Label htmlFor="instagram-username" className="flex items-center gap-2">
+            Instagram Username
+            <span className="text-xs text-muted-foreground font-normal">(Required for Reels)</span>
+          </Label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">@</span>
+            <Input 
+              id="instagram-username" 
+              name="instagramUsername" 
+              required={formData.type === "reel"} 
+              value={formData.instagramUsername} 
+              onChange={handleChange} 
+              placeholder="username" 
+              className="pl-8"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            This will allow viewers to follow the creator directly on Instagram.
+          </p>
+        </div>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2 pt-4 border-t border-border/50">
         <div className="space-y-2">

@@ -12,6 +12,7 @@ interface InstagramReelsViewerProps {
   author?: string;
   likes?: number;
   comments?: number;
+  instagramUsername?: string;
 }
 
 export function InstagramReelsViewer({
@@ -23,6 +24,7 @@ export function InstagramReelsViewer({
   author = "@beestory_tn",
   likes = 1240,
   comments = 89,
+  instagramUsername,
 }: InstagramReelsViewerProps) {
   if (!isOpen) return null;
 
@@ -83,10 +85,21 @@ export function InstagramReelsViewer({
                   <img src="https://ui-avatars.com/api/?name=TN&background=ffcc1a&color=1f3a5f" alt="avatar" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-white font-bold text-sm leading-none">{author}</span>
-                  <button className="text-white text-xs border border-white/40 rounded-full px-3 py-1 font-medium bg-transparent hover:bg-white/20 transition-colors">
-                    Follow
-                  </button>
+                  <span className="text-white font-bold text-sm leading-none">{instagramUsername ? `@${instagramUsername}` : author}</span>
+                  {instagramUsername ? (
+                    <a
+                      href={`https://instagram.com/${instagramUsername}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white text-xs border border-white/40 rounded-full px-3 py-1 font-medium bg-transparent hover:bg-white/20 transition-colors"
+                    >
+                      Follow
+                    </a>
+                  ) : (
+                    <button className="text-white text-xs border border-white/40 rounded-full px-3 py-1 font-medium bg-transparent hover:bg-white/20 transition-colors">
+                      Follow
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -98,7 +111,7 @@ export function InstagramReelsViewer({
                  <Music className="w-4 h-4" />
                  <div className="overflow-hidden w-[150px]">
                     <div className="animate-marquee whitespace-nowrap text-xs">
-                       Original Audio - {author}
+                       Original Audio - {instagramUsername ? `@${instagramUsername}` : author}
                     </div>
                  </div>
               </div>

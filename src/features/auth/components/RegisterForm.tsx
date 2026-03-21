@@ -63,7 +63,10 @@ export function RegisterForm() {
         role: values.role,
       });
       
-      toast.success(t("welcomeSuccess"));
+      localStorage.setItem("show_welcome_modal", "true");
+      toast.success(t("welcomePackSuccess"), {
+        duration: 5000,
+      });
       router.push("/login");
     } catch (error: any) {
       toast.error(error.response?.data?.message || t("invalidCredentials"));

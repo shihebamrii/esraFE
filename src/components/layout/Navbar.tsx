@@ -130,8 +130,10 @@ export function Navbar() {
           <img 
             src="/logo-beestory.png" 
             alt="Bee Story Logo" 
+            width={620}
+            height={173}
             className={cn(
-              "h-32 object-contain transition-all duration-500",
+              "h-12 w-auto sm:h-8 object-contain transition-all duration-500",
               isHeroPage && !isScrolled ? "brightness-0 invert" : "" // Make logo white if on hero and not scrolled
             )} 
           />

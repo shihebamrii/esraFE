@@ -15,51 +15,16 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { InteractiveMap } from "../tounesna/components/InteractiveMap";
 import { GOV_PHOTOS } from "../tounesna/constants";
+import { PacksSection } from "../tounesna/components/PacksSection";
 import { InstagramReelsViewer } from "@/features/content/components/InstagramReelsViewer";
+import { api } from "@/lib/api";
 
-// Mock Data
-const ALL_CONTENTS = [
-  {
-    id: "1",
-    title: "Discovering the Sahara: A Journey Through Time",
-    thumbnail: "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
-    duration: "12:45",
-    type: "documentary" as const,
-    isPremium: true,
-    category: "culture",
-    theme: "environment"
-  },
-  {
-    id: "2",
-    title: "Traditional Crafts of Tunis Medina",
-    thumbnail: "https://images.unsplash.com/photo-1580237072617-771c3ecc4a24?q=80&w=800&auto=format&fit=crop",
-    duration: "08:20",
-    type: "reels" as const,
-    isPremium: false,
-    category: "culture",
-    theme: "womenArtisans"
-  },
-  {
-    id: "3",
-    title: "The Blue City: Sidi Bou Said Guide",
-    thumbnail: "https://i1.pickpik.com/photos/176/752/965/59687782937d9-preview.jpg",
-    duration: "15:00",
-    type: "podcast" as const,
-    isPremium: true,
-    category: "travel",
-    theme: "youth"
-  },
-  {
-    id: "4",
-    title: "Eco-farming in Testour",
-    thumbnail: "https://images.unsplash.com/photo-1506102383123-c8ce1d5ea80d?q=80&w=800&auto=format&fit=crop",
-    duration: "05:30",
-    type: "videoStr" as const,
-    isPremium: false,
-    category: "documentary",
-    theme: "environment"
-  }
-];
+const formatDuration = (seconds?: number) => {
+  if (!seconds) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
 
 // Abstract Golden Bee Component
 const GoldenBee = ({ delay, className }: { delay: number, className: string }) => (
@@ -133,7 +98,7 @@ function HeroSection() {
       {/* Video Background */}
       <video
         ref={videoRef}
-        src="/hq-impact.mp4"
+        src="/long-hero.mp4"
         className="absolute inset-0 w-full h-full object-cover"
         muted
         loop
@@ -194,7 +159,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-6xl md:text-8xl lg:text-[7.5rem] font-serif font-black text-white leading-[0.95] tracking-tight mb-8 drop-shadow-[0_4px_32px_rgba(0,0,0,0.9)] max-w-4xl"
+            className="text-4xl md:text-5xl lg:text-7xl font-serif font-black text-white leading-[1.05] tracking-tight mb-8 drop-shadow-[0_4px_32px_rgba(0,0,0,0.9)] max-w-4xl"
           >
             {t("titleLine1")}{" "}
             <span
@@ -232,8 +197,8 @@ function HeroSection() {
                </span>
             </button>
             <button
-              onClick={scrollToContent}
-              className="text-white/90 text-sm font-bold hover:text-[#ffcc1a] transition-colors flex items-center gap-2 group px-8 py-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+               onClick={scrollToContent}
+               className="text-white/90 text-sm font-bold hover:text-[#ffcc1a] transition-colors flex items-center gap-2 group px-8 py-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
             >
               {t("browseAll")}
               <ChevronDown className="h-4 w-4 group-hover:translate-y-1 transition-transform" />
@@ -264,6 +229,8 @@ function HeroSection() {
 
 export default function ImpactPage() {
   const t = useTranslations("Impact");
+  const [contents, setContents] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterTheme, setFilterTheme] = useState("all");
@@ -296,6 +263,40 @@ export default function ImpactPage() {
     }
   }, [activeGovId]);
 
+  useEffect(() => {
+    const fetchContents = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get("/contents");
+        if (response.data?.status === "success") {
+          const apiContents = response.data.data.contents.map((c: any) => {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+            return {
+              id: c._id,
+              title: c.title,
+              thumbnail: c.thumbnailUrl ? `${baseUrl}${c.thumbnailUrl}` : "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
+              duration: formatDuration(c.duration),
+              type: c.type === 'reel' ? 'reels' : c.type,
+              isPremium: c.rights !== 'free',
+              category: c.type || 'culture',
+              theme: c.themes?.[0] || 'general',
+              region: c.region,
+              contentUrl: c.contentUrl ? `${baseUrl}${c.contentUrl}` : "/Impact.mp4",
+              metadata: c.metadata || {}
+            };
+          });
+          setContents(apiContents);
+        }
+      } catch (error) {
+        console.error("Failed to fetch contents:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchContents();
+  }, []);
+
   const handleGovClick = (govId: string) => {
     const idToName: Record<string, string> = Object.fromEntries(
       Object.entries(govNameToId).map(([name, id]) => [id, name])
@@ -310,15 +311,16 @@ export default function ImpactPage() {
     }
   };
 
-  const filteredContent = ALL_CONTENTS.filter((item) => {
+  const filteredContent = contents.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
     const matchesType = filterType === "all" || item.type.toLowerCase() === filterType.toLowerCase() || item.category.toLowerCase() === filterType.toLowerCase();
     const matchesTheme = filterTheme === "all" || item.theme?.toLowerCase() === filterTheme.toLowerCase();
+    const matchesGov = filterGov === "all" || item.region?.toLowerCase() === filterGov.toLowerCase();
     const matchesAccess =
       filterAccess === "all" ||
       (filterAccess === "free" && !item.isPremium) ||
       (filterAccess === "premium" && item.isPremium);
-    return matchesSearch && matchesType && matchesAccess && matchesTheme;
+    return matchesSearch && matchesType && matchesAccess && matchesTheme && matchesGov;
   });
 
   return (
@@ -379,114 +381,87 @@ export default function ImpactPage() {
         {/* Right: Content Panel - Adjusted widths and added internal padding */}
         <div className="w-full lg:w-[60%] xl:w-[65%] min-h-screen relative z-10 pb-32">
         
-          {/* Architectural Overlay: Mashrabiya (Geometric Lattice) Pattern */}
-          <div 
-            className="absolute inset-x-0 top-0 h-full opacity-[0.05] pointer-events-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0l15 45 45 15-45 15-15 45-15-45-45-15 45-15z' fill='%231f3a5f' fill-opacity='1'/%3E%3Cpath d='M0 60l10-30 20-10 10 30-10 30-20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3Cpath d='M120 60l-10-30-20-10-10 30 10 30 20-10z' fill='%23ffcc1a' fill-opacity='0.4'/%3E%3C/svg%3E")`,
-              backgroundSize: '120px 120px',
-              maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
-            }}
-          />
+          {/* Subtle elegant gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/40 to-white/10 pointer-events-none" />
 
-          <div className="container mx-auto px-4 lg:px-12 xl:px-16 py-24 relative">
+          <div className="container mx-auto px-4 lg:px-12 xl:px-16 py-16 lg:py-24 relative">
             
-            {/* ── Section Header: The Grand Entrance ── */}
+            {/* ── Section Header ── */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="mb-16 text-center relative"
+              className="mb-12 text-left relative"
             >
-              {/* Hand-crafted Jasmine Flower Motif */}
-              <div className="mb-10 flex flex-col items-center">
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 blur-2xl bg-[#ffcc1a]/20 rounded-full" />
-                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
-                    <path d="M24 4C24 4 28 16 36 16C44 16 44 24 36 24C44 24 44 32 36 32C28 32 24 44 24 44C24 44 20 32 12 32C4 32 4 24 12 24C4 24 4 16 12 16C20 16 24 4 24 4Z" fill="#ffcc1a" />
-                    <circle cx="24" cy="24" r="3" fill="#1f3a5f" />
-                  </svg>
-                </div>
-                
-                <div className="flex items-center gap-8 px-4">
-                  <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#1f3a5f20]" />
-                  <span className="text-[#1f3a5f50] text-[10px] font-black uppercase tracking-[0.5em] whitespace-nowrap">
-                     {t("heritage")}
-                  </span>
-                  <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#1f3a5f20]" />
-                </div>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-px w-12 bg-[#ffcc1a]" />
+                <span className="text-[#1f3a5f] text-sm font-semibold uppercase tracking-[0.2em]">
+                   {t("heritage")}
+                </span>
               </div>
               
-              <h2 className="text-5xl md:text-6xl font-serif font-bold text-[#1f3a5f] leading-none mb-8">
-                {t("sectionTitleLine1")} <span className="italic underline underline-offset-8 decoration-[#ffcc1a]/30 font-light">{t("sectionTitleHighlight")}</span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1f3a5f] leading-tight mb-6">
+                {t("sectionTitleLine1")} <span className="italic font-light text-[#1f3a5f]/60">{t("sectionTitleHighlight")}</span>
               </h2>
               
-              <p className="text-xl max-w-2xl mx-auto font-light leading-relaxed text-[#1f3a5f]/70">
-                {t("subtitle")}
-              </p>
+
             </motion.div>
 
-            {/* Filters: Sticky Floating Architectural Bar */}
+            {/* Filters */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="sticky top-8 z-30 flex flex-col lg:flex-row gap-6 mb-16 p-6 md:p-8 rounded-[36px] shadow-2xl shadow-[#1f3a5f08] border border-white/60 relative group overflow-hidden bg-white/80 backdrop-blur-2xl"
+              className="sticky top-24 z-30 mb-12 flex flex-col lg:flex-row items-center gap-2 p-2 lg:rounded-full rounded-[2rem] bg-white/80 backdrop-blur-2xl border border-white shadow-[0_8px_32px_rgba(31,58,95,0.06)] w-full transition-all"
             >
-              {/* Subtle corner motif for filters */}
-              <div className="absolute top-0 left-0 w-12 h-12 border-t border-l border-[#ffcc1a]/40 rounded-tl-[36px]" />
-              <div className="absolute bottom-0 right-0 w-12 h-12 border-b border-r border-[#ffcc1a]/40 rounded-br-[36px]" />
-              
-              <div className="relative flex-1 w-full lg:max-w-md">
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#ffcc1a]"
-                />
+              <div className="relative flex-1 w-full min-w-[200px]">
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-[#1f3a5f]/50" />
                 <Input
                   placeholder={t("searchPlaceholder")}
-                  className="pl-12 h-14 rounded-2xl border-[#1f3a5f08] bg-white/60 text-[#1f3a5f] placeholder:text-[#1f3a5f40] focus-visible:ring-[#ffcc1a] focus-visible:bg-white transition-all duration-300 shadow-inner"
+                  className="pl-14 h-12 w-full rounded-full border-none bg-transparent hover:bg-white/50 focus:bg-white/90 text-[#1f3a5f] placeholder:text-[#1f3a5f]/50 focus-visible:ring-0 shadow-none text-base transition-colors"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              <div className="flex flex-wrap gap-4 w-full lg:w-auto items-center">
+              
+              <div className="hidden lg:block w-px h-8 bg-[#1f3a5f]/10 mx-2" />
+
+              <div className="flex flex-wrap sm:flex-nowrap gap-2 items-center w-full lg:w-auto px-2 pb-2 lg:p-0">
                 <Select value={filterTheme} onValueChange={setFilterTheme}>
-                  <SelectTrigger className="w-full sm:w-[150px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]">
+                  <SelectTrigger className="h-12 border-none bg-transparent hover:bg-white/60 rounded-full px-5 text-[#1f3a5f] focus:ring-0 shadow-none transition-colors data-[state=open]:bg-white font-medium">
                     <SelectValue placeholder={t("theme")} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
-                    <SelectItem value="all">{t("allThemes")}</SelectItem>
-                    <SelectItem value="youth">{t("youth")}</SelectItem>
-                    <SelectItem value="womenArtisans">{t("womenArtisans")}</SelectItem>
-                    <SelectItem value="environment">{t("environment")}</SelectItem>
+                  <SelectContent className="rounded-2xl border-none shadow-xl min-w-[160px] bg-white/95 backdrop-blur-lg">
+                    <SelectItem value="all" className="rounded-xl my-1">{t("allThemes")}</SelectItem>
+                    <SelectItem value="youth" className="rounded-xl my-1">{t("youth")}</SelectItem>
+                    <SelectItem value="womenArtisans" className="rounded-xl my-1">{t("womenArtisans")}</SelectItem>
+                    <SelectItem value="environment" className="rounded-xl my-1">{t("environment")}</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="w-full sm:w-[150px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]">
+                  <SelectTrigger className="h-12 border-none bg-transparent hover:bg-white/60 rounded-full px-5 text-[#1f3a5f] focus:ring-0 shadow-none transition-colors data-[state=open]:bg-white font-medium">
                     <SelectValue placeholder={t("type")} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
-                    <SelectItem value="all">{t("allTypes")}</SelectItem>
-                    <SelectItem value="podcast">{t("podcast")}</SelectItem>
-                    <SelectItem value="videoStr">{t("videoStr")}</SelectItem>
-                    <SelectItem value="documentary">{t("documentary")}</SelectItem>
-                    <SelectItem value="reels">{t("reels")}</SelectItem>
+                  <SelectContent className="rounded-2xl border-none shadow-xl min-w-[160px] bg-white/95 backdrop-blur-lg">
+                    <SelectItem value="all" className="rounded-xl my-1">{t("allTypes")}</SelectItem>
+                    <SelectItem value="podcast" className="rounded-xl my-1">{t("podcast")}</SelectItem>
+                    <SelectItem value="video" className="rounded-xl my-1">{t("videoStr")}</SelectItem>
+                    <SelectItem value="photo" className="rounded-xl my-1">{t("photos")}</SelectItem>
+                    <SelectItem value="reel" className="rounded-xl my-1">{t("reels")}</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={filterAccess} onValueChange={setFilterAccess}>
-                  <SelectTrigger
-                    className="w-full sm:w-[150px] h-14 rounded-2xl bg-white/60 border-[#1f3a5f08] text-[#1f3a5f] shadow-inner focus:ring-[#ffcc1a]"
-                  >
+                  <SelectTrigger className="h-12 border-none bg-transparent hover:bg-white/60 rounded-full px-5 text-[#1f3a5f] focus:ring-0 shadow-none transition-colors data-[state=open]:bg-white font-medium">
                     <SelectValue placeholder={t("access")} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-[#1f3a5f10] shadow-2xl">
-                    <SelectItem value="all">{t("allAccess")}</SelectItem>
-                    <SelectItem value="free">{t("free")}</SelectItem>
-                    <SelectItem value="premium">{t("premium")}</SelectItem>
+                  <SelectContent className="rounded-2xl border-none shadow-xl min-w-[160px] bg-white/95 backdrop-blur-lg">
+                    <SelectItem value="all" className="rounded-xl my-1">{t("allAccess")}</SelectItem>
+                    <SelectItem value="free" className="rounded-xl my-1">{t("free")}</SelectItem>
+                    <SelectItem value="premium" className="rounded-xl my-1">{t("premium")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -511,7 +486,7 @@ export default function ImpactPage() {
                   >
                     <ContentCard 
                         {...item} 
-                        onClick={item.type === "reels" ? () => handleReelClick(item) : undefined} 
+                        onClick={item.type === "reel" ? () => handleReelClick(item) : undefined} 
                     />
                   </motion.div>
                 ))}
@@ -544,10 +519,12 @@ export default function ImpactPage() {
       <InstagramReelsViewer
         isOpen={reelsModalOpen}
         onClose={() => setReelsModalOpen(false)}
-        videoSrc="/Impact.mp4"
+        videoSrc={activeReel?.contentUrl}
         thumbnail={activeReel?.thumbnail}
         title={activeReel?.title}
+        instagramUsername={activeReel?.metadata?.instagramUsername}
       />
+      <PacksSection type="impact" />
     </div>
   );
 }

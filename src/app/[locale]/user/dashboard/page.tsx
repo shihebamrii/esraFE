@@ -17,6 +17,7 @@ import { Link } from "@/i18n/navigation";
 import { UserService, UserStats } from "@/features/user/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/store/authStore";
+import { QuotaTracker } from "@/features/user/components/QuotaTracker";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -157,6 +158,17 @@ export default function UserDashboardPage() {
             </Card>
           );
         })}
+      </div>
+
+      {/* Quota Tracker Section */}
+      <div
+        style={{
+          animation: "slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          animationDelay: "400ms",
+          opacity: 0,
+        }}
+      >
+        <QuotaTracker />
       </div>
 
       {/* Recent Orders */}

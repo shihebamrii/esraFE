@@ -11,7 +11,7 @@ export function ImpactPreview() {
   return (
     <section className="relative py-24 md:py-32 bg-[#1f3a5f] text-white overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-6 gap-8">
             <motion.div 
                initial={{ opacity: 0, x: -20 }}
                whileInView={{ opacity: 1, x: 0 }}
@@ -25,8 +25,11 @@ export function ImpactPreview() {
                  </span>
                </div>
                <h2 className="text-4xl md:text-5xl lg:text-5xl font-black leading-[1.1] tracking-tight">
-                 {t("titleLine1")} <span className="text-white/60 font-light">{t("titleHighlight")}</span>
+                 {t("titleLine1")} <span className="text-[#ffcc1a]">{t("titleHighlight")}</span>
                </h2>
+               <p className="mt-4 text-white/60 text-base leading-relaxed max-w-xl">
+                 {t("subtitle")}
+               </p>
             </motion.div>
 
             <motion.div
@@ -43,7 +46,7 @@ export function ImpactPreview() {
         </div>
 
         {/* Feature Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[500px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[500px] mt-10">
             
             {/* Featured Item - Large */}
             <motion.div 
@@ -56,7 +59,7 @@ export function ImpactPreview() {
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-500 z-10" />
                 <div 
                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                   style={{ backgroundImage: 'url("https://travel.com/wp-content/uploads/2025/09/The-hillside-Berber-village-of-Chenini-in-Tataouine-with-its-distinctive-white-mosque-and-cave-.webp")' }}
+                   style={{ backgroundImage: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Kasserine2.JPG/1280px-Kasserine2.JPG")' }}
                 />
                 
                 {/* Play Button Overlay */}
@@ -67,9 +70,14 @@ export function ImpactPreview() {
                 </div>
 
                 <div className="absolute bottom-0 left-0 w-full p-8 z-30 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
-                   <span className="inline-block px-3 py-1 bg-[#ffcc1a] text-[#1f3a5f] text-xs font-bold uppercase tracking-wider rounded-md mb-4">
-                      {t("documentaryBadge")}
-                   </span>
+                   <div className="flex items-center gap-2 mb-3">
+                     <span className="inline-block px-3 py-1 bg-[#ffcc1a] text-[#1f3a5f] text-xs font-bold uppercase tracking-wider rounded-md">
+                        {t("documentaryBadge")}
+                     </span>
+                     <span className="inline-block px-3 py-1 bg-white/10 text-white/80 text-xs font-semibold rounded-md backdrop-blur-sm">
+                        📍 Kasserine
+                     </span>
+                   </div>
                    <h3 className="text-3xl font-bold text-white mb-2">{t("featuredTitle")}</h3>
                    <p className="text-white/80 max-w-xl line-clamp-2">{t("featuredDesc")}</p>
                 </div>
@@ -87,10 +95,11 @@ export function ImpactPreview() {
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500 z-10" />
                     <div 
                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                       style={{ backgroundImage: 'url("https://travel.com/wp-content/uploads/2025/09/Aerial-view-of-Sfax-Tunisia-showing-the-medina-walls-and-surrounding-city.webp")' }}
+                       style={{ backgroundImage: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Tataouine_%282%29.jpg/1280px-Tataouine_%282%29.jpg")' }}
                     />
                     <div className="absolute bottom-0 left-0 w-full p-6 z-30 bg-gradient-to-t from-black/80 to-transparent">
-                       <h3 className="text-xl font-bold text-white group-hover:text-[#ffcc1a] transition-colors">{t("sideTitle1")}</h3>
+                       <span className="text-[#ffcc1a] text-[10px] font-bold uppercase tracking-wider">📍 Tataouine</span>
+                       <h3 className="text-xl font-bold text-white group-hover:text-[#ffcc1a] transition-colors mt-1">{t("sideTitle1")}</h3>
                        <div className="flex items-center gap-2 mt-2 text-white/70 text-xs font-bold uppercase tracking-wider">
                            <Play className="w-3 h-3" /> {t("reelsBadge")}
                        </div>
@@ -107,10 +116,11 @@ export function ImpactPreview() {
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500 z-10" />
                     <div 
                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                       style={{ backgroundImage: 'url("https://travel.com/wp-content/uploads/2025/09/Panoramic-view-of-Nabeul-Tunisia-with-its-white-buildings-palm-trees-and-Mediterranean.webp")' }}
+                       style={{ backgroundImage: 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Nabeul_Pottery.jpg/1280px-Nabeul_Pottery.jpg")' }}
                     />
                     <div className="absolute bottom-0 left-0 w-full p-6 z-30 bg-gradient-to-t from-black/80 to-transparent">
-                       <h3 className="text-xl font-bold text-white group-hover:text-[#ffcc1a] transition-colors">{t("sideTitle2")}</h3>
+                       <span className="text-[#ffcc1a] text-[10px] font-bold uppercase tracking-wider">📍 Nabeul</span>
+                       <h3 className="text-xl font-bold text-white group-hover:text-[#ffcc1a] transition-colors mt-1">{t("sideTitle2")}</h3>
                        <div className="flex items-center gap-2 mt-2 text-white/70 text-xs font-bold uppercase tracking-wider">
                            <Play className="w-3 h-3" /> {t("podcastBadge")}
                        </div>

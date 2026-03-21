@@ -65,4 +65,30 @@ export const AdminService = {
     const response = await api.get('/admin/users', { params });
     return response.data;
   },
+  updateUserStatus: async (id: string, isActive: boolean) => {
+    const response = await api.put(`/admin/users/${id}/status`, { isActive });
+    return response.data;
+  },
+  updateUserPackQuota: async (userId: string, userPackId: string, quotas: any) => {
+    const response = await api.put(`/admin/users/${userId}/packs/${userPackId}`, { quotas });
+    return response.data;
+  },
+
+  // Packs
+  getPacks: async (params?: any) => {
+    const response = await api.get('/admin/packs', { params });
+    return response.data;
+  },
+  createPack: async (data: any) => {
+    const response = await api.post('/admin/packs', data);
+    return response.data;
+  },
+  updatePack: async (id: string, data: any) => {
+    const response = await api.put(`/admin/packs/${id}`, data);
+    return response.data;
+  },
+  deletePack: async (id: string) => {
+    const response = await api.delete(`/admin/packs/${id}`);
+    return response.data;
+  },
 };

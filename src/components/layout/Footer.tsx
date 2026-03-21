@@ -46,10 +46,12 @@ export function Footer() {
                <img 
                  src="/logo-beestory.png" 
                  alt="Bee Story" 
-                 className="h-18 object-contain transition-transform duration-300 group-hover:scale-105" 
+                 width={620}
+                 height={173}
+                 className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
                />
              </Link>
-             <p className="leading-relaxed text-base -mt-4">
+             <p className="leading-relaxed text-base ">
                {f("description")}
              </p>
           </div>

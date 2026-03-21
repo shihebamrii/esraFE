@@ -17,6 +17,7 @@ import { notFound, redirect } from 'next/navigation';
 import { locales, defaultLocale } from '@/i18n/settings';
 
 import { PushNotificationProvider } from "@/providers/PushNotificationProvider";
+import { WelcomeModal } from "@/features/auth/components/WelcomeModal";
 
 export default async function RootLayout({
   children,
@@ -54,6 +55,7 @@ export default async function RootLayout({
               <FooterWrapper />
             </div>
             <Toaster position="bottom-right" theme="dark" />
+            <WelcomeModal />
             <PushNotificationProvider />
           </Providers>
         </NextIntlClientProvider>

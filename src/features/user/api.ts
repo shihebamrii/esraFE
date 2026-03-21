@@ -78,5 +78,10 @@ export const UserService = {
   toggleFavorite: async (itemType: string, itemId: string) => {
     const response = await api.post('/favorites/toggle', { itemType, itemId });
     return response.data;
+  },
+
+  getUserPacks: async () => {
+    const response = await api.get('/dashboard/packs');
+    return response.data;
   }
 };

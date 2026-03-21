@@ -1,28 +1,71 @@
 "use client";
 
+import { useState, useEffect, use } from "react";
 import { VideoPlayer } from "@/features/content/components/VideoPlayer";
 import { Download, Share2, Unlock, ArrowLeft, Tag } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
+import { api } from "@/lib/api";
 
-// Mock data (in real app, fetch based on props.params.id)
-const MOCK_DETAIL = {
-    id: "1",
-    title: "Discovering the Sahara: A Journey Through Time",
-    description: "Experience the majestic beauty of the Tunisian Sahara in this exclusive documentary under 4K resolution. Follow the path of ancient nomads and discover the secrets hidden within the golden dunes.",
-    videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    poster: "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=1200&auto=format&fit=crop",
-    duration: "12:45",
-    type: "video" as const,
-    isPremium: true,
-    category: "Documentary",
-    tags: ["Sahara", "Nature", "4K", "Tozeur"],
-    author: "Bee Story Studios",
-    price: 15.00
+const formatDuration = (seconds?: number) => {
+  if (!seconds) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-export default function ImpactDetailsPage({ params }: { params: { id: string } }) {
-  const content = MOCK_DETAIL;
+export default function ImpactDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const [content, setContent] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get(`/contents/${id}`);
+        if (response.data?.status === "success") {
+          const c = response.data.data.content;
+          
+          setContent({
+            id: c._id,
+            title: c.title,
+            description: c.description || c.title,
+            videoUrl: c.contentUrl || "/Impact.mp4",
+            poster: c.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=1200&auto=format&fit=crop",
+            duration: formatDuration(c.duration),
+            type: c.type || "video",
+            isPremium: c.rights !== 'free',
+            category: c.type || 'Documentary',
+            tags: c.themes && c.themes.length > 0 ? c.themes : ["Impact"],
+            author: c.createdBy?.name || "Bee Story Studios",
+            price: c.price || 0
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch content details:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchContent();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor: "#fff9e6", color: "#1f3a5f" }}>
+        <p className="font-bold animate-pulse text-lg py-32">Loading Content...</p>
+      </div>
+    );
+  }
+
+  if (!content) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor: "#fff9e6", color: "#1f3a5f" }}>
+        <p className="font-bold text-lg py-32">Content not found.</p>
+      </div>
+    );
+  }
 
   return (
     <div

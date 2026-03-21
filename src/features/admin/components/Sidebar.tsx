@@ -11,7 +11,8 @@ import {
   ShoppingCart,
   Settings,
   LogOut,
-  Upload
+  Upload,
+  Users
 } from "lucide-react";
 
 const sidebarNavItems = [
@@ -19,6 +20,16 @@ const sidebarNavItems = [
     title: "Dashboard",
     href: "/admin/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Users",
+    href: "/admin/users",
+    icon: Users,
+  },
+  {
+    title: "Packs",
+    href: "/admin/packs",
+    icon: Package,
   },
   {
     title: "Upload",

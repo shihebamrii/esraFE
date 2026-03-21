@@ -8,9 +8,9 @@ CONFIGURATION
 ════════════════════════════════════════════════════════════
 */
 
-const IMAGE_WIDTH = "150%";
-const IMAGE_HEIGHT = "150%";
-const IMAGE_OFFSET_Y = "6%";
+const IMAGE_WIDTH = "100%";
+const IMAGE_HEIGHT = "100%";
+const IMAGE_OFFSET_Y = "0%";
 
 const STATS = [
   { label: "Regions", value: 24 },
@@ -108,7 +108,7 @@ export function TounesnaHero() {
   return (
     <section
       ref={heroRef}
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#6a0d2e]"
+      className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-[#6a0d2e]"
     >
       {/* VIDEO BACKGROUND */}
 
@@ -126,25 +126,6 @@ export function TounesnaHero() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#6a0d2e] z-[1]" />
 
-      {/* PARALLAX IMAGE */}
-
-      <div
-        className="absolute inset-0 z-[2] flex items-center justify-center pointer-events-none transition-transform duration-200"
-        style={{
-          transform: `translate(${mouse.x}px, ${mouse.y}px)`
-        }}
-      >
-        <img
-          src="/hero-hq-transp.png"
-          alt=""
-          style={{
-            width: IMAGE_WIDTH,
-            height: IMAGE_HEIGHT,
-            objectFit: "contain",
-            transform: `translateY(${IMAGE_OFFSET_Y})`
-          }}
-        />
-      </div>
 
       {/* FLOATING PARTICLES */}
 

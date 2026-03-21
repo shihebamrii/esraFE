@@ -143,7 +143,7 @@ export default function TounesnaPage() {
   };
 
   return (
-    <div className="-mt-20 min-h-screen bg-[#fff9e6] text-[#6a0d2e] font-sans selection:bg-[#ffcc1a] selection:text-[#fff9e6]">
+    <div className="min-h-screen bg-[#fff9e6] text-[#6a0d2e] font-sans selection:bg-[#ffcc1a] selection:text-[#fff9e6]">
       {/* ─── Global Zellige texture layer ─── */}
       <div
         className="fixed inset-0 pointer-events-none z-0 opacity-[0.05]"
@@ -157,13 +157,13 @@ export default function TounesnaPage() {
       <TounesnaHero />
       {/* ═══════════════ MAP & GALLERY ═══════════════ */}
       {/* ─── Refined Tile Band Divider ─── */}
-      <div className="relative z-20 w-full h-8 bg-[#fff9e6] flex items-center justify-center border-y border-[#6a0d2e]/10 shadow-sm mt-[-1px]">
-        {/* Intricate Geometric Background Pattern */}
+      <div className="relative z-20 w-full h-30 bg-[#fff9e6] flex items-center justify-center border-y border-[#6a0d2e]/10 shadow-sm mt-[-1px] overflow-hidden">
+        {/* Provided Divider Image */}
         <div 
-           className="absolute inset-0 opacity-40 mix-blend-multiply"
+           className="absolute inset-0 w-full h-full"
            style={{
-             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='32' viewBox='0 0 100 32'%3E%3Cg fill='none' stroke='%236a0d2e' stroke-width='0.75'%3E%3Cpath d='M50 0L66 16L50 32L34 16Z'/%3E%3Cpath d='M100 0L116 16L100 32L84 16Z'/%3E%3Cpath d='M0 0L16 16L0 32L-16 16Z'/%3E%3Cpath d='M25 16L50 16'/%3E%3Cpath d='M75 16L100 16'/%3E%3Ccircle cx='50' cy='16' r='3' fill='%23ffcc1a' stroke='none'/%3E%3Ccircle cx='0' cy='16' r='3' fill='%23ffcc1a' stroke='none'/%3E%3Ccircle cx='100' cy='16' r='3' fill='%23ffcc1a' stroke='none'/%3E%3C/g%3E%3C/svg%3E")`,
-             backgroundSize: "100px 32px",
+             backgroundImage: `url("/divider.png")`,
+             backgroundSize: "contain",
              backgroundRepeat: "repeat-x",
              backgroundPosition: "center"
            }}
@@ -174,7 +174,7 @@ export default function TounesnaPage() {
         <div className="absolute bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ffcc1a]/60 to-transparent" />
       </div>
 
-      <div id="tounesna-content" className="w-full flex flex-col lg:flex-row relative z-10 pt-4">
+      <div id="tounesna-content" className="w-full flex flex-col lg:flex-row relative z-10">
 
         {/* ── Dynamic Fading Background based on selected Governorate ── */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
