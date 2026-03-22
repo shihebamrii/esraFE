@@ -130,9 +130,11 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
     } else {
       if (f.reelsLimit) features.push(`${f.reelsLimit} vidéos courtes (reels)`);
       if (f.videosLimit) features.push(`${f.videosLimit} vidéos storytelling`);
+      if (f.podcastsLimit) features.push(`${f.podcastsLimit} podcasts`);
       if (f.documentariesLimit) features.push(`${f.documentariesLimit} mini-documentaires`);
+      if (f.successStoryLimit) features.push(`${f.successStoryLimit} success story complète`);
+      
       if (pack.title.includes("Premium")) {
-        features.push("1 success story complète");
         features.push("Stratégie de contenu");
       }
       features.push(`Qualité ${f.quality.toUpperCase()}`);
