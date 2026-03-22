@@ -34,18 +34,6 @@ export function Footer() {
       className="w-full pt-20 pb-8 text-sm transition-colors duration-500 relative z-10 border-t"
       style={{ ...footerStyle, borderColor: `${mainColor}20` }}
     >
-      {/* Image Divider for Footer */}
-      <div className="relative z-20 w-full h-[80px] bg-transparent flex items-center justify-center overflow-hidden mb-12 opacity-80">
-        <div 
-           className="absolute inset-0 w-full h-full"
-           style={{
-             backgroundImage: `url("/divider.png")`,
-             backgroundSize: "contain",
-             backgroundRepeat: "repeat-x",
-             backgroundPosition: "center"
-           }}
-        />
-      </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         
