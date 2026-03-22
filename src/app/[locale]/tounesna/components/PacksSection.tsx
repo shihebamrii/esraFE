@@ -152,14 +152,21 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
       />
       
       <div className="max-w-7xl mx-auto relative z-10">
+        
+        {/* Image Divider */}
+        <div className="relative z-20 w-full h-[80px] mb-12 bg-transparent flex items-center justify-center overflow-hidden opacity-80">
+          <div 
+             className="absolute inset-0 w-full h-full"
+             style={{
+               backgroundImage: `url("/divider.png")`,
+               backgroundSize: "contain",
+               backgroundRepeat: "repeat-x",
+               backgroundPosition: "center"
+             }}
+          />
+        </div>
+
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-4">
-             <span className="text-[#ffcc1a] text-lg">✦</span>
-             <span className={`text-[11px] tracking-[0.4em] uppercase ${isImpact ? 'text-[#1f3a5f]/60' : 'text-[#6a0d2e]/60'} font-bold`}>
-               اكتشف الباقات — Exclusive Bundles
-             </span>
-             <span className="text-[#ffcc1a] text-lg">✦</span>
-          </div>
           <h2 className={`text-4xl lg:text-5xl font-serif ${isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]'} mb-6 drop-shadow-sm`}>
             Unlock the Full Vision
           </h2>

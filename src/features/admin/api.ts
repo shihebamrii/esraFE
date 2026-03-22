@@ -74,6 +74,24 @@ export const AdminService = {
     return response.data;
   },
 
+  // Playlists
+  getPlaylists: async (params?: any) => {
+    const response = await api.get('/admin/playlists', { params });
+    return response.data;
+  },
+  createPlaylist: async (data: any) => {
+    const response = await api.post('/admin/playlists', data);
+    return response.data;
+  },
+  updatePlaylist: async (id: string, data: any) => {
+    const response = await api.put(`/admin/playlists/${id}`, data);
+    return response.data;
+  },
+  deletePlaylist: async (id: string) => {
+    const response = await api.delete(`/admin/playlists/${id}`);
+    return response.data;
+  },
+};
   // Packs
   getPacks: async (params?: any) => {
     const response = await api.get('/admin/packs', { params });

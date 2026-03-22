@@ -157,7 +157,7 @@ export default function TounesnaPage() {
       <TounesnaHero />
       {/* ═══════════════ MAP & GALLERY ═══════════════ */}
       {/* ─── Refined Tile Band Divider ─── */}
-      <div className="relative z-20 w-full h-30 bg-[#fff9e6] flex items-center justify-center border-y border-[#6a0d2e]/10 shadow-sm mt-[-1px] overflow-hidden">
+      <div className="relative z-20 w-full h-[80px] bg-[#fff9e6] flex items-center justify-center border-y border-[#6a0d2e]/10 shadow-sm mt-[-1px] overflow-hidden">
         {/* Provided Divider Image */}
         <div 
            className="absolute inset-0 w-full h-full"
@@ -294,13 +294,11 @@ export default function TounesnaPage() {
                   </SelectTrigger>
                   <SelectContent className="bg-[#fff9e6] border-[#6a0d2e]/10 text-[#6a0d2e] rounded-xl shadow-2xl backdrop-blur-xl">
                     <SelectItem value="all">{t("allTypes")}</SelectItem>
-                    <SelectItem value="sea" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🌊 Sea</SelectItem>
-                    <SelectItem value="desert" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏜️ Desert</SelectItem>
-                    <SelectItem value="mountain" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">⛰️ Mountain</SelectItem>
-                    <SelectItem value="city" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏙️ City</SelectItem>
-                    <SelectItem value="historical" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏛️ Historical</SelectItem>
-                    <SelectItem value="oasis" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🌴 Oasis</SelectItem>
-                    <SelectItem value="village" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏘️ Village</SelectItem>
+                    <SelectItem value="sea" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🌊 {t("sea")}</SelectItem>
+                    <SelectItem value="desert" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏜️ {t("desert")}</SelectItem>
+                    <SelectItem value="mountain" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">⛰️ {t("mountain")}</SelectItem>
+                    <SelectItem value="oasis" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🌴 {t("oasis")}</SelectItem>
+                    <SelectItem value="village" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏘️ {t("village")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -309,7 +307,7 @@ export default function TounesnaPage() {
               <div className="flex items-center justify-end gap-8 w-full xl:w-auto xl:ml-auto text-[#6a0d2e]">
                 <div className="text-right xl:text-center">
                   <span className="block text-[#6a0d2e] text-2xl lg:text-3xl font-serif leading-none drop-shadow-sm">{photos.length}</span>
-                  <span className="uppercase text-[9px] tracking-[0.25em] font-bold mt-2 block opacity-60">Photos</span>
+                  <span className="uppercase text-[9px] tracking-[0.25em] font-bold mt-2 block opacity-60">{t("photos")}</span>
                 </div>
                 <div className="w-px h-10 bg-[#6a0d2e]/20" />
                 <div className="text-left xl:text-center">

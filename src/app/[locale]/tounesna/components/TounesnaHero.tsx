@@ -167,9 +167,9 @@ export function TounesnaHero() {
           </span>
 
           <span className="block mt-4 text-sm md:text-lg tracking-[0.3em] font-semibold text-[#ffcc1a]">
-            PHOTO PRISE LORS DE 
+            VALORISATION DU PATRIMOINE
             <br />
-            LA TOURNÉE CnBees
+            NATUREL ET TOURISTIQUE TUNISIEN
           </span>
         </h1>
 

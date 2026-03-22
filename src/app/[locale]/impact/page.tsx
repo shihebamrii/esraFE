@@ -18,6 +18,7 @@ import { GOV_PHOTOS } from "../tounesna/constants";
 import { PacksSection } from "../tounesna/components/PacksSection";
 import { InstagramReelsViewer } from "@/features/content/components/InstagramReelsViewer";
 import { api } from "@/lib/api";
+import { Link } from "@/i18n/navigation";
 
 const formatDuration = (seconds?: number) => {
   if (!seconds) return "0:00";
@@ -230,6 +231,7 @@ function HeroSection() {
 export default function ImpactPage() {
   const t = useTranslations("Impact");
   const [contents, setContents] = useState<any[]>([]);
+  const [playlists, setPlaylists] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
@@ -264,37 +266,40 @@ export default function ImpactPage() {
   }, [activeGovId]);
 
   useEffect(() => {
-    const fetchContents = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get("/contents");
-        if (response.data?.status === "success") {
-          const apiContents = response.data.data.contents.map((c: any) => {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
-            return {
-              id: c._id,
-              title: c.title,
-              thumbnail: c.thumbnailUrl ? `${baseUrl}${c.thumbnailUrl}` : "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
-              duration: formatDuration(c.duration),
-              type: c.type === 'reel' ? 'reels' : c.type,
-              isPremium: c.rights !== 'free',
-              category: c.type || 'culture',
-              theme: c.themes?.[0] || 'general',
-              region: c.region,
-              contentUrl: c.contentUrl ? `${baseUrl}${c.contentUrl}` : "/Impact.mp4",
-              metadata: c.metadata || {}
-            };
-          });
-          setContents(apiContents);
+        const [contentRes, playlistRes] = await Promise.all([
+          api.get("/contents?type=video,reel,podcast,documentary"),
+          api.get("/playlists")
+        ]);
+
+        if (contentRes.data?.status === "success") {
+          setContents(contentRes.data.data.contents.map((c: any) => ({
+            id: c._id,
+            title: c.title,
+            thumbnail: c.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
+            duration: formatDuration(c.duration),
+            type: c.type,
+            isPremium: c.rights !== 'free',
+            category: c.type === 'reel' ? 'Reel' : (c.type === 'podcast' ? 'Podcast' : 'Documentary'),
+            contentUrl: c.contentUrl,
+            theme: c.themes?.[0] || "Impact",
+            region: c.region,
+            metadata: c.metadata
+          })));
+        }
+
+        if (playlistRes.data?.status === "success") {
+          setPlaylists(playlistRes.data.data.playlists);
         }
       } catch (error) {
-        console.error("Failed to fetch contents:", error);
+        console.error("Failed to fetch impact data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
-    fetchContents();
+    fetchData();
   }, []);
 
   const handleGovClick = (govId: string) => {
@@ -405,6 +410,43 @@ export default function ImpactPage() {
                 {t("sectionTitleLine1")} <span className="italic font-light text-[#1f3a5f]/60">{t("sectionTitleHighlight")}</span>
               </h2>
               
+              {/* Playlists / Series Section */}
+              {playlists.length > 0 && (
+                <div className="mt-12 mb-16">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="h-10 w-10 rounded-xl bg-[#ffcc1a] flex items-center justify-center">
+                      <Play className="h-5 w-5 text-[#1f3a5f] fill-current" />
+                    </div>
+                    <h3 className="text-2xl font-serif font-bold">Story Series & Collections</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {playlists.map((pl) => (
+                      <Link key={pl._id} href={`/impact/playlist/${pl._id}`}>
+                        <div className="group relative h-64 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
+                          <img 
+                            src={pl.items[0]?.contentId?.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop"} 
+                            alt={pl.title}
+                            className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#1f3a5f] via-[#1f3a5f]/40 to-transparent" />
+                          <div className="absolute bottom-6 left-8 right-6">
+                            <Badge className="bg-[#ffcc1a] text-[#1f3a5f] mb-3 border-none uppercase tracking-tighter text-[10px]">
+                              {pl.type.replace('_', ' ')} • {pl.items.length} Episodes
+                            </Badge>
+                            <h4 className="text-2xl font-serif font-bold text-white mb-2 group-hover:text-[#ffcc1a] transition-colors">{pl.title}</h4>
+                            <p className="text-sm text-white/70 line-clamp-1">{pl.description}</p>
+                          </div>
+                          <div className="absolute top-6 right-8 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <ChevronRight className="h-6 w-6 text-white" />
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
 
             </motion.div>
 
@@ -449,7 +491,6 @@ export default function ImpactPage() {
                     <SelectItem value="all" className="rounded-xl my-1">{t("allTypes")}</SelectItem>
                     <SelectItem value="podcast" className="rounded-xl my-1">{t("podcast")}</SelectItem>
                     <SelectItem value="video" className="rounded-xl my-1">{t("videoStr")}</SelectItem>
-                    <SelectItem value="photo" className="rounded-xl my-1">{t("photos")}</SelectItem>
                     <SelectItem value="reel" className="rounded-xl my-1">{t("reels")}</SelectItem>
                   </SelectContent>
                 </Select>

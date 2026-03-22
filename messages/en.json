@@ -67,7 +67,6 @@
     "podcast": "Podcasts",
     "videoStr": "Videos",
     "reels": "Reels",
-    "photos": "Photos",
     "theme": "Theme",
     "allThemes": "All Themes",
     "type": "Type",
@@ -87,18 +86,20 @@
     "statCategories": "Impact Areas"
   },
   "Tounesna": {
-    "badge": "Photography Archive",
+    "badge": "Heritage Valuation",
     "title": "Tounesna",
-    "subtitle": "A curated collection of Tunisia's most breathtaking landscapes, history, and culture, captured by top photographers.",
-    "searchPlaceholder": "Search photos...",
+    "subtitle": "Showcasing authentic Tunisian territories through high-quality multimedia (photos, videos, reels) to promote sustainable and responsible tourism.",
+    "searchPlaceholder": "Search media...",
     "governorate": "Governorate",
     "allGovernorates": "All Governorates",
-    "type": "Type",
+    "type": "Landscape Type",
     "allTypes": "All Types",
-    "urban": "Urban",
+    "sea": "Sea",
     "desert": "Desert",
-    "nature": "Nature",
-    "photos": "Photos",
+    "mountain": "Mountain",
+    "oasis": "Oasis",
+    "village": "Village",
+    "photos": "Photos, Videos, Reels",
     "governorates": "Governorates"
   },
   "Auth": {
@@ -226,8 +227,8 @@
   "RegionsPreview": {
     "sectionBadge": "Explore Tounesna",
     "titleLine1": "Tunisian",
-    "titleHighlight": "landscapes",
-    "subtitle": "Discover the diverse beauty of Tunisia's distinct regions, from the golden desert to the coastal pearls.",
+    "titleHighlight": "Heritage",
+    "subtitle": "Value Tunisia's natural and tourist heritage and encourage sustainable tourism with attractive visual content (Silver, Gold, Premium).",
     "cta": "Explore the Map",
     "explore": "Explore"
   },
@@ -240,7 +241,7 @@
     "documentaryBadge": "Impact Project",
     "featuredTitle": "Organized Series & Packs",
     "featuredDesc": "Buy complete packs (Silver, Gold, Premium) or download a free video upon registration.",
-    "sideTitle1": "Videos, Reels, Podcasts and Photos",
+    "sideTitle1": "Videos, Reels, and Podcasts",
     "reelsBadge": "Project Story",
     "sideTitle2": "Women artisans, youth, environment",
     "podcastBadge": "Impact Story"

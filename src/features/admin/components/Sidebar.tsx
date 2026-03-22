@@ -32,6 +32,11 @@ const sidebarNavItems = [
     icon: Package,
   },
   {
+    title: "Playlists",
+    href: "/admin/playlists",
+    icon: Video,
+  },
+  {
     title: "Upload",
     href: "/admin/upload",
     icon: Upload,

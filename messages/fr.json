@@ -67,7 +67,6 @@
     "podcast": "Podcasts",
     "videoStr": "Vidéos",
     "reels": "Réels",
-    "photos": "Photos",
     "theme": "Thème",
     "allThemes": "Tous les Thèmes",
     "type": "Type",
@@ -87,18 +86,20 @@
     "statCategories": "Domaines d'impact"
   },
   "Tounesna": {
-    "badge": "Archive Photographique",
+    "badge": "Valorisation du Patrimoine",
     "title": "Tounesna",
-    "subtitle": "Une collection soigneusement sélectionnée des paysages, de l'histoire et de la culture les plus époustouflants de Tunisie, capturés par des photographes de renom.",
-    "searchPlaceholder": "Rechercher des photos...",
+    "subtitle": "Valorisation des territoires tunisiens authentiques à travers des contenus multimédias (photos, vidéos, réels) de haute qualité pour promouvoir un tourisme durable et responsable.",
+    "searchPlaceholder": "Rechercher des médias...",
     "governorate": "Gouvernorat",
     "allGovernorates": "Tous les Gouvernorats",
-    "type": "Type",
+    "type": "Type de Paysage",
     "allTypes": "Tous les Types",
-    "urban": "Urbain",
+    "sea": "Mer",
     "desert": "Désert",
-    "nature": "Nature",
-    "photos": "Photos",
+    "mountain": "Montagne",
+    "oasis": "Oasis",
+    "village": "Village",
+    "photos": "Photos, Vidéos, Réels",
     "governorates": "Gouvernorats"
   },
   "Auth": {
@@ -225,9 +226,9 @@
   },
   "RegionsPreview": {
     "sectionBadge": "Explorer Tounesna",
-    "titleLine1": "Paysages",
-    "titleHighlight": "tunisiens",
-    "subtitle": "Découvrez la beauté diversifiée des régions distinctes de la Tunisie, du désert doré aux perles côtières.",
+    "titleLine1": "Patrimoine",
+    "titleHighlight": "tunisien",
+    "subtitle": "Valorisez le patrimoine naturel et touristique de la Tunisie et encouragez un tourisme durable avec des contenus visuels attractifs (Silver, Gold, Premium).",
     "cta": "Explorer la Carte",
     "explore": "Explorer"
   },
@@ -240,7 +241,7 @@
     "documentaryBadge": "Projet à Impact",
     "featuredTitle": "Séries Organisées & Packs",
     "featuredDesc": "Achetez des packs complets (Silver, Gold, Premium) ou téléchargez une vidéo gratuite lors de votre inscription.",
-    "sideTitle1": "Vidéos, Réels, Podcasts et Photos",
+    "sideTitle1": "Vidéos, Réels et Podcasts",
     "reelsBadge": "Histoire du Projet",
     "sideTitle2": "Femmes artisanes, jeunesse, environnement",
     "podcastBadge": "Histoire à Impact"
