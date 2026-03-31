@@ -36,6 +36,10 @@ export default function TounesnaPage() {
       if (gov) {
         setFilterGov(gov);
       }
+      const searchParam = params.get("search");
+      if (searchParam) {
+        setSearch(searchParam);
+      }
     }
   }, []);
 
@@ -66,9 +70,11 @@ export default function TounesnaPage() {
 
         // Manual search filtering if backend doesn't support text search in this endpoint yet
         if (search) {
+          const q = search.toLowerCase();
           results = results.filter((p: Photo) => 
-            p.title.toLowerCase().includes(search.toLowerCase()) || 
-            p.governorate.toLowerCase().includes(search.toLowerCase())
+            p.title.toLowerCase().includes(q) || 
+            p.governorate.toLowerCase().includes(q) ||
+            (p.tags && p.tags.some(tag => tag.toLowerCase().includes(q)))
           );
         }
 
@@ -94,6 +100,7 @@ export default function TounesnaPage() {
     width: 800, // Fallback width
     height: 800 + (Math.random() * 400), // Randomized height for masonry effect
     gov: p.governorate,
+    mediaType: p.mediaType,
     type: p.landscapeType
   }));
 

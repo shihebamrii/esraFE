@@ -11,6 +11,7 @@ interface Photo {
   width: number;
   height: number;
   gov: string;
+  mediaType?: 'photo' | 'video';
 }
 
 interface MasonryGridProps {

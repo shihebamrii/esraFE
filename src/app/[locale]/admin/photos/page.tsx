@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { format } from "date-fns";
 import { AdminService } from "@/features/admin/api";
@@ -101,6 +101,7 @@ export default function AdminPhotosPage() {
 
             <TableHead>Location</TableHead>
             <TableHead>Price</TableHead>
+            <TableHead>Tags</TableHead>
             <TableHead>Date</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -108,7 +109,7 @@ export default function AdminPhotosPage() {
         <TableBody>
           {data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
                 No photos found
               </TableCell>
             </TableRow>
@@ -129,6 +130,25 @@ export default function AdminPhotosPage() {
 
                 <TableCell>{item.governorate}</TableCell>
                 <TableCell>{item.priceTND} DT</TableCell>
+                <TableCell>
+                  {item.tags && item.tags.length > 0 ? (
+                    <div className="flex flex-wrap gap-1 max-w-[200px]">
+                      {item.tags.slice(0, 3).map((tag: string) => (
+                        <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
+                          <Sparkles className="h-2.5 w-2.5 mr-0.5 text-amber-500" />
+                          {tag}
+                        </Badge>
+                      ))}
+                      {item.tags.length > 3 && (
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 text-muted-foreground">
+                          +{item.tags.length - 3}
+                        </Badge>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground text-xs">—</span>
+                  )}
+                </TableCell>
                 <TableCell>{format(new Date(item.createdAt), 'dd MMM yyyy')}</TableCell>
                 <TableCell className="text-right space-x-2">
                   {showApprovalActions ? (

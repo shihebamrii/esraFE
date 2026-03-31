@@ -5,7 +5,7 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, Image as ImageIcon, Upload, Loader2, AlertCircle, RefreshCcw } from "lucide-react";
+import { Camera, Image as ImageIcon, Upload, Loader2, AlertCircle, RefreshCcw, Sparkles, CheckCircle2, XCircle } from "lucide-react";
 import { PhotoService } from "@/features/photos/api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -14,7 +14,9 @@ import { Label } from "@/components/ui/label";
 export default function UserUploadPage() {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
+  const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [uploadStep, setUploadStep] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,6 +30,12 @@ export default function UserUploadPage() {
   const [attributionText, setAttributionText] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [aiTags, setAiTags] = useState<string[]>([]);
+
+  const [mediaType, setMediaType] = useState<'photo' | 'video'>('photo');
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
   const [governorates, setGovernorates] = useState<string[]>([]);
   const [landscapeTypes, setLandscapeTypes] = useState<string[]>([]);
@@ -60,13 +68,58 @@ export default function UserUploadPage() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setSelectedFile(file);
       
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
+
+      // Trigger Real-Time AI Tagging for images
+      if (mediaType === 'photo') {
+        setIsAnalyzingAI(true);
+        try {
+          const formData = new FormData();
+          formData.append("photo", file);
+          const result = await PhotoService.analyzePhoto(formData);
+          
+          if (result.data?.tags && result.data.tags.length > 0) {
+            // Append new tags to existing tags (if any)
+            setTags((prev) => {
+              const currentTags = prev.split(',').map(t => t.trim()).filter(Boolean);
+              const newTags = [...new Set([...currentTags, ...result.data.tags])];
+              return newTags.join(', ');
+            });
+          }
+          
+          if (result.data?.description) {
+            setDescription((prev) => {
+               // Only autofill if the user hasn't already typed a detailed description
+               if (!prev || prev.trim() === "") {
+                 return result.data.description;
+               }
+               return prev;
+            });
+          }
+        } catch (error) {
+          console.error("AI Analysis failed", error);
+        } finally {
+          setIsAnalyzingAI(false);
+        }
+      }
+    }
+  };
+
+  const handleThumbnailClick = () => {
+    thumbnailInputRef.current?.click();
+  };
+
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setThumbnailFile(file);
+      setThumbnailPreviewUrl(URL.createObjectURL(file));
     }
   };
 
@@ -81,10 +134,18 @@ export default function UserUploadPage() {
     setAttributionText("");
     setSelectedFile(null);
     setPreviewUrl(null);
+    setMediaType('photo');
+    setThumbnailFile(null);
+    setThumbnailPreviewUrl(null);
+    setAiTags([]);
     setUploadSuccess(false);
     setUploadError("");
+    setUploadStep("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+    }
+    if (thumbnailInputRef.current) {
+      thumbnailInputRef.current.value = "";
     }
   };
 
@@ -95,17 +156,24 @@ export default function UserUploadPage() {
        return setUploadError("Title is required");
     }
     if (!selectedFile) {
-       return setUploadError("Please select a photo file");
+       return setUploadError(`Please select a ${mediaType} file`);
+    }
+    if (mediaType === 'video' && !thumbnailFile) {
+       return setUploadError("For video uploads, please provide a thumbnail image");
     }
     if (!governorate) {
        return setUploadError("Governorate is required");
     }
 
     setIsUploading(true);
+    setUploadStep("Preparing your file...");
 
     try {
       const formData = new FormData();
       formData.append("highRes", selectedFile);
+      if (thumbnailFile) {
+        formData.append("lowRes", thumbnailFile);
+      }
       formData.append("title", title);
       formData.append("description", description);
       formData.append("governorate", governorate);
@@ -116,30 +184,87 @@ export default function UserUploadPage() {
         formData.append("attributionText", attributionText);
       }
       
+      // The background AI logic is gone. 
+      // User tags state already contains the AI-generated tags!
       if (tags) {
         const tagsArray = tags.split(",").map(t => t.trim()).filter(Boolean);
         formData.append("tags", JSON.stringify(tagsArray));
       }
 
+      setUploadStep("Uploading to server...");
       await PhotoService.uploadPhoto(formData);
+      
+      setUploadStep("Processing complete!");
       setUploadSuccess(true);
       
-      // Navigate to dashboard after 2 seconds
+      // Navigate to dashboard after 5 seconds so user can see success
       setTimeout(() => {
         router.push("/user/dashboard");
-      }, 2000);
+      }, 5000);
       
     } catch (err: any) {
-      setUploadError(
-        err.response?.data?.message || "Failed to upload photo. Please try again."
-      );
+      const errorMsg = err.response?.data?.message 
+        || err.message 
+        || "Failed to upload photo. Please try again.";
+      setUploadError(errorMsg);
+      // Scroll error into view
+      setTimeout(() => {
+        document.getElementById('upload-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     } finally {
       setIsUploading(false);
+      setUploadStep("");
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto pb-12">
+    <div className="max-w-4xl mx-auto pb-12 relative">
+
+      {/* ═══ Full-screen Upload Overlay ═══ */}
+      {(isUploading || isAnalyzingAI) && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-300">
+          <div className="bg-card border border-border/50 rounded-3xl p-10 shadow-2xl max-w-md w-full mx-4 text-center animate-in zoom-in-95 duration-500">
+            {isAnalyzingAI ? (
+              // AI Processing State
+              <>
+                <div className="relative mx-auto mb-6 h-20 w-20">
+                  <div className="absolute inset-0 rounded-full border-4 border-amber-500/20" />
+                  <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-500 animate-spin" />
+                  <div className="absolute inset-3 rounded-full bg-amber-500/10 flex items-center justify-center">
+                    <Sparkles className="h-7 w-7 text-amber-500" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-400 mb-2">
+                  AI is processing...
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">Generating tags for your photo</p>
+                <div className="flex items-center justify-center gap-2 text-amber-500 text-sm font-medium">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Analyzing image content</span>
+                </div>
+              </>
+            ) : (
+              // Uploading State
+              <>
+                <div className="relative mx-auto mb-6 h-20 w-20">
+                  <div className="absolute inset-0 rounded-full border-4 border-fuchsia-500/20" />
+                  <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-fuchsia-500 animate-spin" />
+                  <div className="absolute inset-3 rounded-full bg-fuchsia-500/10 flex items-center justify-center">
+                    <Upload className="h-7 w-7 text-fuchsia-500" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Uploading Your {mediaType === 'photo' ? 'Photo' : 'Video'}...</h3>
+                <p className="text-sm text-muted-foreground mb-4">Please don't close this page</p>
+                <div className="flex items-center justify-center gap-2 text-fuchsia-500 text-sm font-medium">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>{uploadStep}</span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-600 to-pink-600">
@@ -154,12 +279,26 @@ export default function UserUploadPage() {
       {uploadSuccess ? (
         <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-12 text-center animate-in fade-in zoom-in duration-500">
           <div className="h-20 w-20 bg-emerald-500/20 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Upload className="h-10 w-10" />
+            <CheckCircle2 className="h-10 w-10" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-3">Upload Successful!</h2>
-          <p className="text-muted-foreground max-w-md mx-auto mb-8">
-            Your photo has been uploaded successfully and is now pending admin approval. You will be notified once it's reviewed.
+          <h2 className="text-2xl font-bold text-foreground mb-3">Upload Successful! 🎉</h2>
+          <p className="text-muted-foreground max-w-md mx-auto mb-2">
+            Your {mediaType === 'photo' ? 'photo' : 'video'} has been uploaded and is now <span className="text-amber-600 font-semibold">pending admin approval</span>.
           </p>
+          <p className="text-xs text-muted-foreground max-w-md mx-auto mb-6">
+            You'll be notified once reviewed. Redirecting to dashboard in a few seconds...
+          </p>
+          
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 max-w-md mx-auto mb-8 animate-in fade-in slide-in-from-bottom-2">
+            <div className="flex items-center justify-center gap-2 text-amber-600 mb-3">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-bold uppercase tracking-wider">AI Auto-Tagging</span>
+            </div>
+            <div className="text-sm text-amber-700 font-medium">
+              Your photo was successfully uploaded with the following tags:
+            </div>
+          </div>
+          
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button onClick={() => router.push("/user/dashboard")} variant="outline" className="w-full sm:w-auto">
               Go to Dashboard
@@ -239,6 +378,12 @@ export default function UserUploadPage() {
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                   />
+                  <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-500/15 rounded-lg">
+                    <Sparkles className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                    <p className="text-xs text-amber-700">
+                      <span className="font-semibold">AI Auto-Tagging:</span> The tags above are automatically generated when you select a photo. You can edit or add more tags before submitting!
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -289,29 +434,48 @@ export default function UserUploadPage() {
 
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm sticky top-24">
-              <h2 className="text-xl font-semibold mb-4">Upload File <span className="text-red-500">*</span></h2>
+              <h2 className="text-xl font-semibold mb-4">Select Media Type</h2>
+              
+              <div className="space-y-4 mb-6">
+                <div className="flex gap-4">
+                  <label className={`flex items-center gap-3 cursor-pointer border p-3 rounded-xl flex-1 transition-colors ${mediaType === 'photo' ? 'border-fuchsia-500 bg-fuchsia-500/5' : 'hover:bg-muted/50'}`}>
+                    <input type="radio" name="mediaType" className="w-4 h-4 text-fuchsia-600" checked={mediaType === 'photo'} onChange={() => { setMediaType('photo'); setSelectedFile(null); setPreviewUrl(null); }} />
+                    <span className="font-medium text-sm">Photo</span>
+                  </label>
+                  <label className={`flex items-center gap-3 cursor-pointer border p-3 rounded-xl flex-1 transition-colors ${mediaType === 'video' ? 'border-fuchsia-500 bg-fuchsia-500/5' : 'hover:bg-muted/50'}`}>
+                    <input type="radio" name="mediaType" className="w-4 h-4 text-fuchsia-600" checked={mediaType === 'video'} onChange={() => { setMediaType('video'); setSelectedFile(null); setPreviewUrl(null); setThumbnailFile(null); setThumbnailPreviewUrl(null); }} />
+                    <span className="font-medium text-sm">Video</span>
+                  </label>
+                </div>
+              </div>
+
+              <h2 className="text-xl font-semibold mb-4">Upload {mediaType === 'photo' ? 'Photo' : 'Video' } <span className="text-red-500">*</span></h2>
               
               <div 
                 onClick={handleFileClick}
                 className={`
                   border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all aspect-[4/3]
-                  ${previewUrl ? 'border-fuchsia-500/50 bg-fuchsia-500/5 p-2' : 'border-border/60 hover:border-fuchsia-500/50 hover:bg-muted p-6'}
+                  ${previewUrl && mediaType === 'photo' ? 'border-fuchsia-500/50 bg-fuchsia-500/5 p-2' : 'border-border/60 hover:border-fuchsia-500/50 hover:bg-muted p-6'}
                 `}
               >
                 <input 
                   type="file" 
                   ref={fileInputRef} 
                   onChange={handleFileChange} 
-                  accept="image/jpeg,image/png,image/webp" 
+                  accept={mediaType === 'photo' ? "image/jpeg,image/png,image/webp" : "video/*"} 
                   className="hidden" 
                 />
                 
                 {previewUrl ? (
-                  <div className="relative w-full h-full rounded-lg overflow-hidden group">
-                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <div className="relative w-full h-full rounded-lg overflow-hidden group bg-black/10 flex items-center justify-center">
+                    {mediaType === 'photo' ? (
+                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                        <video src={previewUrl} className="w-full h-full object-contain" controls />
+                    )}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <p className="text-white font-medium flex items-center gap-2">
-                        <Camera className="h-5 w-5" /> Change Photo
+                        <Camera className="h-5 w-5" /> Change {mediaType === 'photo' ? 'Photo' : 'Video'}
                       </p>
                     </div>
                   </div>
@@ -320,9 +484,9 @@ export default function UserUploadPage() {
                     <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                       <Upload className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium text-foreground mb-1">Click to upload photo</p>
+                    <p className="font-medium text-foreground mb-1">Click to upload {mediaType}</p>
                     <p className="text-xs text-muted-foreground max-w-[180px] mx-auto mb-4">
-                      High resolution JPEG, PNG or WEBP (Max 10MB)
+                      {mediaType === 'photo' ? 'JPEG, PNG or WEBP (Max 10MB)' : 'MP4, WEBM (Max 500MB)'}
                     </p>
                     <Button variant="outline" size="sm" type="button" className="pointer-events-none">
                       Browse Files
@@ -342,29 +506,67 @@ export default function UserUploadPage() {
                 </div>
               )}
 
+              {mediaType === 'video' && (
+                <div className="mt-6">
+                  <h2 className="text-xl font-semibold mb-4">Video Thumbnail <span className="text-red-500">*</span></h2>
+                  <div 
+                    onClick={handleThumbnailClick}
+                    className={`
+                      border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all aspect-video
+                      ${thumbnailPreviewUrl ? 'border-fuchsia-500/50 bg-fuchsia-500/5 p-2' : 'border-border/60 hover:border-fuchsia-500/50 hover:bg-muted p-6'}
+                    `}
+                  >
+                    <input 
+                      type="file" 
+                      ref={thumbnailInputRef} 
+                      onChange={handleThumbnailChange} 
+                      accept="image/jpeg,image/png,image/webp" 
+                      className="hidden" 
+                    />
+                    
+                    {thumbnailPreviewUrl ? (
+                      <div className="relative w-full h-full rounded-lg overflow-hidden group">
+                        <img src={thumbnailPreviewUrl} alt="Thumbnail Preview" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <p className="text-white font-medium flex items-center gap-2">
+                            <Camera className="h-5 w-5" /> Change Thumbnail
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <ImageIcon className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
+                        <p className="text-sm font-medium text-foreground mb-1">Upload an image thumbnail</p>
+                        <p className="text-xs text-muted-foreground mt-1">Required for videos</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {uploadError && (
-                <div className="mt-4 flex items-start gap-2 text-red-500 bg-red-500/10 p-3 rounded-lg border border-red-500/20 text-sm">
-                  <AlertCircle className="h-5 w-5 shrink-0" />
-                  <p>{uploadError}</p>
+                <div id="upload-error" className="mt-4 p-4 rounded-xl border-2 border-red-500/30 bg-red-500/10 animate-in shake-x duration-500">
+                  <div className="flex items-center gap-2 mb-2">
+                    <XCircle className="h-5 w-5 text-red-500 shrink-0" />
+                    <span className="font-semibold text-red-600 text-sm">Upload Failed</span>
+                  </div>
+                  <p className="text-red-500 text-sm ml-7">{uploadError}</p>
+                  <button 
+                    onClick={() => setUploadError('')} 
+                    className="mt-3 ml-7 text-xs text-red-400 hover:text-red-600 underline transition-colors"
+                  >
+                    Dismiss
+                  </button>
                 </div>
               )}
 
               <Button 
-                className="w-full mt-6 bg-fuchsia-600 hover:bg-fuchsia-700 h-12 text-base font-semibold" 
+                className="w-full mt-6 bg-fuchsia-600 hover:bg-fuchsia-700 h-12 text-base font-semibold disabled:opacity-50" 
                 onClick={handleUploadClick}
                 disabled={isUploading}
               >
-                {isUploading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="mr-2 h-5 w-5" />
-                    Submit for Approval
-                  </>
-                )}
+                <Upload className="mr-2 h-5 w-5" />
+                Submit for Approval
               </Button>
             </div>
           </div>

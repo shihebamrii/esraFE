@@ -2,6 +2,7 @@ import { api } from '@/lib/api';
 
 export interface Photo {
   _id: string;
+  mediaType?: 'photo' | 'video';
   title: string;
   description: string;
   governorate: string;
@@ -39,11 +40,12 @@ export const PhotoService = {
   },
 
   uploadPhoto: async (formData: FormData) => {
-    const response = await api.post('/photos/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/photos/upload', formData);
+    return response.data;
+  },
+
+  analyzePhoto: async (formData: FormData) => {
+    const response = await api.post('/photos/analyze', formData);
     return response.data;
   }
 };

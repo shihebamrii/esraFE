@@ -22,19 +22,11 @@ export const AdminService = {
     return response.data;
   },
   uploadPhoto: async (formData: FormData) => {
-    const response = await api.post('/admin/photos/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/admin/photos/upload', formData);
     return response.data;
   },
   updatePhoto: async (id: string, formData: FormData) => {
-    const response = await api.put(`/admin/photos/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.put(`/admin/photos/${id}`, formData);
     return response.data;
   },
   deletePhoto: async (id: string) => {
@@ -52,11 +44,7 @@ export const AdminService = {
     return response.data;
   },
   uploadContent: async (formData: FormData) => {
-    const response = await api.post('/admin/content/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/admin/content/upload', formData);
     return response.data;
   },
 
@@ -91,7 +79,7 @@ export const AdminService = {
     const response = await api.delete(`/admin/playlists/${id}`);
     return response.data;
   },
-};
+
   // Packs
   getPacks: async (params?: any) => {
     const response = await api.get('/admin/packs', { params });

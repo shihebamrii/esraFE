@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, ShoppingCart } from "lucide-react";
+import { MapPin, ShoppingCart, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
@@ -18,9 +18,10 @@ interface PhotoCardProps {
   price: number;
   width: number;
   height: number;
+  mediaType?: 'photo' | 'video';
 }
 
-export function PhotoCard({ id, title, url, location, price, width, height }: PhotoCardProps) {
+export function PhotoCard({ id, title, url, location, price, width, height, mediaType }: PhotoCardProps) {
   const addItem = useCartStore(state => state.addItem);
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -60,6 +61,14 @@ export function PhotoCard({ id, title, url, location, price, width, height }: Ph
               className="w-full h-auto object-cover transition-opacity duration-300 group-hover:opacity-90"
               loading="lazy"
             />
+          )}
+          
+          {/* Video Indicator */}
+          {mediaType === 'video' && (
+            <div className="absolute top-2 left-2 z-10 bg-black/50 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1.5 text-white shadow-sm">
+              <PlayCircle className="h-3.5 w-3.5 fill-white" />
+              <span className="text-[10px] font-bold tracking-wider">VIDEO</span>
+            </div>
           )}
           
           {/* Favorite Button — Top Right */}

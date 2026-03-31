@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { useAuthStore } from "@/store/authStore";
 
 interface Pack {
   _id: string;
@@ -22,6 +21,8 @@ interface Pack {
     reelsLimit?: number;
     videosLimit?: number;
     documentariesLimit?: number;
+    podcastsLimit?: number;
+    successStoryLimit?: number;
     quality: string;
     module: "tounesna" | "impact" | "both";
   };
@@ -35,34 +36,16 @@ interface PacksSectionProps {
 export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
   const [packs, setPacks] = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const isImpact = type === "impact";
   const { addItem } = useCartStore();
-  const { user } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
     const fetchPacksAndSubscription = async () => {
       try {
         setLoading(true);
-        
-        // 1. Fetch user packs to check subscription if logged in
-        if (user) {
-          const userPacksResponse = await api.get("/dashboard/packs");
-          if (userPacksResponse.data?.status === "success") {
-            const userPacks = userPacksResponse.data.data.packs;
-            const activePackForModule = userPacks.find((up: any) => 
-              up.isActive && (up.module === type || up.module === "both")
-            );
-            if (activePackForModule) {
-              setIsSubscribed(true);
-              setLoading(false);
-              return; // No need to fetch public packs if already subscribed
-            }
-          }
-        }
 
-        // 2. Fetch public packs
+        // Fetch public packs
         const response = await api.get("/packs");
         if (response.data?.status === "success") {
           const allPacks = response.data.data.packs;
@@ -96,7 +79,7 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
     };
 
     fetchPacksAndSubscription();
-  }, [type, user]);
+  }, [type]);
 
   const handleBuy = (pack: Pack) => {
     addItem({
@@ -142,7 +125,6 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
     return features;
   };
 
-  if (isSubscribed) return null;
   if (loading) return null;
   if (packs.length === 0) return null;
   

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, ShoppingCart, Info, MapPin, Loader2, ArrowLeft, Heart } from "lucide-react";
+import { Download, ShoppingCart, Info, MapPin, Loader2, ArrowLeft, Heart, Sparkles } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { PhotoService } from "@/features/photos/api";
@@ -92,20 +92,33 @@ export default function PhotoDetailsPage() {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* Image Preview */}
-        <div className="relative rounded-2xl overflow-hidden bg-muted shadow-2xl group">
+        {/* Media Preview */}
+        <div className="relative rounded-2xl overflow-hidden bg-muted shadow-2xl group flex items-center justify-center min-h-[300px]">
           <img
             src={photo.previewUrl}
             alt={photo.title}
-            className="w-full h-auto object-cover"
+            className="w-full h-auto object-cover max-h-[80vh]"
           />
+          {photo.mediaType === 'video' && (
+             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                 <div className="bg-black/40 backdrop-blur-md rounded-full px-6 py-4 text-white text-center shadow-2xl border border-white/20">
+                     <span className="block text-3xl mb-1 ml-1 opacity-90">▶</span>
+                     <span className="text-[10px] uppercase tracking-widest font-bold text-white/80">Video Asset</span>
+                 </div>
+             </div>
+          )}
           <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors pointer-events-none" />
         </div>
 
         {/* Details */}
         <div className="space-y-8 sticky top-24">
           <div>
-            <h1 className="text-3xl font-bold mb-2">{photo.title}</h1>
+            <div className="flex items-center gap-3 mb-3">
+              {photo.mediaType === 'video' && (
+                 <Badge className="bg-fuchsia-600 hover:bg-fuchsia-700 uppercase tracking-wider text-[10px]">Video</Badge>
+              )}
+              <h1 className="text-3xl font-bold">{photo.title}</h1>
+            </div>
             <div className="flex items-center text-muted-foreground">
               <MapPin className="h-4 w-4 me-1" />
               <Link href={`/tounesna?gov=${photo.governorate}`} className="hover:text-primary hover:underline transition-colors">
@@ -180,12 +193,26 @@ export default function PhotoDetailsPage() {
           </div>
 
           {photo.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {photo.tags.map((tag: string) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-1.5 text-amber-600">
+                  <Sparkles className="h-4 w-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider">AI-Generated Tags</span>
+                </div>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {photo.tags.map((tag: string) => (
+                  <Link key={tag} href={`/tounesna?search=${encodeURIComponent(tag)}`}>
+                    <Badge
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                    >
+                      {tag}
+                    </Badge>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
 
