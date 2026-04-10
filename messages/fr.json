@@ -102,6 +102,521 @@
     "photos": "Photos, Vidéos, Réels",
     "governorates": "Gouvernorats"
   },
+  "UserDashboard": {
+    "greeting": {
+      "morning": "Bonjour",
+      "afternoon": "Bon après-midi",
+      "evening": "Bonsoir"
+    },
+    "sidebar": {
+      "dashboard": "Tableau de bord",
+      "orders": "Mes Commandes",
+      "downloads": "Téléchargements",
+      "favorites": "Favoris",
+      "profile": "Profil",
+      "upload": "Téléverser Photo",
+      "logout": "Déconnexion",
+      "member": "Membre",
+      "navigation": "Navigation"
+    },
+    "stats": {
+      "totalOrders": "Total Commandes",
+      "totalOrdersSubtitle": "Placées avec succès",
+      "totalSpent": "Total Dépensé",
+      "totalSpentSubtitle": "Achats cumulés",
+      "downloads": "Téléchargements",
+      "downloadsSubtitle": "Photos & vidéos",
+      "videos": "Vidéos",
+      "packs": "Packs",
+      "photos": "Photos"
+    },
+    "home": {
+      "welcomeBack": "Bon retour",
+      "overviewSubtitle": "Voici un aperçu de l'activité de votre compte et de vos achats récents.",
+      "browseContent": "Parcourir le contenu",
+      "recentOrders": "Commandes Récentes",
+      "viewAll": "Voir Tout"
+    },
+    "orders": {
+      "title": "Historique des Commandes",
+      "subtitle": "Consultez et gérez vos achats",
+      "orderCount": "{count} {count, plural, =1 {commande} other {commandes}}",
+      "noOrders": "Pas encore de commandes",
+      "noOrdersSubtitle": "Lorsque vous achetez du contenu, l'historique de vos commandes apparaîtra ici.",
+      "orderId": "Commande #",
+      "itemCount": "{count} {count, plural, =1 {article} other {articles}}",
+      "paid": "Payé",
+      "pending": "En attente",
+      "browseContent": "Parcourir le contenu"
+    },
+    "downloads": {
+      "title": "Mes Téléchargements",
+      "subtitle": "Accédez et téléchargez vos contenus achetés",
+      "searchPlaceholder": "Rechercher des téléchargements...",
+      "noMatches": "Aucun résultat trouvé",
+      "noMatchesSubtitle": "Essayez un autre terme de recherche",
+      "noDownloads": "Pas encore de téléchargements",
+      "noDownloadsSubtitle": "Vos contenus achetés apparaîtront ici pour un accès facile.",
+      "expired": "Expiré",
+      "download": "Télécharger"
+    },
+    "favorites": {
+      "title": "Mes Favoris",
+      "subtitle": "{count} {count, plural, =1 {article enregistré} other {articles enregistrés}}",
+      "emptySubtitle": "Articles que vous avez enregistrés pour plus tard",
+      "all": "Tout",
+      "searchPlaceholder": "Rechercher des favoris...",
+      "noFavorites": "Pas encore de favoris",
+      "noFavoritesSubtitle": "Parcourez notre collection et appuyez sur l'icône de cœur pour enregistrer les articles que vous aimez.",
+      "exploreContent": "Explorer le contenu",
+      "noMatches": "Aucun résultat trouvé",
+      "noMatchesSubtitle": "Essayez un autre terme de recherche ou filtre",
+      "removed": "Retiré des favoris",
+      "removeFailed": "Échec du retrait",
+      "addedToCart": "{title} ajouté au panier"
+    },
+    "upload": {
+      "title": "Téléverser sur Tounesna",
+      "subtitle": "Partagez vos belles photos de Tunisie. Les soumissions nécessitent l'approbation de l'administrateur.",
+      "success": "Téléversement réussi ! 🎉",
+      "pendingApproval": "Votre {type} a été téléversé et est maintenant en attente d'approbation par l'administrateur.",
+      "notification": "Vous serez informé une fois examiné. Redirection vers le tableau de bord dans quelques secondes...",
+      "goDashboard": "Aller au tableau de bord",
+      "uploadAnother": "Téléverser un autre",
+      "details": "Détails de la photo",
+      "formTitle": "Titre de la photo",
+      "titlePlaceholder": "Ex: Coucher de soleil à Sidi Bou Saïd",
+      "description": "Description",
+      "descriptionPlaceholder": "Parlez-nous de cette photo... où a-t-elle été prise ? Quelle est l'histoire ?",
+      "governorate": "Gouvernorat",
+      "selectGovernorate": "Sélectionner un gouvernorat",
+      "landscapeType": "Type de paysage",
+      "selectType": "Sélectionner le type",
+      "tags": "Tags (séparés par des virgules)",
+      "tagsPlaceholder": "ex: nature, coucher de soleil, architecture",
+      "pricing": "Prix et licence",
+      "price": "Prix (TND)",
+      "freeInfo": "Mettre à 0 pour rendre gratuit",
+      "watermark": "Ajouter un filigrane à l'aperçu",
+      "watermarkInfo": "Protégez votre image haute résolution avec un filigrane sur l'aperçu",
+      "customWatermark": "Texte de filigrane personnalisé (optionnel)",
+      "customWatermarkPlaceholder": "ex: Photo par Jane Doe",
+      "mediaType": "Sélectionner le type de média",
+      "photo": "Photo",
+      "video": "Vidéo",
+      "uploadLabel": "Téléverser {type}",
+      "changeMedia": "Changer {type}",
+      "clickToUpload": "Cliquez pour téléverser {type}",
+      "fileInfo": "{type} (Max {size}Mo)",
+      "browseFiles": "Parcourir les fichiers",
+      "videoThumbnail": "Vignette vidéo",
+      "changeThumbnail": "Changer la vignette",
+      "uploadThumbnail": "Téléverser une vignette d'image",
+      "requiredForVideos": "Requis pour les vidéos",
+      "uploadFailed": "Échec du téléversement",
+      "dismiss": "Ignorer",
+      "submit": "Soumettre pour approbation",
+      "uploading": "Téléversement de votre {type}...",
+      "dontClose": "Veuillez ne pas fermer cette page",
+      "errors": {
+        "titleRequired": "Le titre est requis",
+        "fileRequired": "Veuillez sélectionner un fichier {type}",
+        "thumbnailRequired": "Pour les téléversements vidéo, veuillez fournir une vignette d'image",
+        "governorateRequired": "Le gouvernorat est requis",
+        "failedToLoad": "Échec du chargement des listes déroulantes",
+        "failedToUpload": "Échec du téléversement de la photo. Veuillez réessayer."
+      },
+      "steps": {
+        "preparing": "Préparation de votre fichier...",
+        "uploading": "Téléversement sur le serveur...",
+        "complete": "Traitement terminé !"
+      },
+      "governorates": {
+        "Ariana": "Ariana",
+        "Béja": "Béja",
+        "Ben Arous": "Ben Arous",
+        "Bizerte": "Bizerte",
+        "Gabès": "Gabès",
+        "Gafsa": "Gafsa",
+        "Jendouba": "Jendouba",
+        "Kairouan": "Kairouan",
+        "Kasserine": "Kasserine",
+        "Kébili": "Kébili",
+        "Kef": "Le Kef",
+        "Mahdia": "Mahdia",
+        "Manouba": "La Manouba",
+        "Medenine": "Médenine",
+        "Monastir": "Monastir",
+        "Nabeul": "Nabeul",
+        "Sfax": "Sfax",
+        "Sidi Bouzid": "Sidi Bouzid",
+        "Siliana": "Siliana",
+        "Sousse": "Sousse",
+        "Tataouine": "Tataouine",
+        "Tozeur": "Tozeur",
+        "Tunis": "Tunis",
+        "Zaghouan": "Zaghouan"
+      },
+      "landscapeTypes": {
+        "sea": "Mer",
+        "desert": "Désert",
+        "mountain": "Montagne",
+        "village": "Village",
+        "oasis": "Oasis",
+        "forest": "Forêt",
+        "city": "Ville",
+        "historical": "Historique",
+        "other": "Autre"
+      }
+    },
+    "layout": {
+      "redirecting": "Redirection..."
+    },
+    "quota": {
+      "title": "Vos Quotas Actifs",
+      "activePack": "{count} {count, plural, =1 {Pack Actif} other {Packs Actifs}}",
+      "photos": "Photos",
+      "reels": "Réels",
+      "videos": "Vidéos",
+      "storytelling": "Storytelling",
+      "miniDocs": "Mini-Docs",
+      "left": "{remaining} / {limit} Restant",
+      "failedToFetch": "Échec du chargement des packs utilisateur"
+    }
+  },
+  "AdminDashboard": {
+    "sidebar": {
+      "dashboard": "Tableau de bord",
+      "users": "Utilisateurs",
+      "packs": "Packs",
+      "playlists": "Listes de lecture",
+      "upload": "Téléverser",
+      "contentImpact": "Contenu (Impact)",
+      "photosTounesna": "Photos (Tounesna)",
+      "orders": "Commandes",
+      "overview": "Aperçu"
+    },
+    "home": {
+      "title": "Tableau de bord",
+      "totalRevenue": "Revenu Total",
+      "paidOrders": "Toutes les commandes payées",
+      "activeUsers": "Utilisateurs Actifs",
+      "totalRegistered": "Total inscrits",
+      "contentCount": "Nombre de Contenus",
+      "videoPlatform": "Dans la plateforme vidéo",
+      "tounesnaPhotos": "Photos Tounesna",
+      "photoGallery": "Dans la galerie photos",
+      "videos": "Vidéos"
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "searchPlaceholder": "Rechercher par nom ou email...",
+      "table": {
+        "user": "Utilisateur",
+        "role": "Rôle",
+        "status": "Statut",
+        "quotas": "Packs Actifs & Quotas",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Actif",
+        "deactivated": "Désactivé",
+        "deactivate": "Désactiver",
+        "activate": "Activer"
+      },
+      "packs": {
+        "noPacks": "Aucun pack actif",
+        "photos": "Photos",
+        "reels": "Réels",
+        "videos": "Vidéos",
+        "docs": "Docs"
+      },
+      "dialog": {
+        "editQuotas": "Modifier les Quotas",
+        "editDescription": "Ajuster manuellement les quotas restants pour {name} ({pack}).",
+        "photosRemaining": "Photos Restantes",
+        "reelsRemaining": "Réels Restants",
+        "videosRemaining": "Vidéos Restantes",
+        "docsRemaining": "Docs Restants",
+        "saveChanges": "Enregistrer les modifications"
+      },
+      "messages": {
+        "fetchFailed": "Échec de la récupération des utilisateurs",
+        "updateStatusSuccess": "Utilisateur {status} avec succès",
+        "updateStatusFailed": "Échec de la mise à jour du statut de l'utilisateur",
+        "updateQuotasSuccess": "Quotas mis à jour avec succès",
+        "updateQuotasFailed": "Échec de la mise à jour des quotas"
+      }
+    },
+    "packs": {
+      "title": "Gestion des Packs",
+      "createPack": "Créer un Pack",
+      "editPack": "Modifier le Pack",
+      "createDescription": "Remplissez les détails du pack. Les packs d'adhésion définissent les quotas pour les utilisateurs.",
+      "form": {
+        "title": "Titre du Pack",
+        "titlePlaceholder": "ex: Tounesna Gold",
+        "price": "Prix (TND)",
+        "description": "Description",
+        "descriptionPlaceholder": "Qu'est-ce qui est inclus dans ce pack ?",
+        "type": "Type de Pack",
+        "selectType": "Sélectionner le type",
+        "membership": "Adhésion (Quotas)",
+        "collection": "Collection (Statique)",
+        "active": "Actif et visible",
+        "quotas": "Quotas d'Adhésion",
+        "module": "Module",
+        "selectModule": "Sélectionner le module",
+        "tounesna": "Tounesna (Photos)",
+        "impact": "Impact (Vidéos)",
+        "both": "Les deux",
+        "quality": "Qualité Max",
+        "selectQuality": "Sélectionner la qualité",
+        "standard": "Standard",
+        "hd": "HD (1080p)",
+        "4k": "4K / Ultra HD",
+        "photosLimit": "Limite de Photos",
+        "reelsLimit": "Limite de Réels",
+        "videosLimit": "Vidéos Storytelling",
+        "docsLimit": "Limite de Mini-Docs",
+        "cancel": "Annuler"
+      },
+      "table": {
+        "name": "Nom du Pack",
+        "type": "Type",
+        "price": "Prix",
+        "quotas": "Quotas / Articles",
+        "status": "Statut",
+        "actions": "Actions",
+        "popular": "Populaire",
+        "inactive": "Inactif",
+        "active": "Actif",
+        "photos": "Photos",
+        "reels": "Réels",
+        "videos": "Vidéos",
+        "quality": "Qualité"
+      },
+      "messages": {
+        "fetchFailed": "Échec de la récupération des packs",
+        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce pack ?",
+        "deleteSuccess": "Pack supprimé avec succès",
+        "deleteFailed": "Échec de la suppression du pack",
+        "saveSuccess": "Pack enregistré avec succès",
+        "saveFailed": "Échec de l'enregistrement du pack"
+      }
+    },
+    "photos": {
+      "title": "Gestion des Photos",
+      "addPhoto": "Ajouter une Photo",
+      "loading": "Chargement...",
+      "searchPlaceholder": "Rechercher des photos...",
+      "tabs": {
+        "official": "Contenu Officiel",
+        "community": "Soumissions Communautaires",
+        "pending": "En attente d'approbation",
+        "approved": "Approuvées",
+        "rejected": "Rejetées"
+      },
+      "officialDescription": "Photos téléversées par les administrateurs système. Approuvées automatiquement.",
+      "table": {
+        "preview": "Aperçu",
+        "title": "Titre",
+        "user": "Utilisateur",
+        "location": "Lieu",
+        "price": "Prix",
+        "tags": "Tags",
+        "date": "Date",
+        "actions": "Actions",
+        "noPhotos": "Aucune photo trouvée",
+        "unknown": "Inconnu",
+        "approve": "Approuver",
+        "reject": "Rejeter",
+        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{title}\" ?"
+      },
+      "dialog": {
+        "editPhoto": "Modifier la Photo",
+        "editDescription": "Mettre à jour les détails de la photo sélectionnée."
+      },
+      "messages": {
+        "fetchFailed": "Échec du chargement des photos",
+        "deleteSuccess": "Photo supprimée avec succès",
+        "deleteFailed": "Échec de la suppression de la photo",
+        "approveSuccess": "Photo {status} avec succès",
+        "approveFailed": "Échec de l'action {status} sur la photo"
+      }
+    },
+    "content": {
+      "title": "Gestion du Contenu",
+      "addContent": "Ajouter du Contenu",
+      "loading": "Chargement...",
+      "searchPlaceholder": "Rechercher du contenu...",
+      "officialDescription": "Contenu téléversé par les administrateurs système. Approuvé automatiquement.",
+      "tabs": {
+        "official": "Contenu Officiel",
+        "community": "Soumissions Communautaires",
+        "pending": "En attente d'approbation",
+        "approved": "Approuvées",
+        "rejected": "Rejetées"
+      },
+      "table": {
+        "title": "Titre",
+        "user": "Utilisateur",
+        "type": "Type",
+        "status": "Statut",
+        "date": "Date",
+        "actions": "Actions",
+        "noContent": "Aucun contenu trouvé",
+        "unknown": "Inconnu"
+      },
+      "messages": {
+        "fetchFailed": "Échec du chargement du contenu",
+        "approveSuccess": "Contenu {status} avec succès",
+        "approveFailed": "Échec de l'action {status} sur le contenu"
+      }
+    },
+    "orders": {
+      "title": "Gestion des Commandes",
+      "table": {
+        "orderId": "ID Commande",
+        "customer": "Client",
+        "date": "Date",
+        "total": "Total",
+        "status": "Statut",
+        "actions": "Actions",
+        "unknown": "Inconnu"
+      },
+      "messages": {
+        "fetchFailed": "Échec de la récupération des commandes"
+      }
+    },
+    "playlists": {
+      "title": "Gestion des Listes de Lecture",
+      "createPlaylist": "Créer une Liste de Lecture",
+      "editPlaylist": "Modifier la Liste de Lecture",
+      "searchPlaceholder": "Rechercher des listes de lecture...",
+      "messages": {
+        "fetchFailed": "Échec du chargement des listes de lecture",
+        "contentFailed": "Échec du chargement du contenu disponible",
+        "saveSuccess": "Liste de lecture enregistrée avec succès",
+        "saveFailed": "Échec de l'enregistrement de la liste de lecture",
+        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette liste de lecture ?",
+        "deleteSuccess": "Liste de lecture supprimée avec succès",
+        "deleteFailed": "Échec de la suppression de la liste de lecture",
+        "noPlaylists": "Aucune liste de lecture trouvée"
+      },
+      "form": {
+        "title": "Titre de la Liste de Lecture",
+        "titlePlaceholder": "ex: Aventures dans le Désert",
+        "description": "Description",
+        "descriptionPlaceholder": "À propos de cette liste de lecture",
+        "type": "Type",
+        "series": "Série",
+        "collection": "Collection",
+        "podcast": "Série de Podcasts",
+        "region": "Région",
+        "themes": "Thèmes (séparés par des virgules)",
+        "tags": "Tags (séparés par des virgules)",
+        "active": "Actif",
+        "content": "Contenu de la Liste",
+        "addContent": "Ajouter du Contenu",
+        "selectContent": "Sélectionner le contenu à ajouter",
+        "noItems": "Aucun élément dans cette liste de lecture pour le moment. Sélectionnez du contenu ci-dessus pour en ajouter."
+      },
+      "table": {
+        "name": "Nom de la Liste",
+        "type": "Type",
+        "items": "Articles",
+        "status": "Statut",
+        "actions": "Actions",
+        "active": "Actif",
+        "inactive": "Inactif"
+      }
+    },
+    "upload": {
+      "title": "Téléversement de Médias",
+      "photoTab": "Photo (Tounesna)",
+      "videoTab": "Vidéo/Contenu (Impact)",
+      "form": {
+        "photo": {
+          "title": "Titre de la Photo",
+          "description": "Description",
+          "governorate": "Gouvernorat",
+          "landscape": "Type de Paysage",
+          "price": "Prix (TND)",
+          "watermark": "Filigrane",
+          "attribution": "Texte d'Attribution",
+          "tags": "Tags (tableau JSON)",
+          "highRes": "Photo Haute Résolution",
+          "lowRes": "Basse Résolution / Aperçu",
+          "submit": "Téléverser la Photo",
+          "update": "Mettre à jour la Photo",
+          "assetType": "Type d'actif",
+          "photo": "Photo / Image",
+          "video": "Vidéo",
+          "landscapes": {
+            "sea": "Mer / Plage",
+            "desert": "Désert",
+            "mountain": "Montagne",
+            "village": "Village",
+            "oasis": "Oasis",
+            "forest": "Forêt",
+            "city": "Ville",
+            "historical": "Historique",
+            "other": "Autre"
+          },
+          "attributionPlaceholder": "Texte du filigrane",
+          "autoWatermark": "Générer automatiquement le filigrane",
+          "highResLabel": "Image Haute Résolution",
+          "videoFileLabel": "Fichier Vidéo",
+          "optionalToChange": "(Optionnel pour modifier)",
+          "fullQuality": "Qualité totale pour les acheteurs",
+          "videoThumbnail": "Vignette Vidéo (Image)",
+          "lowResPreview": "Aperçu Basse Résolution (Optionnel)",
+          "requiredForVideo": "Requis pour la vidéo",
+          "autoGenerated": "Généré automatiquement si vide",
+          "updating": "Mise à jour...",
+          "uploading": "Téléversement...",
+          "clickToReplace": "Cliquez pour remplacer {type}",
+          "clickToUpload": "Cliquez ou glissez le fichier {type}",
+          "clickToUploadPreview": "Cliquez ou glissez l'image d'aperçu"
+        },
+        "video": {
+          "title": "Titre *",
+          "description": "Description",
+          "type": "Type de Contenu",
+          "video": "Vidéo",
+          "reel": "Reel",
+          "podcast": "Podcast",
+          "documentary": "Documentaire",
+          "themes": "Thèmes",
+          "region": "Région (Gouvernorat)",
+          "selectRegion": "Sélectionner la région",
+          "tags": "Tags (tableau JSON)",
+          "language": "Langue",
+          "rights": "Droits d'Utilisation",
+          "free": "Gratuit",
+          "premium": "Premium",
+          "price": "Prix (TND)",
+          "visibility": "Visibilité",
+          "public": "Public",
+          "private": "Privé",
+          "instagram": "Nom d'utilisateur Instagram (pour Reels)",
+          "file": "Fichier Vidéo/Audio *",
+          "thumbnail": "Image de Vignette",
+          "submit": "Téléverser le Contenu",
+          "uploading": "Téléversement...",
+          "selectFile": "Veuillez sélectionner un fichier vidéo",
+          "success": "Vidéo téléversée avec succès !",
+          "failed": "Échec du téléversement de la vidéo"
+        }
+      }
+    },
+    "layout": {
+      "loading": "Chargement...",
+      "hydrating": "Hydratation de l'état...",
+      "redirecting": "Redirection..."
+    }
+  },
   "Auth": {
     "welcomeBack": "Bienvenue",
     "enterEmail": "Entrez votre email pour vous connecter à votre compte",
@@ -125,7 +640,21 @@
     "roleLabel": "Je suis un",
     "userRole": "Utilisateur",
     "photographerRole": "Photographe",
-    "roleDescription": "Sélectionnez votre type de compte"
+    "roleDescription": "Sélectionnez votre type de compte",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordStrength": {
+      "weak": "Mot de passe faible",
+      "fair": "Mot de passe moyen",
+      "good": "Bon mot de passe",
+      "strong": "Mot de passe fort"
+    },
+    "passwordRules": {
+      "minLength": "Au moins 8 caractères",
+      "uppercase": "Une lettre majuscule (A-Z)",
+      "lowercase": "Une lettre minuscule (a-z)",
+      "number": "Un chiffre (0-9)",
+      "special": "Un caractère spécial (!@#$...)"
+    }
   },
   "Footer": {
     "description": "Médiathèque numérique à deux modules : Impact (soutien aux projets via CnBees) et Tounesna (découverte du patrimoine tunisien).",
@@ -245,5 +774,35 @@
     "reelsBadge": "Histoire du Projet",
     "sideTitle2": "Femmes artisanes, jeunesse, environnement",
     "podcastBadge": "Histoire à Impact"
+  },
+  "License": {
+    "personal": "Personnel",
+    "commercial": "Commercial",
+    "personalDescription": "Pour projets personnels, blogs et utilisation non commerciale",
+    "commercialDescription": "Pour entreprises, publicité et projets commerciaux",
+    "selectLicense": "Choisir la Licence",
+    "pricePersonal": "Prix Licence Personnelle",
+    "priceCommercial": "Prix Licence Commerciale",
+    "addToCart": "Ajouter au Panier",
+    "free": "Gratuit",
+    "licensePricing": "Tarification des Licences",
+    "freeHint": "Mettre les deux à 0 pour du contenu gratuit. Laisser Commercial à 0 pour ne proposer que la licence Personnelle."
+  },
+  "PhotoDetail": {
+    "packMember": "Membre du Pack",
+    "includedInPack": "Inclus dans le Pack",
+    "quotaRemaining": "{remaining} / {limit} téléchargements restants",
+    "downloadWithPack": "Télécharger avec le Pack — Gratuit",
+    "redeeming": "Téléchargement en cours...",
+    "packRedeemInfo": "Cela utilisera 1 téléchargement de votre quota de pack",
+    "redeemSuccess": "Téléchargé avec succès ! Vérifiez vos téléchargements.",
+    "redeemFailed": "Échec de l'échange. Veuillez réessayer.",
+    "redeemSuccessTitle": "Téléchargement prêt !",
+    "redeemSuccessDesc": "Votre fichier est prêt pour le téléchargement.",
+    "downloadNow": "Télécharger maintenant",
+    "goToDownloads": "Mes Téléchargements",
+    "orBuySeparately": "Ou acheter séparément",
+    "alreadyOwned": "Déjà Possédé",
+    "alreadyOwnedDesc": "Vous avez déjà acheté ou échangé cet article."
   }
 }

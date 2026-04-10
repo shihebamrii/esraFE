@@ -11,12 +11,15 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, ShoppingBag, Sparkles } from "lucide-react";
+import { MoreHorizontal, ShoppingBag, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function AdminOrdersPage() {
+  const t = useTranslations("AdminDashboard.orders");
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +29,7 @@ export default function AdminOrdersPage() {
         const response = await api.get("/checkout/admin/orders");
         setOrders(response.data?.data?.orders || []);
       } catch (error) {
-        console.error("Failed to fetch orders:", error);
+        toast.error(t("messages.fetchFailed"));
       } finally {
         setLoading(false);
       }
@@ -35,99 +38,73 @@ export default function AdminOrdersPage() {
     fetchOrders();
   }, []);
 
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "paid":
-        return "default";
-      case "pending":
-        return "secondary";
-      case "failed":
-        return "destructive";
-      case "refunded":
-        return "outline";
-      default:
-        return "secondary";
-    }
-  };
-
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Orders Management</h2>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-xl border border-border/50 bg-card overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="pl-6">{t("table.orderId")}</TableHead>
+              <TableHead>{t("table.customer")}</TableHead>
+              <TableHead>{t("table.date")}</TableHead>
+              <TableHead>{t("table.total")}</TableHead>
+              <TableHead>{t("table.status")}</TableHead>
+              <TableHead className="text-right pr-6">{t("table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
-              Array(5)
-                .fill(0)
-                .map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell className="text-right"><Skeleton className="h-8 w-8 ml-auto" /></TableCell>
-                  </TableRow>
-                ))
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="pl-6"><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
+                  <TableCell className="text-right pr-6"><Skeleton className="h-8 w-8 ml-auto" /></TableCell>
+                </TableRow>
+              ))
             ) : orders.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6}>
-                  <div className="flex flex-col items-center justify-center py-16">
-                    <div className="relative mb-4">
-                      <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 flex items-center justify-center">
-                        <ShoppingBag className="h-8 w-8 text-blue-500/40" />
-                      </div>
-                      <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                        <Sparkles className="h-2.5 w-2.5 text-white" />
-                      </div>
-                    </div>
-                    <h3 className="font-semibold text-base mb-1">No orders yet</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Orders will appear here when customers make purchases.
-                    </p>
-                  </div>
+                <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                  No orders found
                 </TableCell>
               </TableRow>
             ) : (
               orders.map((order) => (
-                <TableRow key={order._id}>
-                  <TableCell className="font-medium">
-                    {order._id.substring(0, 8).toUpperCase()}
+                <TableRow key={order._id} className="hover:bg-muted/30 transition-colors">
+                  <TableCell className="pl-6 font-mono text-xs font-semibold">
+                    #{order._id.substring(0, 8).toUpperCase()}
                   </TableCell>
                   <TableCell>
-                    {order.userId?.name || "Unknown"}
+                    <div className="flex flex-col">
+                      <span className="font-medium">{order.userId?.name || t("table.unknown")}</span>
+                      <span className="text-xs text-muted-foreground">{order.userId?.email}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="font-bold text-sm">
+                    {order.total} {order.currency === 'TND' ? 'DT' : order.currency}
                   </TableCell>
                   <TableCell>
-                    {new Date(order.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </TableCell>
-                  <TableCell>
-                    {order.total} {order.currency}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusVariant(order.paymentStatus)}>
+                    <Badge variant="outline" className={`rounded-full px-3 capitalize ${
+                      order.paymentStatus === 'paid' ? 'text-green-600 border-green-200 bg-green-50' :
+                      'text-amber-600 border-amber-200 bg-amber-50'
+                    }`}>
                       {order.paymentStatus}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="icon">
-                      <Eye className="h-4 w-4" />
+                  <TableCell className="text-right pr-6">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
+                      <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>

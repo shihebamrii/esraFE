@@ -7,12 +7,13 @@ export interface CartItem {
   title: string;
   price: number;
   thumbnail?: string;
+  licenseType: 'personal' | 'commercial';
 }
 
 interface CartState {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (id: string, type: CartItem['type']) => void;
+  removeItem: (id: string, type: CartItem['type'], licenseType?: CartItem['licenseType']) => void;
   clearCart: () => void;
   total: () => number;
 }
@@ -23,14 +24,14 @@ export const useCartStore = create<CartState>()(
       items: [],
       addItem: (item) => {
         const items = get().items;
-        // Avoid duplicates if needed, or allow multiples
-        if (!items.find((i) => i.id === item.id && i.type === item.type)) {
+        // Avoid duplicates: same item + same license type
+        if (!items.find((i) => i.id === item.id && i.type === item.type && i.licenseType === item.licenseType)) {
           set({ items: [...items, item] });
         }
       },
-      removeItem: (id, type) =>
+      removeItem: (id, type, licenseType) =>
         set({
-          items: get().items.filter((i) => !(i.id === id && i.type === type)),
+          items: get().items.filter((i) => !(i.id === id && i.type === type && (licenseType ? i.licenseType === licenseType : true))),
         }),
       clearCart: () => set({ items: [] }),
       total: () => get().items.reduce((sum, item) => sum + item.price, 0),

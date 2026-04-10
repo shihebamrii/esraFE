@@ -44,8 +44,8 @@ export const PhotoService = {
     return response.data;
   },
 
-  analyzePhoto: async (formData: FormData) => {
-    const response = await api.post('/photos/analyze', formData);
+  redeemWithPack: async (itemId: string, itemType: 'photo' | 'content' = 'photo') => {
+    const response = await api.post('/checkout/redeem', { itemId, itemType });
     return response.data;
   }
 };

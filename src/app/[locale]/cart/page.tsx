@@ -3,7 +3,8 @@
 import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Trash2, ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Trash2, ArrowRight, User, Briefcase } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 
@@ -30,7 +31,7 @@ export default function CartPage() {
         
         <div className="lg:col-span-2 space-y-4">
           {items.map((item) => (
-            <Card key={`${item.type}-${item.id}`} className="flex items-center p-4 gap-4">
+            <Card key={`${item.type}-${item.id}-${item.licenseType}`} className="flex items-center p-4 gap-4">
                <div className="relative h-20 w-20 rounded-lg overflow-hidden shrink-0 bg-muted">
                {item.thumbnail ? (
                     <img src={item.thumbnail} alt={item.title} className="object-cover w-full h-full" loading="lazy" />
@@ -41,7 +42,25 @@ export default function CartPage() {
                
                <div className="flex-1 min-w-0">
                  <h3 className="font-semibold truncate">{item.title}</h3>
-                 <p className="text-sm text-muted-foreground capitalize">{item.type}</p>
+                 <div className="flex items-center gap-2 mt-1">
+                   <span className="text-sm text-muted-foreground capitalize">{item.type}</span>
+                   {item.licenseType && (
+                     <Badge 
+                       variant="outline" 
+                       className={`text-[10px] px-1.5 py-0.5 h-5 ${
+                         item.licenseType === 'commercial' 
+                           ? 'border-emerald-300 text-emerald-700 bg-emerald-50 dark:border-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/30' 
+                           : 'border-blue-300 text-blue-700 bg-blue-50 dark:border-blue-700 dark:text-blue-400 dark:bg-blue-950/30'
+                       }`}
+                     >
+                       {item.licenseType === 'commercial' ? (
+                         <><Briefcase className="h-3 w-3 me-0.5" /> Commercial</>
+                       ) : (
+                         <><User className="h-3 w-3 me-0.5" /> Personal</>
+                       )}
+                     </Badge>
+                   )}
+                 </div>
                  <div className="text-lg font-bold mt-1">{item.price} TND</div>
                </div>
 
@@ -49,7 +68,7 @@ export default function CartPage() {
                 variant="ghost" 
                 size="icon" 
                 className="text-muted-foreground hover:text-destructive"
-                onClick={() => removeItem(item.id, item.type)}
+                onClick={() => removeItem(item.id, item.type, item.licenseType)}
                >
                  <Trash2 className="h-5 w-5" />
                </Button>

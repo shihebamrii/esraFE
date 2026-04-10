@@ -14,6 +14,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface UserPack {
   _id: string;
@@ -41,6 +42,7 @@ interface UserPack {
 }
 
 export function QuotaTracker() {
+  const t = useTranslations("UserDashboard.quota");
   const [packs, setPacks] = useState<UserPack[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,13 +54,13 @@ export function QuotaTracker() {
           setPacks(response.data.packs);
         }
       } catch (error) {
-        console.error("Failed to fetch user packs:", error);
+        console.error(t("failedToFetch"), error);
       } finally {
         setLoading(false);
       }
     };
     fetchPacks();
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
@@ -81,10 +83,10 @@ export function QuotaTracker() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
            <Package className="h-5 w-5 text-violet-500" />
-           <h3 className="text-xl font-bold font-serif text-[#1f3a5f] dark:text-[#fff9e6]">Your Active Quotas</h3>
+           <h3 className="text-xl font-bold font-serif text-[#1f3a5f] dark:text-[#fff9e6]">{t("title")}</h3>
         </div>
         <Badge variant="secondary" className="bg-violet-500/10 text-violet-600 dark:text-violet-400 border-none">
-          {packs.length} Active {packs.length === 1 ? 'Pack' : 'Packs'}
+          {t("activePack", { count: packs.length })}
         </Badge>
       </div>
 
@@ -134,9 +136,9 @@ export function QuotaTracker() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-medium">
                       <span className="flex items-center gap-1.5 opacity-70">
-                        <ImageIcon className="h-3.5 w-3.5" /> Photos
+                        <ImageIcon className="h-3.5 w-3.5" /> {t("photos")}
                       </span>
-                      <span>{pack.quotas.photosRemaining} / {features.photosLimit} Left</span>
+                      <span>{t("left", { remaining: pack.quotas.photosRemaining, limit: features.photosLimit })}</span>
                     </div>
                     <div className="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
                       <div 
@@ -152,9 +154,9 @@ export function QuotaTracker() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-medium">
                       <span className="flex items-center gap-1.5 opacity-70">
-                        <Film className="h-3.5 w-3.5" /> Reels
+                        <Film className="h-3.5 w-3.5" /> {t("reels")}
                       </span>
-                      <span>{pack.quotas.reelsRemaining} / {features.reelsLimit} Left</span>
+                      <span>{t("left", { remaining: pack.quotas.reelsRemaining, limit: features.reelsLimit })}</span>
                     </div>
                     <div className="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
                       <div 
@@ -170,9 +172,9 @@ export function QuotaTracker() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-medium">
                       <span className="flex items-center gap-1.5 opacity-70">
-                        <Video className="h-3.5 w-3.5" /> {isImpact ? 'Storytelling' : 'Videos'}
+                        <Video className="h-3.5 w-3.5" /> {isImpact ? t("storytelling") : t("videos")}
                       </span>
-                      <span>{pack.quotas.videosRemaining} / {features.videosLimit} Left</span>
+                      <span>{t("left", { remaining: pack.quotas.videosRemaining, limit: features.videosLimit })}</span>
                     </div>
                     <div className="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
                       <div 
@@ -188,9 +190,9 @@ export function QuotaTracker() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs font-medium">
                       <span className="flex items-center gap-1.5 opacity-70">
-                        <FileText className="h-3.5 w-3.5" /> Mini-Docs
+                        <FileText className="h-3.5 w-3.5" /> {t("miniDocs")}
                       </span>
-                      <span>{pack.quotas.documentariesRemaining} / {features.documentariesLimit} Left</span>
+                      <span>{t("left", { remaining: pack.quotas.documentariesRemaining, limit: features.documentariesLimit })}</span>
                     </div>
                     <div className="h-1.5 w-full bg-muted/30 rounded-full overflow-hidden">
                       <div 

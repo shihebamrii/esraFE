@@ -14,6 +14,10 @@ export function Footer() {
   const isTounesna = pathname?.includes("/tounesna");
   const isImpact = pathname?.includes("/impact");
 
+  if (pathname?.includes("/login") || pathname?.includes("/register") || pathname?.includes("/admin") || pathname?.includes("/user")) {
+    return null;
+  }
+
   // Shared color values
   const bgColor = "#fff9e6";
   const mainColor = isTounesna ? "#6a0d2e" : (isImpact ? "#1f3a5f" : "#1f3a5f"); 

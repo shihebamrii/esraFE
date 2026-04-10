@@ -19,51 +19,53 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
 import { useState, useEffect } from "react";
-
-const sidebarNavItems = [
-  {
-    title: "Dashboard",
-    href: "/user/dashboard",
-    icon: LayoutDashboard,
-    gradient: "from-violet-500 to-purple-600",
-  },
-  {
-    title: "My Orders",
-    href: "/user/orders",
-    icon: ShoppingBag,
-    gradient: "from-blue-500 to-cyan-500",
-  },
-  {
-    title: "Downloads",
-    href: "/user/downloads",
-    icon: Download,
-    gradient: "from-emerald-500 to-teal-500",
-  },
-  {
-    title: "Favorites",
-    href: "/user/favorites",
-    icon: Heart,
-    gradient: "from-rose-500 to-pink-500",
-  },
-  {
-    title: "Profile",
-    href: "/profile",
-    icon: User,
-    gradient: "from-amber-500 to-orange-500",
-  },
-  {
-    title: "Upload Photo",
-    href: "/user/upload",
-    icon: Camera,
-    gradient: "from-fuchsia-500 to-pink-600",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function UserSidebar() {
+  const t = useTranslations("UserDashboard.sidebar");
   const pathname = usePathname();
   const { logout, user } = useAuthStore();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const sidebarNavItems = [
+    {
+      title: t("dashboard"),
+      href: "/user/dashboard",
+      icon: LayoutDashboard,
+      gradient: "from-violet-500 to-purple-600",
+    },
+    {
+      title: t("orders"),
+      href: "/user/orders",
+      icon: ShoppingBag,
+      gradient: "from-blue-500 to-cyan-500",
+    },
+    {
+      title: t("downloads"),
+      href: "/user/downloads",
+      icon: Download,
+      gradient: "from-emerald-500 to-teal-500",
+    },
+    {
+      title: t("favorites"),
+      href: "/user/favorites",
+      icon: Heart,
+      gradient: "from-rose-500 to-pink-500",
+    },
+    {
+      title: t("profile"),
+      href: "/profile",
+      icon: User,
+      gradient: "from-amber-500 to-orange-500",
+    },
+    {
+      title: t("upload"),
+      href: "/user/upload",
+      icon: Camera,
+      gradient: "from-fuchsia-500 to-pink-600",
+    },
+  ];
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -104,7 +106,7 @@ export function UserSidebar() {
             <p className="text-sm font-semibold truncate">{user?.name}</p>
             <div className="flex items-center gap-1">
               <Sparkles className="h-3 w-3 text-violet-500" />
-              <p className="text-[11px] text-muted-foreground font-medium">Member</p>
+              <p className="text-[11px] text-muted-foreground font-medium">{t("member")}</p>
             </div>
           </div>
         </div>
@@ -113,7 +115,7 @@ export function UserSidebar() {
       {/* Navigation */}
       <div className="flex-1 px-3">
         <p className="px-4 mb-3 text-[11px] font-semibold tracking-widest uppercase text-muted-foreground/70">
-          Navigation
+          {t("navigation")}
         </p>
         <div className="space-y-1">
           {sidebarNavItems.map((item, index) => {
@@ -166,7 +168,7 @@ export function UserSidebar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted/80">
             <LogOut className="h-4 w-4" />
           </span>
-          Logout
+          {t("logout")}
         </Button>
       </div>
     </div>

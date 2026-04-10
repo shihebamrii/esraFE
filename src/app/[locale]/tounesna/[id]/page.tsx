@@ -4,13 +4,40 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, ShoppingCart, Info, MapPin, Loader2, ArrowLeft, Heart, Sparkles } from "lucide-react";
+import { Download, ShoppingCart, Info, MapPin, Loader2, ArrowLeft, Heart, Sparkles, User, Briefcase, Check, Package, Zap, ExternalLink } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { PhotoService } from "@/features/photos/api";
+import { UserService } from "@/features/user/api";
 import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
+
+interface UserPackData {
+  _id: string;
+  packId: {
+    _id: string;
+    title: string;
+    membershipFeatures: {
+      photosLimit: number;
+      reelsLimit: number;
+      videosLimit: number;
+      documentariesLimit: number;
+      module: "tounesna" | "impact" | "both";
+    };
+  };
+  module: "tounesna" | "impact";
+  quotas: {
+    photosRemaining: number;
+    reelsRemaining: number;
+    videosRemaining: number;
+    documentariesRemaining: number;
+  };
+  quality: string;
+  isActive: boolean;
+}
 
 export default function PhotoDetailsPage() {
   const params = useParams();
@@ -18,7 +45,15 @@ export default function PhotoDetailsPage() {
   const [photo, setPhoto] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedLicense, setSelectedLicense] = useState<'personal' | 'commercial'>('personal');
+  const [activePack, setActivePack] = useState<UserPackData | null>(null);
+  const [packLoading, setPackLoading] = useState(false);
+  const [redeemLoading, setRedeemLoading] = useState(false);
+  const [redeemResult, setRedeemResult] = useState<{ downloadUrl: string } | null>(null);
+  const [isOwned, setIsOwned] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+  const { isAuthenticated } = useAuthStore();
+  const t = useTranslations("PhotoDetail");
 
   useEffect(() => {
     if (!id) return;
@@ -37,16 +72,100 @@ export default function PhotoDetailsPage() {
     fetchPhoto();
   }, [id]);
 
+  // Fetch user's active packs if authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setActivePack(null);
+      return;
+    }
+    const fetchPacks = async () => {
+      setPackLoading(true);
+      try {
+        const response = await UserService.getUserPacks();
+        const packs: UserPackData[] = response.data?.packs || [];
+        // Find an active Tounesna pack with remaining photo quota
+        const tounesnaPack = packs.find(
+          (p) =>
+            p.isActive &&
+            (p.module === "tounesna") &&
+            p.quotas.photosRemaining > 0
+        );
+        setActivePack(tounesnaPack || null);
+      } catch (err) {
+        console.error("Failed to fetch user packs:", err);
+        setActivePack(null);
+      } finally {
+        setPackLoading(false);
+      }
+    };
+    fetchPacks();
+  }, [isAuthenticated]);
+
+  // Check if item is already owned
+  useEffect(() => {
+    if (!isAuthenticated || !photo) {
+      setIsOwned(false);
+      return;
+    }
+    const checkOwnership = async () => {
+      try {
+        const downloads = await UserService.getMyDownloads();
+        const owned = downloads.some((d: any) => d.itemId === photo._id);
+        setIsOwned(owned);
+      } catch (err) {
+        console.error("Failed to check user downloads:", err);
+      }
+    };
+    checkOwnership();
+  }, [isAuthenticated, photo]);
+
+  // Derive prices from photo data
+  const personalPrice = photo?.pricePersonalTND ?? photo?.priceTND ?? 0;
+  const commercialPrice = photo?.priceCommercialTND ?? 0;
+  const hasCommercialLicense = commercialPrice > 0;
+  const currentPrice = selectedLicense === 'commercial' ? commercialPrice : personalPrice;
+  const isFree = personalPrice === 0 && commercialPrice === 0;
+
   const handleAddToCart = () => {
     if (!photo) return;
     addItem({
       id: photo._id,
       type: "photo",
       title: photo.title,
-      price: photo.priceTND,
+      price: currentPrice,
       thumbnail: photo.previewUrl,
+      licenseType: selectedLicense,
     });
-    toast.success("Added to cart");
+    toast.success(`Added to cart (${selectedLicense === 'personal' ? 'Personal' : 'Commercial'} License)`);
+  };
+
+  const handleRedeemWithPack = async () => {
+    if (!photo || !activePack) return;
+    setRedeemLoading(true);
+    try {
+      const response = await PhotoService.redeemWithPack(photo._id, 'photo');
+      setRedeemResult({
+        downloadUrl: response.data?.downloadUrl || '',
+      });
+      // Update the remaining quota locally
+      setActivePack((prev) =>
+        prev
+          ? {
+              ...prev,
+              quotas: {
+                ...prev.quotas,
+                photosRemaining: prev.quotas.photosRemaining - 1,
+              },
+            }
+          : null
+      );
+      toast.success(t("redeemSuccess", { defaultMessage: "Downloaded successfully! Check your downloads." }));
+    } catch (err: any) {
+      const message = err?.response?.data?.message || t("redeemFailed", { defaultMessage: "Failed to redeem. Please try again." });
+      toast.error(message);
+    } finally {
+      setRedeemLoading(false);
+    }
   };
 
   const handleDownloadPreview = () => {
@@ -83,6 +202,9 @@ export default function PhotoDetailsPage() {
       </div>
     );
   }
+
+  const photosLimit = activePack?.packId?.membershipFeatures?.photosLimit || 0;
+  const photosRemaining = activePack?.quotas?.photosRemaining || 0;
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
@@ -127,34 +249,239 @@ export default function PhotoDetailsPage() {
             </div>
           </div>
 
-          <div className="p-6 bg-card border rounded-xl shadow-sm space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-muted-foreground">Standard License</span>
-              <span className="text-2xl font-bold">
-                {photo.priceTND === 0 ? "Free" : `${photo.priceTND} TND`}
-              </span>
-            </div>
+          {/* ═══ PACK REDEMPTION SECTION ═══ */}
+          {isAuthenticated && !isFree && activePack && !redeemResult && !isOwned && (
+            <div className="relative p-7 rounded-2xl border border-[#ffcc1a]/20 bg-gradient-to-br from-slate-900 via-[#1f3a5f] to-slate-900 text-white shadow-2xl shadow-[#1f3a5f]/20 space-y-5 overflow-hidden">
+              {/* Decorative gradient blob */}
+              <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#ffcc1a]/10 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="flex items-center justify-between relative">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc1a] to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <Package className="h-5 w-5 text-slate-900" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#ffcc1a] text-lg tracking-tight">
+                      {t("packMember", { defaultMessage: "Pack Member" })}
+                    </h3>
+                    <p className="text-sm text-slate-300 font-medium">
+                      {activePack.packId.title}
+                    </p>
+                  </div>
+                </div>
+                <Badge className="bg-[#ffcc1a]/10 text-[#ffcc1a] border-[#ffcc1a]/20 font-bold text-xs px-3 py-1">
+                  {t("includedInPack", { defaultMessage: "Included in Pack" })}
+                </Badge>
+              </div>
 
-            {photo.priceTND > 0 && (
-              <Button className="w-full h-12 text-lg" size="lg" onClick={handleAddToCart}>
-                <ShoppingCart className="me-2 h-5 w-5" />
-                Add to Cart
-              </Button>
-            )}
+              {/* Quota progress */}
+              <div className="space-y-2.5 relative bg-black/20 p-4 rounded-xl border border-white/5">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-200 font-medium tracking-wide">
+                    {t("quotaRemaining", { remaining: photosRemaining, limit: photosLimit, defaultMessage: `${photosRemaining} / ${photosLimit} downloads left` })}
+                  </span>
+                </div>
+                <div className="h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#ffcc1a] via-yellow-400 to-amber-500 rounded-full transition-all duration-1000 ease-out relative"
+                    style={{ width: `${photosLimit > 0 ? (photosRemaining / photosLimit) * 100 : 0}%` }}
+                  >
+                    <div className="absolute inset-0 bg-white/20 w-full animate-pulse" />
+                  </div>
+                </div>
+              </div>
 
-            <div className="flex gap-2">
-              <Button variant="outline" className="flex-1" onClick={handleDownloadPreview}>
-                <Download className="me-2 h-4 w-4" />
-                Preview {photo.priceTND === 0 ? "(Free)" : "(Low-Res)"}
+              {/* Redeem Button */}
+              <Button
+                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-[#ffcc1a] to-amber-500 hover:from-[#f0c015] hover:to-amber-600 text-slate-900 shadow-xl shadow-amber-500/20 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/30 hover:-translate-y-0.5 border-none"
+                size="lg"
+                onClick={handleRedeemWithPack}
+                disabled={redeemLoading}
+              >
+                {redeemLoading ? (
+                  <Loader2 className="me-2 h-6 w-6 animate-spin text-slate-800" />
+                ) : (
+                  <Zap className="me-2 h-6 w-6 text-slate-800" />
+                )}
+                {redeemLoading
+                  ? t("redeeming", { defaultMessage: "Downloading..." })
+                  : t("downloadWithPack", { defaultMessage: "Download with Pack — Free" })
+                }
               </Button>
-              <FavoriteButton
-                itemId={photo._id}
-                itemType="Photo"
-                size="md"
-                className="border border-border"
-              />
+
+              <p className="text-xs text-center text-slate-400 font-medium">
+                {t("packRedeemInfo", { defaultMessage: "This will use 1 download from your pack quota" })}
+              </p>
             </div>
-          </div>
+          )}
+
+          {/* ═══ ALREADY OWNED SECTION ═══ */}
+          {isOwned && !redeemResult && (
+            <div className="p-6 rounded-xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
+                  <Check className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-emerald-800 dark:text-emerald-300">
+                    {t("alreadyOwned", { defaultMessage: "Already Owned" })}
+                  </h3>
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                    {t("alreadyOwnedDesc", { defaultMessage: "You have already purchased or redeemed this item." })}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Link href="/user/downloads" className="flex-1">
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Download className="me-2 h-4 w-4" />
+                    {t("goToDownloads", { defaultMessage: "My Downloads" })}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* ═══ REDEEM SUCCESS ═══ */}
+          {redeemResult && (
+            <div className="p-6 rounded-xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
+                  <Check className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-emerald-800 dark:text-emerald-300">
+                    {t("redeemSuccessTitle", { defaultMessage: "Download Ready!" })}
+                  </h3>
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                    {t("redeemSuccessDesc", { defaultMessage: "Your file is ready for download." })}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {redeemResult.downloadUrl && (
+                  <a href={redeemResult.downloadUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
+                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <Download className="me-2 h-4 w-4" />
+                      {t("downloadNow", { defaultMessage: "Download Now" })}
+                    </Button>
+                  </a>
+                )}
+                <Link href="/user/downloads" className="flex-1">
+                  <Button variant="outline" className="w-full border-emerald-500 text-emerald-700 hover:bg-emerald-50">
+                    <ExternalLink className="me-2 h-4 w-4" />
+                    {t("goToDownloads", { defaultMessage: "My Downloads" })}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* ═══ LICENSE CHOOSER (CART FLOW) ═══ */}
+          {!redeemResult && !activePack && !isOwned && (
+            <div className="p-6 bg-card border rounded-xl shadow-sm space-y-5">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-lg">Choose License</h3>
+                {isFree && <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Free</Badge>}
+              </div>
+
+              {!isFree && (
+                <div className={`grid gap-3 ${hasCommercialLicense ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {/* Personal License Card */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedLicense('personal')}
+                    className={`relative text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+                      selectedLicense === 'personal'
+                        ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 shadow-md shadow-blue-500/10'
+                        : 'border-border hover:border-blue-300 hover:bg-muted/30'
+                    }`}
+                  >
+                    {selectedLicense === 'personal' && (
+                      <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                        <Check className="h-3 w-3 text-white" />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+                        <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <span className="font-semibold text-sm">Personal</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                      For personal projects, blogs, and non-commercial use
+                    </p>
+                    <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                      {personalPrice === 0 ? "Free" : `${personalPrice} TND`}
+                    </div>
+                  </button>
+
+                  {/* Commercial License Card */}
+                  {hasCommercialLicense && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedLicense('commercial')}
+                      className={`relative text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+                        selectedLicense === 'commercial'
+                          ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-md shadow-emerald-500/10'
+                          : 'border-border hover:border-emerald-300 hover:bg-muted/30'
+                      }`}
+                    >
+                      {selectedLicense === 'commercial' && (
+                        <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                          <Check className="h-3 w-3 text-white" />
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                          <Briefcase className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <span className="font-semibold text-sm">Commercial</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                        For business, advertising, and commercial projects
+                      </p>
+                      <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+                        {commercialPrice} TND
+                      </div>
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Selected price summary */}
+              {!isFree && (
+                <div className="flex justify-between items-center pt-2 border-t">
+                  <span className="text-muted-foreground text-sm">
+                    {selectedLicense === 'personal' ? 'Personal' : 'Commercial'} License
+                  </span>
+                  <span className="text-2xl font-bold">
+                    {currentPrice === 0 ? "Free" : `${currentPrice} TND`}
+                  </span>
+                </div>
+              )}
+
+              {currentPrice > 0 && (
+                <Button className="w-full h-12 text-lg" size="lg" onClick={handleAddToCart}>
+                  <ShoppingCart className="me-2 h-5 w-5" />
+                  Add to Cart — {currentPrice} TND
+                </Button>
+              )}
+
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1" onClick={handleDownloadPreview}>
+                  <Download className="me-2 h-4 w-4" />
+                  Preview {isFree ? "(Free)" : "(Low-Res)"}
+                </Button>
+                <FavoriteButton
+                  itemId={photo._id}
+                  itemType="Photo"
+                  size="md"
+                  className="border border-border"
+                />
+              </div>
+            </div>
+          )}
 
           {photo.description && (
             <div>

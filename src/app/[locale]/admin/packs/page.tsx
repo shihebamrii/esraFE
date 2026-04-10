@@ -14,6 +14,7 @@ import { Pencil, Trash2, Plus, Loader2, Check, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AdminService } from "@/features/admin/api";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +56,7 @@ interface Pack {
 }
 
 export default function AdminPacksPage() {
+  const t = useTranslations("AdminDashboard.packs");
   const [packs, setPacks] = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -86,7 +88,7 @@ export default function AdminPacksPage() {
         setPacks(response.data.packs);
       }
     } catch (error) {
-      toast.error("Failed to fetch packs");
+      toast.error(t("messages.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -113,13 +115,13 @@ export default function AdminPacksPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this pack?")) return;
+    if (!confirm(t("messages.deleteConfirm"))) return;
     try {
       await AdminService.deletePack(id);
-      toast.success("Pack deleted successfully");
+      toast.success(t("messages.deleteSuccess"));
       fetchPacks();
     } catch (error) {
-      toast.error("Failed to delete pack");
+      toast.error(t("messages.deleteFailed"));
     }
   };
 
@@ -129,16 +131,16 @@ export default function AdminPacksPage() {
     try {
       if (editingPack) {
         await AdminService.updatePack(editingPack._id, formData);
-        toast.success("Pack updated successfully");
+        toast.success(t("messages.saveSuccess"));
       } else {
         await AdminService.createPack(formData);
-        toast.success("Pack created successfully");
+        toast.success(t("messages.saveSuccess"));
       }
       setIsDialogOpen(false);
       fetchPacks();
       resetForm();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to save pack");
+      toast.error(error.response?.data?.message || t("messages.saveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -164,9 +166,11 @@ export default function AdminPacksPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Packs Management</h2>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        </div>
         <Dialog
           open={isDialogOpen}
           onOpenChange={(open) => {
@@ -175,35 +179,36 @@ export default function AdminPacksPage() {
           }}
         >
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="me-2 h-4 w-4" /> Create Pack
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Plus className="mr-2 h-4 w-4" />
+              {t("createPack")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl overflow-y-auto max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>
-                {editingPack ? "Edit Pack" : "Create New Pack"}
+                {editingPack ? t("editPack") : t("createPack")}
               </DialogTitle>
               <DialogDescription>
-                Fill in the details for the pack. Membership packs define quotas for users.
+                {t("createDescription")}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Pack Title</Label>
+                  <Label htmlFor="title">{t("form.title")}</Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) =>
                       setFormData({ ...formData, title: e.target.value })
                     }
-                    placeholder="e.g. Tounesna Gold"
+                    placeholder={t("form.titlePlaceholder")}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price (TND)</Label>
+                  <Label htmlFor="price">{t("form.price")}</Label>
                   <Input
                     id="price"
                     type="number"
@@ -220,20 +225,20 @@ export default function AdminPacksPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t("form.description")}</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  placeholder="What's included in this pack?"
+                  placeholder={t("form.descriptionPlaceholder")}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="type">Pack Type</Label>
+                  <Label htmlFor="type">{t("form.type")}</Label>
                   <Select
                     value={formData.type}
                     onValueChange={(value: "collection" | "membership") =>
@@ -241,11 +246,11 @@ export default function AdminPacksPage() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
+                      <SelectValue placeholder={t("form.selectType")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="membership">Membership (Quotas)</SelectItem>
-                      <SelectItem value="collection">Collection (Static)</SelectItem>
+                      <SelectItem value="membership">{t("form.membership")}</SelectItem>
+                      <SelectItem value="collection">{t("form.collection")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -257,16 +262,16 @@ export default function AdminPacksPage() {
                       setFormData({ ...formData, isActive: checked })
                     }
                   />
-                  <Label htmlFor="active">Active and visible</Label>
+                  <Label htmlFor="active">{t("form.active")}</Label>
                 </div>
               </div>
 
               {formData.type === "membership" && (
                 <div className="space-y-4 border p-4 rounded-lg bg-muted/30">
-                  <h3 className="font-semibold text-sm">Membership Quotas</h3>
+                  <h3 className="font-semibold text-sm">{t("form.quotas")}</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="module">Module</Label>
+                      <Label htmlFor="module">{t("form.module")}</Label>
                       <Select
                         value={formData.membershipFeatures?.module}
                         onValueChange={(value: "tounesna" | "impact" | "both") =>
@@ -280,17 +285,17 @@ export default function AdminPacksPage() {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select module" />
+                          <SelectValue placeholder={t("form.selectModule")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="tounesna">Tounesna (Photos)</SelectItem>
-                          <SelectItem value="impact">Impact (Videos)</SelectItem>
-                          <SelectItem value="both">Both</SelectItem>
+                          <SelectItem value="tounesna">{t("form.tounesna")}</SelectItem>
+                          <SelectItem value="impact">{t("form.impact")}</SelectItem>
+                          <SelectItem value="both">{t("form.both")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="quality">Max Quality</Label>
+                      <Label htmlFor="quality">{t("form.quality")}</Label>
                       <Select
                         value={formData.membershipFeatures?.quality}
                         onValueChange={(value: "standard" | "hd" | "4k") =>
@@ -304,12 +309,12 @@ export default function AdminPacksPage() {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select quality" />
+                          <SelectValue placeholder={t("form.selectQuality")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="standard">Standard</SelectItem>
-                          <SelectItem value="hd">HD (1080p)</SelectItem>
-                          <SelectItem value="4k">4K / Ultra HD</SelectItem>
+                          <SelectItem value="standard">{t("form.standard")}</SelectItem>
+                          <SelectItem value="hd">{t("form.hd")}</SelectItem>
+                          <SelectItem value="4k">{t("form.4k")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -317,7 +322,7 @@ export default function AdminPacksPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="photos">Photos Limit</Label>
+                      <Label htmlFor="photos">{t("form.photosLimit")}</Label>
                       <Input
                         id="photos"
                         type="number"
@@ -334,7 +339,7 @@ export default function AdminPacksPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="reels">Reels Limit</Label>
+                      <Label htmlFor="reels">{t("form.reelsLimit")}</Label>
                       <Input
                         id="reels"
                         type="number"
@@ -351,7 +356,7 @@ export default function AdminPacksPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="videos">Storytelling Videos</Label>
+                      <Label htmlFor="videos">{t("form.videosLimit")}</Label>
                       <Input
                         id="videos"
                         type="number"
@@ -368,7 +373,7 @@ export default function AdminPacksPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="docs">Mini-Docs Limit</Label>
+                      <Label htmlFor="docs">{t("form.docsLimit")}</Label>
                       <Input
                         id="docs"
                         type="number"
@@ -394,11 +399,11 @@ export default function AdminPacksPage() {
                   variant="outline"
                   onClick={() => setIsDialogOpen(false)}
                 >
-                  Cancel
+                  {t("form.cancel")}
                 </Button>
                 <Button type="submit" disabled={submitting}>
                   {submitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
-                  {editingPack ? "Update Pack" : "Create Pack"}
+                  {editingPack ? t("editPack") : t("createPack")}
                 </Button>
               </DialogFooter>
             </form>
@@ -410,12 +415,12 @@ export default function AdminPacksPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Pack Name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Quotas / Items</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t("table.name")}</TableHead>
+            <TableHead>{t("table.type")}</TableHead>
+            <TableHead>{t("table.price")}</TableHead>
+            <TableHead>{t("table.quotas")}</TableHead>
+            <TableHead>{t("table.status")}</TableHead>
+            <TableHead className="text-right">{t("table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -436,28 +441,38 @@ export default function AdminPacksPage() {
                       </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="capitalize">{pack.type}</TableCell>
+                  <TableCell className="capitalize">
+                    {pack.type === "membership" ? t("form.membership") : t("form.collection")}
+                  </TableCell>
                   <TableCell>{pack.priceTND} TND</TableCell>
                   <TableCell>
                     {pack.type === "membership" ? (
                       <div className="text-[10px] space-y-0.5 opacity-70">
-                        {pack.membershipFeatures?.photosLimit ? <div>• {pack.membershipFeatures.photosLimit} Photos</div> : null}
-                        {pack.membershipFeatures?.reelsLimit ? <div>• {pack.membershipFeatures.reelsLimit} Reels</div> : null}
-                        {pack.membershipFeatures?.videosLimit ? <div>• {pack.membershipFeatures.videosLimit} Videos</div> : null}
-                        <div>• {pack.membershipFeatures?.quality.toUpperCase()} Quality</div>
+                        {pack.membershipFeatures?.photosLimit ? (
+                          <div>• {pack.membershipFeatures.photosLimit} {t("table.photos")}</div>
+                        ) : null}
+                        {pack.membershipFeatures?.reelsLimit ? (
+                          <div>• {pack.membershipFeatures.reelsLimit} {t("table.reels")}</div>
+                        ) : null}
+                        {pack.membershipFeatures?.videosLimit ? (
+                          <div>• {pack.membershipFeatures.videosLimit} {t("table.videos")}</div>
+                        ) : null}
+                        <div>• {pack.membershipFeatures?.quality.toUpperCase()} {t("table.quality")}</div>
                       </div>
                     ) : (
-                      <span className="text-sm opacity-70">{pack.photoIds?.length || 0} Photos</span>
+                      <span className="text-sm opacity-70">
+                        {pack.photoIds?.length || 0} {t("table.photos")}
+                      </span>
                     )}
                   </TableCell>
                   <TableCell>
                     {pack.isActive ? (
                       <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
-                        Active
+                        {t("table.active")}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="text-muted-foreground">
-                        Inactive
+                        {t("table.inactive")}
                       </Badge>
                     )}
                   </TableCell>

@@ -4,12 +4,14 @@ import { UserSidebar } from "@/features/user/components/Sidebar";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "@/i18n/navigation";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function UserLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations("UserDashboard.layout");
   const { user, isAuthenticated, _hasHydrated } = useAuthStore();
   const router = useRouter();
 
@@ -54,7 +56,7 @@ export default function UserLayout({
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
             <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           </div>
-          <p className="text-sm text-muted-foreground font-medium">Redirecting...</p>
+          <p className="text-sm text-muted-foreground font-medium">{t("redirecting")}</p>
         </div>
       </div>
     );

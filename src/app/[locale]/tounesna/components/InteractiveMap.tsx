@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { mapPaths } from "./SvgPaths";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface InteractiveMapProps {
   onGovernorateClick?: (gov: string) => void;
@@ -9,6 +10,15 @@ interface InteractiveMapProps {
   primaryColor?: string;
   secondaryColor?: string;
 }
+
+const ID_TO_NAME: Record<string, string> = {
+  "TN-AR": "Ariana", "TN-BE": "Beja", "TN-BA": "Ben Arous", "TN-BI": "Bizerte",
+  "TN-GB": "Gabes", "TN-GF": "Gafsa", "TN-JN": "Jendouba", "TN-KR": "Kairouan",
+  "TN-KS": "Kasserine", "TN-KE": "Kebili", "TN-KF": "Kef", "TN-MH": "Mahdia",
+  "TN-MN": "Manouba", "TN-MD": "Medenine", "TN-MS": "Monastir", "TN-NA": "Nabeul",
+  "TN-SF": "Sfax", "TN-SB": "Sidi Bouzid", "TN-SI": "Siliana", "TN-SO": "Sousse",
+  "TN-TT": "Tataouine", "TN-TZ": "Tozeur", "TN-TN": "Tunis", "TN-ZG": "Zaghouan"
+};
 
 export function InteractiveMap({ 
   onGovernorateClick, 
@@ -19,6 +29,7 @@ export function InteractiveMap({
 }: InteractiveMapProps) {
   const mapRef = useRef<SVGSVGElement>(null);
   const [hoveredGov, setHoveredGov] = useState<string | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -39,8 +50,15 @@ export function InteractiveMap({
     );
   }, []);
 
-  const handleMouseEnter = (id: string) => {
+  const handleMouseEnter = (id: string, e: React.MouseEvent) => {
     setHoveredGov(id);
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (hoveredGov) {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    }
   };
 
   const handleMouseLeave = () => {
@@ -48,7 +66,10 @@ export function InteractiveMap({
   };
 
   return (
-    <div className="relative w-full h-full min-h-[600px] flex items-center justify-center bg-transparent overflow-hidden group">
+    <div 
+      className="relative w-full h-full min-h-[600px] flex items-center justify-center bg-transparent overflow-hidden group"
+      onMouseMove={handleMouseMove}
+    >
       {/* Background Texture - Deep Maroon with subtle golden grid */}
       <div className="absolute inset-0 opacity-10 pointer-events-none" 
            style={{ backgroundImage: `radial-gradient(circle at center, ${primaryColor} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} 
@@ -128,7 +149,7 @@ export function InteractiveMap({
                   strokeLinejoin="round"
                   className="transition-all duration-500 cursor-pointer outline-none hover:drop-shadow-[0_0_20px_rgba(106,13,46,0.25)]"
                   style={{ fill: fillStyle }}
-                  onMouseEnter={() => handleMouseEnter(path.id)}
+                  onMouseEnter={(e) => handleMouseEnter(path.id, e)}
                   onMouseLeave={handleMouseLeave}
                   onClick={() => onGovernorateClick?.(path.id)}
                 />
@@ -137,6 +158,34 @@ export function InteractiveMap({
           </g>
         </svg>
       </div>
+
+      {/* Floating Tooltip */}
+      <AnimatePresence>
+        {hoveredGov && ID_TO_NAME[hoveredGov] && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            className="fixed pointer-events-none z-[100] px-5 py-3 rounded-2xl backdrop-blur-xl border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.15)] flex items-center gap-3"
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.75)",
+              left: mousePos.x + 15,
+              top: mousePos.y + 15,
+            }}
+          >
+            <span className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: secondaryColor }} />
+            <span className="font-serif font-bold text-xl drop-shadow-sm tracking-wide" style={{ color: primaryColor }}>
+              {ID_TO_NAME[hoveredGov]}
+            </span>
+            {photosByGov[hoveredGov] && (
+              <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md ml-2" style={{ backgroundColor: `${primaryColor}1a`, color: primaryColor }}>
+                Collection
+              </span>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

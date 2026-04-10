@@ -129,7 +129,7 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
   if (packs.length === 0) return null;
   
   return (
-    <section className={`relative py-24 px-6 overflow-hidden mt-12 mb-20 ${isImpact ? 'bg-[#fff9e6]' : ''}`}>
+    <section className={`relative py-24 px-6 overflow-hidden mt-12 ${isImpact ? 'bg-[#fff9e6]' : ''}`}>
       {/* Background Decorative Elements */}
       <div 
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent ${isImpact ? 'via-[#1f3a5f]/20' : 'via-[#6a0d2e]/20'} to-transparent`} 
@@ -137,19 +137,6 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
       
       <div className="max-w-7xl mx-auto relative z-10">
         
-        {/* Image Divider */}
-        <div className="relative z-20 w-full h-[80px] mb-12 bg-transparent flex items-center justify-center overflow-hidden opacity-80">
-          <div 
-             className="absolute inset-0 w-full h-full"
-             style={{
-               backgroundImage: `url("/divider.png")`,
-               backgroundSize: "contain",
-               backgroundRepeat: "repeat-x",
-               backgroundPosition: "center"
-             }}
-          />
-        </div>
-
         <div className="text-center mb-16">
           <h2 className={`text-4xl lg:text-5xl font-serif ${isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]'} mb-6 drop-shadow-sm`}>
             Unlock the Full Vision
@@ -163,25 +150,17 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
           {packs.map((pack) => (
             <div 
               key={pack._id} 
-              className={`group relative flex flex-col p-8 rounded-[2.5rem] transition-all duration-500 hover:translate-y-[-8px] ${
-                pack.popular 
-                ? `${isImpact ? 'bg-[#1f3a5f] shadow-[0_25px_60px_rgba(31,58,95,0.25)] border-[#1f3a5f]' : 'bg-[#6a0d2e] shadow-[0_25px_60px_rgba(106,13,46,0.25)] border-[#6a0d2e]'} text-[#fff9e6] scale-105 z-10` 
-                : `bg-white/60 backdrop-blur-xl border border-white/80 ${isImpact ? 'text-[#1f3a5f] shadow-[0_15px_40px_rgba(31,58,95,0.04)] hover:shadow-[0_20px_50px_rgba(31,58,95,0.08)]' : 'text-[#6a0d2e] shadow-[0_15px_40px_rgba(106,13,46,0.04)] hover:shadow-[0_20px_50px_rgba(106,13,46,0.08)]'}`
+              className={`group relative flex flex-col p-8 rounded-[2.5rem] transition-all duration-500 hover:translate-y-[-8px] bg-[#faf9f6] border shadow-[0_15px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] ${
+                isImpact ? 'border-[#1f3a5f]/10 text-[#1f3a5f]' : 'border-[#6a0d2e]/10 text-[#6a0d2e]'
               }`}
             >
               {/* Card Geometric Pattern Overlay */}
               <div 
-                className={`absolute inset-0 opacity-[0.03] pointer-events-none rounded-[2.5rem] ${pack.popular ? 'mix-blend-overlay' : ''}`}
+                className={`absolute inset-0 opacity-[0.03] pointer-events-none rounded-[2.5rem]`}
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='${pack.popular ? '%23fff9e6' : (isImpact ? '%231f3a5f' : '%236a0d2e')}' stroke-width='0.5'%3E%3Cpath d='M40 0L50 10L40 20L30 10Z'/%3E%3Cpath d='M40 60L50 70L40 80L30 70Z'/%3E%3Cpath d='M0 40L10 30L20 40L10 50Z'/%3E%3Cpath d='M60 40L70 30L80 40L70 50Z'/%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='${isImpact ? '%231f3a5f' : '%236a0d2e'}' stroke-width='0.5'%3E%3Cpath d='M40 0L50 10L40 20L30 10Z'/%3E%3Cpath d='M40 60L50 70L40 80L30 70Z'/%3E%3Cpath d='M0 40L10 30L20 40L10 50Z'/%3E%3Cpath d='M60 40L70 30L80 40L70 50Z'/%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
-
-              {pack.popular && (
-                <Badge className={`absolute -top-4 left-1/2 -translate-x-1/2 bg-[#ffcc1a] ${isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]'} hover:bg-[#ffcc1a] border-none px-6 py-1.5 text-[10px] tracking-widest uppercase font-bold shadow-lg`}>
-                  Most Preferred
-                </Badge>
-              )}
               
               <div className="mb-8">
                 <span className={`text-[10px] tracking-[0.2em] uppercase font-bold opacity-60 block mb-2`}>
@@ -197,7 +176,7 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
               <ul className="flex-1 space-y-5 mb-10">
                  {getFeatures(pack).map((feature, i) => (
                     <li key={i} className="flex items-start gap-4 text-sm leading-tight">
-                       <div className={`mt-0.5 h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${pack.popular ? `bg-[#ffcc1a] ${isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]'}` : `${isImpact ? 'bg-[#1f3a5f]/10 text-[#1f3a5f]' : 'bg-[#6a0d2e]/10 text-[#6a0d2e]'}`}`}>
+                       <div className={`mt-0.5 h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${isImpact ? 'bg-[#1f3a5f]/10 text-[#1f3a5f]' : 'bg-[#6a0d2e]/10 text-[#6a0d2e]'}`}>
                          <Check className="h-3 w-3 " strokeWidth={3} />
                        </div>
                        <span className="opacity-90">{feature}</span>
@@ -209,12 +188,12 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
                 onClick={() => handleBuy(pack)}
                 size="lg" 
                 className={`w-full h-14 rounded-2xl font-bold transition-all duration-300 ${
-                  pack.popular 
-                  ? `bg-[#ffcc1a] ${isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]'} hover:bg-white hover:scale-[1.02] shadow-[0_10px_25px_rgba(255,204,26,0.3)]` 
-                  : `${isImpact ? 'bg-[#1f3a5f] hover:shadow-[0_10px_25px_rgba(31,58,95,0.15)]' : 'bg-[#6a0d2e] hover:shadow-[0_10px_25px_rgba(106,13,46,0.15)]'} text-[#fff9e6] ${isImpact ? 'hover:bg-[#2a4a75]' : 'hover:bg-[#8d113d]'}`
+                  isImpact 
+                  ? 'bg-[#1f3a5f] text-[#fff9e6] hover:bg-[#fff9e6] hover:text-[#1f3a5f] border hover:border-[#1f3a5f]' 
+                  : 'bg-[#6a0d2e] text-[#fff9e6] hover:bg-[#fff9e6] hover:text-[#6a0d2e] border hover:border-[#6a0d2e]'
                 }`}
               >
-                 {pack.popular && <Sparkles className="mr-2 h-4 w-4 fill-current" />}
+                 <Sparkles className="mr-2 h-4 w-4 fill-current opacity-70" />
                  Secure This Collection
               </Button>
             </div>

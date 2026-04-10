@@ -4,12 +4,14 @@ import { AdminSidebar } from "@/features/admin/components/Sidebar";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "@/i18n/navigation";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations("AdminDashboard.layout");
   const { user, isAuthenticated, _hasHydrated } = useAuthStore();
   const router = useRouter();
 
@@ -43,8 +45,8 @@ export default function AdminLayout({
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-lg font-semibold">Loading...</h2>
-          <p className="text-sm text-muted-foreground">Hydrating state...</p>
+          <h2 className="text-lg font-semibold">{t("loading")}</h2>
+          <p className="text-sm text-muted-foreground">{t("hydrating")}</p>
         </div>
       </div>
     );
@@ -55,7 +57,7 @@ export default function AdminLayout({
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-lg font-semibold">Redirecting...</h2>
+          <h2 className="text-lg font-semibold">{t("redirecting")}</h2>
         </div>
       </div>
     );

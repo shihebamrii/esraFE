@@ -32,6 +32,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import Image from "next/image";
 
 export function Navbar() {
   const t = useTranslations("Navigation");
@@ -127,13 +128,14 @@ export function Navbar() {
             textColorClass
           )}
         >
-          <img 
+          <Image 
             src="/logo-beestory.png" 
             alt="Bee Story Logo" 
-            width={620}
-            height={173}
+            width={115}
+            height={32}
+            style={{ width: 'auto' }}
             className={cn(
-              "h-12 w-auto sm:h-8 object-contain transition-all duration-500",
+              "h-8 transition-all duration-500",
               isHeroPage && !isScrolled ? "brightness-0 invert" : "" // Make logo white if on hero and not scrolled
             )} 
           />
@@ -248,7 +250,7 @@ export function Navbar() {
                   className="relative h-9 w-9 rounded-xl p-0 ml-1 ring-2 ring-transparent hover:ring-violet-500/20 transition-all duration-300"
                 >
                   <Avatar className="h-9 w-9 rounded-xl">
-                    <AvatarImage src={"/avatars/01.png"} alt={user.name} />
+                    <AvatarImage src={user.avatarUrl} alt={user.name} />
                     <AvatarFallback className="rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white font-semibold text-xs">
                       {userInitials}
                     </AvatarFallback>

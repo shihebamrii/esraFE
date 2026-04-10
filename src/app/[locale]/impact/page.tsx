@@ -10,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Play, Volume2, VolumeX, ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Search, Play, Volume2, VolumeX, ChevronDown, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { InteractiveMap } from "../tounesna/components/InteractiveMap";
@@ -170,15 +171,7 @@ function HeroSection() {
             </span>
           </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed mb-12 font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
-          >
-            {t("subtitle")}
-          </motion.p>
+
 
           {/* CTA Row */}
           <motion.div

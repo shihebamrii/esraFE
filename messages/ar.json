@@ -125,7 +125,522 @@
     "oasis": "واحة",
     "village": "قرية",
     "photos": "صور، فيديو، ريلز",
-    "governorates": "ولاية"
+    "governorates": "ولايات"
+  },
+  "UserDashboard": {
+    "greeting": {
+      "morning": "صباح الخير",
+      "afternoon": "طاب يومك",
+      "evening": "مساء الخير"
+    },
+    "sidebar": {
+      "dashboard": "لوحة التحكم",
+      "orders": "طلباتي",
+      "downloads": "التنزيلات",
+      "favorites": "المفضلة",
+      "profile": "الملف الشخصي",
+      "upload": "تحميل صورة",
+      "logout": "تسجيل الخروج",
+      "member": "عضو",
+      "navigation": "التنقل"
+    },
+    "stats": {
+      "totalOrders": "إجمالي الطلبات",
+      "totalOrdersSubtitle": "تمت بنجاح",
+      "totalSpent": "إجمالي المصاريف",
+      "totalSpentSubtitle": "إجمالي المشتريات",
+      "downloads": "التنزيلات",
+      "downloadsSubtitle": "صور وفيديوهات",
+      "videos": "فيديوهات",
+      "packs": "باقات",
+      "photos": "صور"
+    },
+    "home": {
+      "welcomeBack": "مرحباً بعودتك",
+      "overviewSubtitle": "إليك نظرة عامة على نشاط حسابك ومشترياتك الأخيرة.",
+      "browseContent": "تصفح المحتوى",
+      "recentOrders": "الطلبات الأخيرة",
+      "viewAll": "عرض الكل"
+    },
+    "orders": {
+      "title": "تاريخ الطلبات",
+      "subtitle": "عرض وإدارة مشترياتك",
+      "orderCount": "{count} {count, plural, =1 {طلب} other {طلبات}}",
+      "noOrders": "لا توجد طلبات بعد",
+      "noOrdersSubtitle": "عند شراء المحتوى، سيظهر تاريخ طلباتك هنا.",
+      "orderId": "طلب رقم",
+      "itemCount": "{count} {count, plural, =1 {عنصر} other {عناصر}}",
+      "paid": "تم الدفع",
+      "pending": "قيد الانتظار",
+      "browseContent": "تصفح المحتوى"
+    },
+    "downloads": {
+      "title": "تنزيلاتي",
+      "subtitle": "الوصول إلى المحتوى الذي اشتريته وتنزيله",
+      "searchPlaceholder": "البحث في التنزيلات...",
+      "noMatches": "لم يتم العثور على نتائج",
+      "noMatchesSubtitle": "حاول استخدام مصطلح بحث آخر",
+      "noDownloads": "لا توجد تنزيلات بعد",
+      "noDownloadsSubtitle": "سيظهر المحتوى الذي اشتريته هنا لسهولة الوصول إليه.",
+      "expired": "منتهي الصلاحية",
+      "download": "تنزيل"
+    },
+    "favorites": {
+      "title": "المفضلة",
+      "subtitle": "{count} {count, plural, =1 {عنصر محفوظ} other {عناصر محفوظة}}",
+      "emptySubtitle": "العناصر التي حفظتها لوقت لاحق",
+      "all": "الكل",
+      "searchPlaceholder": "البحث في المفضلة...",
+      "noFavorites": "لا توجد مفضلة بعد",
+      "noFavoritesSubtitle": "تصفح مجموعتنا واضغط على أيقونة القلب لحفظ العناصر التي تحبها.",
+      "exploreContent": "استكشف المحتوى",
+      "noMatches": "لم يتم العثور على نتائج",
+      "noMatchesSubtitle": "حاول استخدام مصطلح بحث آخر أو تصفية",
+      "removed": "تمت الإزالة من المفضلة",
+      "removeFailed": "فشلت الإزالة",
+      "addedToCart": "تم إضافة {title} إلى السلة"
+    },
+    "upload": {
+      "title": "تحميل إلى تونسنا",
+      "subtitle": "شارك صورك الجميلة لتونس. تتطلب المشاركات موافقة المسؤول.",
+      "success": "تم التحميل بنجاح! 🎉",
+      "pendingApproval": "تم تحميل {type} الخاص بك وهو الآن قيد انتظار موافقة المسؤول.",
+      "notification": "سيتم إخطارك بمجرد المراجعة. إعادة التوجيه إلى لوحة التحكم خلال ثوانٍ...",
+      "goDashboard": "الذهاب إلى لوحة التحكم",
+      "uploadAnother": "تحميل ملف آخر",
+      "details": "تفاصيل الصورة",
+      "formTitle": "عنوان الصورة",
+      "titlePlaceholder": "مثال: غروب الشمس في سيدي بوسعيد",
+      "description": "الوصف",
+      "descriptionPlaceholder": "أخبرنا عن هذه الصورة... أين تم التقاطها؟ ما هي القصة؟",
+      "governorate": "الولاية",
+      "selectGovernorate": "اختر الولاية",
+      "landscapeType": "نوع المنظر",
+      "selectType": "اختر النوع",
+      "tags": "الوسوم (مفصولة بفاصلة)",
+      "tagsPlaceholder": "مثال: طبيعة، غروب، هندسة معمارية",
+      "pricing": "التسعير والترخيص",
+      "price": "السعر (د.ت)",
+      "freeInfo": "اجعله 0 ليكون مجانياً",
+      "watermark": "إضافة علامة مائية للمعاينة",
+      "watermarkInfo": "احمِ صورتك عالية الدقة بعلامة مائية متكررة على المعاينة",
+      "customWatermark": "نص علامة مائية مخصص (اختياري)",
+      "customWatermarkPlaceholder": "مثال: تصوير فلان الفلاني",
+      "mediaType": "اختر نوع الوسائط",
+      "photo": "صورة",
+      "video": "فيديو",
+      "uploadLabel": "تحميل {type}",
+      "changeMedia": "تغيير {type}",
+      "clickToUpload": "انقر لتحميل {type}",
+      "fileInfo": "{type} (بحد أقصى {size} ميجابايت)",
+      "browseFiles": "تصفح الملفات",
+      "videoThumbnail": "صورة مصغرة للفيديو",
+      "changeThumbnail": "تغيير الصورة المصغرة",
+      "uploadThumbnail": "تحميل صورة مصغرة",
+      "requiredForVideos": "مطلوب للفيديوهات",
+      "uploadFailed": "فشل التحميل",
+      "dismiss": "إغلاق",
+      "submit": "إرسال للموافقة",
+      "uploading": "جاري تحميل {type} الخاص بك...",
+      "dontClose": "يرجى عدم إغلاق هذه الصفحة",
+      "errors": {
+        "titleRequired": "العنوان مطلوب",
+        "fileRequired": "يرجى اختيار ملف {type}",
+        "thumbnailRequired": "بالنسبة لتحميلات الفيديو، يرجى تقديم صورة مصغرة",
+        "governorateRequired": "الولاية مطلوبة",
+        "failedToLoad": "فشل تحميل القوائم المنسدلة",
+        "failedToUpload": "فشل تحميل الصورة. يرجى المحاولة مرة أخرى."
+      },
+      "steps": {
+        "preparing": "جاري تحضير ملفك...",
+        "uploading": "جاري التحميل إلى الخادم...",
+        "complete": "اكتملت المعالجة!"
+      },
+      "governorates": {
+        "Ariana": "أريانة",
+        "Béja": "باجة",
+        "Ben Arous": "بن عروس",
+        "Bizerte": "بنزرت",
+        "Gabès": "قابس",
+        "Gafsa": "قفصة",
+        "Jendouba": "جندوبة",
+        "Kairouan": "القيروان",
+        "Kasserine": "القصرين",
+        "Kébili": "قبلي",
+        "Kef": "الكاف",
+        "Mahdia": "المهدية",
+        "Manouba": "منوبة",
+        "Medenine": "مدنين",
+        "Monastir": "المنستير",
+        "Nabeul": "نابل",
+        "Sfax": "صفاقس",
+        "Sidi Bouzid": "سيدي بوزيد",
+        "Siliana": "سليانة",
+        "Sousse": "سوسة",
+        "Tataouine": "تطاوين",
+        "Tozeur": "توزر",
+        "Tunis": "تونس",
+        "Zaghouan": "زغوان"
+      },
+      "landscapeTypes": {
+        "sea": "بحر",
+        "desert": "صحراء",
+        "mountain": "جبل",
+        "village": "قرية",
+        "oasis": "واحة",
+        "forest": "غابة",
+        "city": "مدينة",
+        "historical": "تاريخي",
+        "other": "أخرى"
+      }
+    },
+    "layout": {
+      "redirecting": "جاري إعادة التوجيه..."
+    },
+    "quota": {
+      "title": "حصصك النشطة",
+      "activePack": "{count} {count, plural, =1 {باقة نشطة} other {باقات نشطة}}",
+      "photos": "صور",
+      "reels": "ريلز",
+      "videos": "فيديوهات",
+      "storytelling": "قصصي",
+      "miniDocs": "وثائقيات صغيرة",
+      "left": "متبقي {remaining} / {limit}",
+      "failedToFetch": "فشل تحميل باقات المستخدم"
+    }
+  },
+  "AdminDashboard": {
+    "sidebar": {
+      "dashboard": "لوحة التحكم",
+      "users": "المستخدمون",
+      "packs": "الباقات",
+      "playlists": "قوائم التشغيل",
+      "upload": "تحميل",
+      "contentImpact": "المحتوى (Impact)",
+      "photosTounesna": "الصور (Tounesna)",
+      "orders": "الطلبات",
+      "overview": "نظرة عامة"
+    },
+    "home": {
+      "title": "لوحة التحكم",
+      "totalRevenue": "إجمالي الإيرادات",
+      "paidOrders": "جميع الطلبات المدفوعة",
+      "activeUsers": "المستخدمون النشطون",
+      "totalRegistered": "إجمالي المسجلين",
+      "contentCount": "عدد المحتوى",
+      "videoPlatform": "في منصة الفيديو",
+      "tounesnaPhotos": "صور تونسنا",
+      "photoGallery": "في معرض الصور",
+      "videos": "فيديوهات"
+    },
+    "users": {
+      "title": "إدارة المستخدمين",
+      "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني...",
+      "table": {
+        "user": "المستخدم",
+        "role": "الدور",
+        "status": "الحالة",
+        "quotas": "الباقات النشطة والحصص",
+        "actions": "الإجراءات"
+      },
+      "status": {
+        "active": "نشط",
+        "deactivated": "معطل",
+        "deactivate": "تعطيل",
+        "activate": "تنشيط"
+      },
+      "packs": {
+        "noPacks": "لا توجد باقات نشطة",
+        "photos": "صور",
+        "reels": "ريلز",
+        "videos": "فيديوهات",
+        "docs": "وثائق"
+      },
+      "dialog": {
+        "editQuotas": "تعديل الحصص",
+        "editDescription": "ضبط الحصص المتبقية يدوياً لـ {name} ({pack}).",
+        "photosRemaining": "الصور المتبقية",
+        "reelsRemaining": "الريلز المتبقية",
+        "videosRemaining": "الفيديوهات المتبقية",
+        "docsRemaining": "الوثائق المتبقية",
+        "saveChanges": "حفظ التغييرات"
+      },
+      "messages": {
+        "fetchFailed": "فشل جلب المستخدمين",
+        "updateStatusSuccess": "تم {status} المستخدم بنجاح",
+        "updateStatusFailed": "فشل تحديث حالة المستخدم",
+        "updateQuotasSuccess": "تم تحديث الحصص بنجاح",
+        "updateQuotasFailed": "فشل تحديث الحصص"
+      }
+    },
+    "packs": {
+      "title": "إدارة الباقات",
+      "createPack": "إنشاء باقة",
+      "editPack": "تعديل الباقة",
+      "createDescription": "املأ تفاصيل الباقة. تحدد باقات العضوية الحصص للمستخدمين.",
+      "form": {
+        "title": "عنوان الباقة",
+        "titlePlaceholder": "مثال: تونسنا ذهبي",
+        "price": "السعر (د.ت)",
+        "description": "الوصف",
+        "descriptionPlaceholder": "ماذا تشمل هذه الباقة؟",
+        "type": "نوع الباقة",
+        "selectType": "اختر النوع",
+        "membership": "عضوية (حصص)",
+        "collection": "مجموعة (ثابتة)",
+        "active": "نشطة ومرئية",
+        "quotas": "حصص العضوية",
+        "module": "الوحدة",
+        "selectModule": "اختر الوحدة",
+        "tounesna": "تونسنا (صور)",
+        "impact": "Impact (فيديوهات)",
+        "both": "كلاهما",
+        "quality": "أقصى جودة",
+        "selectQuality": "اختر الجودة",
+        "standard": "عادي",
+        "hd": "HD (1080p)",
+        "4k": "4K / Ultra HD",
+        "photosLimit": "حد الصور",
+        "reelsLimit": "حد الريلز",
+        "videosLimit": "فيديوهات قصصية",
+        "docsLimit": "حد الوثائقيات الصغيرة",
+        "cancel": "إلغاء"
+      },
+      "table": {
+        "name": "اسم الباقة",
+        "type": "النوع",
+        "price": "السعر",
+        "quotas": "الحصص / العناصر",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "popular": "شائع",
+        "inactive": "غير نشط",
+        "active": "نشط",
+        "photos": "صور",
+        "reels": "ريلز",
+        "videos": "فيديوهات",
+        "quality": "الجودة"
+      },
+      "messages": {
+        "fetchFailed": "فشل جلب الباقات",
+        "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه الباقة؟",
+        "deleteSuccess": "تم حذف الباقة بنجاح",
+        "deleteFailed": "فشل حذف الباقة",
+        "saveSuccess": "تم حفظ الباقة بنجاح",
+        "saveFailed": "فشل حفظ الباقة"
+      }
+    },
+    "photos": {
+      "title": "إدارة الصور",
+      "addPhoto": "إضافة صورة",
+      "loading": "جاري التحميل...",
+      "searchPlaceholder": "البحث في الصور...",
+      "tabs": {
+        "official": "المحتوى الرسمي",
+        "community": "مشاركات المجتمع",
+        "pending": "في انتظار الموافقة",
+        "approved": "تمت الموافقة",
+        "rejected": "مرفوضة"
+      },
+      "officialDescription": "الصور المحملة من قبل مسؤولي النظام. معتمدة تلقائياً.",
+      "table": {
+        "preview": "معاينة",
+        "title": "العنوان",
+        "user": "المستخدم",
+        "location": "الموقع",
+        "price": "السعر",
+        "tags": "الوسوم",
+        "date": "التاريخ",
+        "actions": "الإجراءات",
+        "noPhotos": "لم يتم العثور على صور",
+        "unknown": "غير معروف",
+        "approve": "موافقة",
+        "reject": "رفض",
+        "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{title}\"؟"
+      },
+      "dialog": {
+        "editPhoto": "تعديل الصورة",
+        "editDescription": "تحديث تفاصيل الصورة المختارة."
+      },
+      "messages": {
+        "fetchFailed": "فشل تحميل الصور",
+        "deleteSuccess": "تم حذف الصورة بنجاح",
+        "deleteFailed": "فشل حذف الصورة",
+        "approveSuccess": "تم {status} الصورة بنجاح",
+        "approveFailed": "فشل {status} الصورة"
+      }
+    },
+    "content": {
+      "title": "إدارة المحتوى",
+      "addContent": "إضافة محتوى",
+      "loading": "جاري التحميل...",
+      "searchPlaceholder": "البحث في المحتوى...",
+      "officialDescription": "المحتوى المحمل من قبل مسؤولي النظام. معتمد تلقائياً.",
+      "tabs": {
+        "official": "المحتوى الرسمي",
+        "community": "مشاركات المجتمع",
+        "pending": "في انتظار الموافقة",
+        "approved": "تمت الموافقة",
+        "rejected": "مرفوضة"
+      },
+      "table": {
+        "title": "العنوان",
+        "user": "المستخدم",
+        "type": "النوع",
+        "status": "الحالة",
+        "date": "التاريخ",
+        "actions": "الإجراءات",
+        "noContent": "لم يتم العثور على محتوى",
+        "unknown": "غير معروف"
+      },
+      "messages": {
+        "fetchFailed": "فشل تحميل المحتوى",
+        "approveSuccess": "تم {status} المحتوى بنجاح",
+        "approveFailed": "فشل {status} المحتوى"
+      }
+    },
+    "orders": {
+      "title": "إدارة الطلبات",
+      "table": {
+        "orderId": "رقم الطلب",
+        "customer": "العميل",
+        "date": "التاريخ",
+        "total": "الإجمالي",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "unknown": "غير معروف"
+      },
+      "messages": {
+        "fetchFailed": "فشل جلب الطلبات"
+      }
+    },
+    "playlists": {
+      "title": "إدارة قوائم التشغيل",
+      "createPlaylist": "إنشاء قائمة تشغيل",
+      "editPlaylist": "تعديل قائمة التشغيل",
+      "searchPlaceholder": "البحث في قوائم التشغيل...",
+      "messages": {
+        "fetchFailed": "فشل تحميل قوائم التشغيل",
+        "contentFailed": "فشل تحميل المحتوى المتاح",
+        "saveSuccess": "تم حفظ قائمة التشغيل بنجاح",
+        "saveFailed": "فشل حفظ قائمة التشغيل",
+        "deleteConfirm": "هل أنت متأكد أنك تريد حذف قائمة التشغيل هذه؟",
+        "deleteSuccess": "تم حذف قائمة التشغيل بنجاح",
+        "deleteFailed": "فشل حذف قائمة التشغيل",
+        "noPlaylists": "لم يتم العثور على قوائم تشغيل"
+      },
+      "form": {
+        "title": "عنوان قائمة التشغيل",
+        "titlePlaceholder": "مثال: مغامرات الصحراء",
+        "description": "الوصف",
+        "descriptionPlaceholder": "حول قائمة التشغيل هذه",
+        "type": "النوع",
+        "series": "سلسلة",
+        "collection": "مجموعة",
+        "podcast": "سلسلة بودكاست",
+        "region": "المنطقة",
+        "themes": "المواضيع (مفصولة بفاصلة)",
+        "tags": "الوسوم (مفصولة بفاصلة)",
+        "active": "نشط",
+        "content": "محتوى قائمة التشغيل",
+        "addContent": "إضافة محتوى",
+        "selectContent": "اختر المحتوى للإضافة",
+        "noItems": "لا توجد عناصر في قائمة التشغيل هذه بعد. اختر المحتوى أعلاه للإضافة."
+      },
+      "table": {
+        "name": "اسم قائمة التشغيل",
+        "type": "النوع",
+        "items": "العناصر",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "active": "نشط",
+        "inactive": "غير نشط"
+      }
+    },
+    "upload": {
+      "title": "تحميل الوسائط",
+      "photoTab": "صورة (تونسنا)",
+      "videoTab": "فيديو/محتوى (Impact)",
+      "form": {
+        "photo": {
+          "title": "عنوان الصورة",
+          "description": "الوصف",
+          "governorate": "الولاية",
+          "landscape": "نوع المنظر",
+          "price": "السعر (د.ت)",
+          "watermark": "علامة مائية",
+          "attribution": "نص الإسناد",
+          "tags": "الوسوم (مصفوفة JSON)",
+          "highRes": "صورة عالية الدقة",
+          "lowRes": "دقة منخفضة / معاينة",
+          "submit": "تحميل الصورة",
+          "update": "تحديث الصورة",
+          "assetType": "نوع الأصل",
+          "photo": "صورة / رسم",
+          "video": "فيديو",
+          "landscapes": {
+            "sea": "بحر / شاطئ",
+            "desert": "صحراء",
+            "mountain": "جبل",
+            "village": "قرية",
+            "oasis": "واحة",
+            "forest": "غابة",
+            "city": "مدينة",
+            "historical": "تاريخي",
+            "other": "أخرى"
+          },
+          "attributionPlaceholder": "نص العلامة المائية",
+          "autoWatermark": "إنشاء علامة مائية تلقائياً",
+          "highResLabel": "صورة عالية الدقة",
+          "videoFileLabel": "ملف فيديو",
+          "optionalToChange": "(اختياري للتغيير)",
+          "fullQuality": "جودة كاملة للمشترين",
+          "videoThumbnail": "صورة مصغرة للفيديو",
+          "lowResPreview": "معاينة منخفضة الدقة (اختياري)",
+          "requiredForVideo": "مطلوب للفيديو",
+          "autoGenerated": "يتم إنشاؤه تلقائياً إذا ترك فارغاً",
+          "updating": "جاري التحديث...",
+          "uploading": "جاري التحميل...",
+          "clickToReplace": "انقر لاستبدال {type}",
+          "clickToUpload": "انقر أو اسحب ملف {type} للتحميل",
+          "clickToUploadPreview": "انقر أو اسحب صورة المعاينة"
+        },
+        "video": {
+          "title": "العنوان *",
+          "description": "الوصف",
+          "type": "نوع المحتوى",
+          "video": "فيديو",
+          "reel": "ريلز",
+          "podcast": "بودكاست",
+          "documentary": "وثائقي",
+          "themes": "المواضيع",
+          "region": "المنطقة (الولاية)",
+          "selectRegion": "اختر المنطقة",
+          "tags": "الوسوم (مصفوفة JSON)",
+          "language": "اللغة",
+          "rights": "حقوق الاستخدام",
+          "free": "مجاني",
+          "premium": "مميز",
+          "price": "السعر (د.ت)",
+          "visibility": "الظهور",
+          "public": "عام",
+          "private": "خاص",
+          "instagram": "اسم مستخدم إنستغرام (للريلز)",
+          "file": "ملف الفيديو/الصوت *",
+          "thumbnail": "صورة مصغرة",
+          "submit": "تحميل المحتوى",
+          "uploading": "جاري التحميل...",
+          "selectFile": "يرجى اختيار ملف فيديو",
+          "success": "تم تحميل الفيديو بنجاح!",
+          "failed": "فشل تحميل الفيديو"
+        }
+      }
+    },
+    "layout": {
+      "loading": "جاري التحميل...",
+      "hydrating": "جاري تهيئة الحالة...",
+      "redirecting": "جاري إعادة التوجيه..."
+    }
   },
   "Auth": {
     "welcomeBack": "مرحباً بعودتك",
@@ -150,7 +665,21 @@
     "roleLabel": "أنا",
     "userRole": "مستخدم",
     "photographerRole": "مصور",
-    "roleDescription": "اختر نوع حسابك"
+    "roleDescription": "اختر نوع حسابك",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordStrength": {
+      "weak": "كلمة مرور ضعيفة",
+      "fair": "كلمة مرور مقبولة",
+      "good": "كلمة مرور جيدة",
+      "strong": "كلمة مرور قوية"
+    },
+    "passwordRules": {
+      "minLength": "8 أحرف على الأقل",
+      "uppercase": "حرف كبير واحد (A-Z)",
+      "lowercase": "حرف صغير واحد (a-z)",
+      "number": "رقم واحد (0-9)",
+      "special": "رمز خاص واحد (!@#$...)"
+    }
   },
   "Footer": {
     "description": "مكتبة وسائط رقمية بوحدتين: Impact (دعم المشاريع عبر CnBees) و Tounesna (اكتشاف التراث التونسي).",
@@ -239,5 +768,35 @@
     "placeholder": "أدخل عنوان بريدك الإلكتروني",
     "button": "اشترك",
     "disclaimer": "نحن نهتم ببياناتك في سياسة الخصوصية الخاصة بنا."
+  },
+  "License": {
+    "personal": "شخصي",
+    "commercial": "تجاري",
+    "personalDescription": "للمشاريع الشخصية والمدونات والاستخدام غير التجاري",
+    "commercialDescription": "للأعمال التجارية والإعلانات والمشاريع التجارية",
+    "selectLicense": "اختر نوع الترخيص",
+    "pricePersonal": "سعر الترخيص الشخصي",
+    "priceCommercial": "سعر الترخيص التجاري",
+    "addToCart": "أضف إلى السلة",
+    "free": "مجاني",
+    "licensePricing": "تسعير التراخيص",
+    "freeHint": "اجعل كلاهما 0 للمحتوى المجاني. اترك التجاري على 0 لتقديم الترخيص الشخصي فقط."
+  },
+  "PhotoDetail": {
+    "packMember": "عضو الباقة",
+    "includedInPack": "مشمول في الباقة",
+    "quotaRemaining": "متبقي {remaining} / {limit} تنزيل",
+    "downloadWithPack": "تنزيل بالباقة — مجاني",
+    "redeeming": "جاري التنزيل...",
+    "packRedeemInfo": "سيتم استخدام تنزيل واحد من حصة باقتك",
+    "redeemSuccess": "تم التنزيل بنجاح! تحقق من تنزيلاتك.",
+    "redeemFailed": "فشل الاسترداد. يرجى المحاولة مرة أخرى.",
+    "redeemSuccessTitle": "التنزيل جاهز!",
+    "redeemSuccessDesc": "ملفك جاهز للتنزيل.",
+    "downloadNow": "تنزيل الآن",
+    "goToDownloads": "تنزيلاتي",
+    "orBuySeparately": "أو شراء بشكل فردي",
+    "alreadyOwned": "مملوك بالفعل",
+    "alreadyOwnedDesc": "لقد قمت بالفعل بشراء أو استرداد هذا العنصر."
   }
 }

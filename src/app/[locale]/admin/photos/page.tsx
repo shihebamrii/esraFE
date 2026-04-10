@@ -12,8 +12,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock, Sparkles } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock, Sparkles, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { format } from "date-fns";
 import { AdminService } from "@/features/admin/api";
 import { UploadPhotoForm } from "@/features/admin/components/UploadPhotoForm";
@@ -28,9 +29,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function AdminPhotosPage() {
+  const t = useTranslations("AdminDashboard.photos");
   const [photos, setPhotos] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ export default function AdminPhotosPage() {
       setPhotos(res.data?.photos || []);
     } catch (e) {
       console.error(e);
-      toast.error("Failed to load photos");
+      toast.error(t("messages.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -54,14 +56,15 @@ export default function AdminPhotosPage() {
     fetchPhotos();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, title: string) => {
+    if (!window.confirm(t("table.deleteConfirm", { title }))) return;
     try {
       await AdminService.deletePhoto(id);
-      toast.success("Photo deleted successfully");
+      toast.success(t("messages.deleteSuccess"));
       fetchPhotos();
     } catch (e) {
       console.error(e);
-      toast.error("Failed to delete photo");
+      toast.error(t("messages.deleteFailed"));
     }
   };
 
@@ -74,11 +77,11 @@ export default function AdminPhotosPage() {
   const handleApprove = async (id: string, status: 'approved' | 'rejected') => {
     try {
       await AdminService.approvePhoto(id, status);
-      toast.success(`Photo ${status} successfully`);
+      toast.success(t("messages.approveSuccess", { status: t(`table.${status}`) }));
       fetchPhotos();
     } catch (e) {
       console.error(e);
-      toast.error(`Failed to ${status} photo`);
+      toast.error(t("messages.approveFailed", { status: t(`table.${status}`) }));
     }
   };
 
@@ -95,15 +98,15 @@ export default function AdminPhotosPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Preview</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead>User</TableHead>
+            <TableHead>{t("table.preview")}</TableHead>
+            <TableHead>{t("table.title")}</TableHead>
+            <TableHead>{t("table.user")}</TableHead>
 
-            <TableHead>Location</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Tags</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t("table.location")}</TableHead>
+            <TableHead>{t("table.price")}</TableHead>
+            <TableHead>{t("table.tags")}</TableHead>
+            <TableHead>{t("table.date")}</TableHead>
+            <TableHead className="text-right">{t("table.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -126,41 +129,52 @@ export default function AdminPhotosPage() {
                   </div>
                 </TableCell>
                 <TableCell className="font-medium truncate max-w-[150px]">{item.title}</TableCell>
-                <TableCell>{item.createdBy?.name || 'Unknown'}</TableCell>
+                <TableCell>{item.createdBy?.name || t("table.unknown")}</TableCell>
 
                 <TableCell>{item.governorate}</TableCell>
-                <TableCell>{item.priceTND} DT</TableCell>
                 <TableCell>
-                  {item.tags && item.tags.length > 0 ? (
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {item.tags.slice(0, 3).map((tag: string) => (
-                        <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
-                          <Sparkles className="h-2.5 w-2.5 mr-0.5 text-amber-500" />
-                          {tag}
-                        </Badge>
-                      ))}
-                      {item.tags.length > 3 && (
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 text-muted-foreground">
-                          +{item.tags.length - 3}
-                        </Badge>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground text-xs">—</span>
-                  )}
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-mono text-sm text-blue-600 dark:text-blue-400">P: {item.pricePersonalTND ?? item.priceTND ?? 0} DT</span>
+                    {(item.priceCommercialTND > 0) && (
+                      <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400">C: {item.priceCommercialTND} DT</span>
+                    )}
+                  </div>
                 </TableCell>
-                <TableCell>{format(new Date(item.createdAt), 'dd MMM yyyy')}</TableCell>
-                <TableCell className="text-right space-x-2">
-                  {showApprovalActions ? (
-                    <>
-                      <Button variant="outline" size="sm" className="text-emerald-500 border-emerald-200 hover:bg-emerald-50" onClick={() => handleApprove(item._id, 'approved')}>
-                        <CheckCircle className="mr-2 h-4 w-4" /> Approve
-                      </Button>
-                      <Button variant="outline" size="sm" className="text-rose-500 border-rose-200 hover:bg-rose-50" onClick={() => handleApprove(item._id, 'rejected')}>
-                        <XCircle className="mr-2 h-4 w-4" /> Reject
-                      </Button>
-                    </>
-                  ) : (
+                <TableCell>
+                  <div className="flex flex-wrap gap-1 max-w-[200px]">
+                    {item.tags?.slice(0, 3).map((tag: string) => (
+                      <Badge key={tag} variant="secondary" className="text-[10px] px-1 py-0 h-4">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {item.tags?.length > 3 && <span className="text-[10px] text-muted-foreground">+{item.tags.length - 3}</span>}
+                  </div>
+                </TableCell>
+                <TableCell className="text-xs text-muted-foreground">
+                  {new Date(item.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end gap-1">
+                    {showApprovalActions ? (
+                      <>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-8 px-2 text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200"
+                          onClick={() => handleApprove(item._id, "approved")}
+                        >
+                          <CheckCircle className="h-4 w-4 me-1" /> {t("table.approve")}
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                          onClick={() => handleApprove(item._id, "rejected")}
+                        >
+                          <XCircle className="h-4 w-4 me-1" /> {t("table.reject")}
+                        </Button>
+                      </>
+                    ) : (
                     <>
                       <Button 
                         variant="ghost" 
@@ -177,16 +191,13 @@ export default function AdminPhotosPage() {
                         variant="ghost" 
                         size="icon" 
                         className="text-destructive"
-                        onClick={() => {
-                          if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
-                            handleDelete(item._id);
-                          }
-                        }}
+                        onClick={() => handleDelete(item._id, item.title)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </>
                   )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))
@@ -197,78 +208,97 @@ export default function AdminPhotosPage() {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-         <h2 className="text-3xl font-bold tracking-tight">Photos Management</h2>
-         <Link href="/admin/upload?tab=photo">
-           <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white">
-             <Plus className="mr-2 h-4 w-4" /> Add Photo
-           </Button>
-         </Link>
-      </div>
-
-       <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-sm">
-           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-           <Input 
-             placeholder="Search photos..."
-             className="pl-9"
-             value={search}
-             onChange={(e) => setSearch(e.target.value)}
-           />
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
+        <Link href="/admin/upload">
+          <Button className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white">
+            <Plus className="mr-2 h-4 w-4" />
+            {t("addPhoto")}
+          </Button>
+        </Link>
       </div>
 
-      <Tabs defaultValue="official" className="w-full mt-6">
-        <TabsList className="mb-4">
-          <TabsTrigger value="official" className="flex gap-2 text-base px-6 py-3">
-            <ShieldAlert className="h-5 w-5 text-amber-500" /> Official Content
-             <Badge variant="secondary" className="ml-1">{officialPhotos.length}</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="community" className="flex gap-2 text-base px-6 py-3">
-            <User className="h-5 w-5 text-slate-500" /> Community Submissions
-            {pendingPhotos.length > 0 && (
-              <Badge variant="destructive" className="ml-1">{pendingPhotos.length} pending</Badge>
-            )}
-            {pendingPhotos.length === 0 && (
-              <Badge variant="secondary" className="ml-1">{communityPhotos.length}</Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+      <Tabs
+        defaultValue="official"
+        className="space-y-4"
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <TabsList className="bg-muted/50 p-1">
+            <TabsTrigger value="official" className="flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4" />
+              {t("tabs.official")}
+              <Badge variant="secondary" className="ml-1">{officialPhotos.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="community" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              {t("tabs.community")}
+              {pendingPhotos.length > 0 && (
+                <Badge variant="destructive" className="ml-1">{pendingPhotos.length}</Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </div>
         
         <TabsContent value="official" className="mt-6">
           <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Photos uploaded by system administrators. Automatically approved.</p>
+            <p className="text-sm text-muted-foreground">{t("officialDescription")}</p>
           </div>
-          {loading ? <div>Loading...</div> : <PhotoTable data={officialPhotos} />}
+          {loading ? <div>{t("loading")}</div> : <PhotoTable data={officialPhotos} />}
         </TabsContent>
 
         <TabsContent value="community" className="mt-6">
-          <div className="bg-slate-50 border rounded-lg p-4 mb-6">
-            <Tabs defaultValue="pending" className="w-full">
-              <TabsList className="mb-4 bg-white border">
-                <TabsTrigger value="pending" className="flex gap-2">
-                  <Clock className="h-4 w-4" /> Pending Approvals 
-                  <Badge variant="secondary" className="ml-1">{pendingPhotos.length}</Badge>
-                </TabsTrigger>
-                <TabsTrigger value="approved" className="flex gap-2">
-                  <CheckCircle className="h-4 w-4" /> Approved
-                </TabsTrigger>
-                <TabsTrigger value="rejected" className="flex gap-2">
-                  <XCircle className="h-4 w-4" /> Rejected
-                </TabsTrigger>
-              </TabsList>
+          <div className="space-y-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-amber-500" />
+                <h3 className="text-lg font-semibold">{t("tabs.pending")}</h3>
+                <Badge variant="destructive" className="ml-1">{pendingPhotos.length}</Badge>
+              </div>
+              {loading ? (
+                <div>{t("loading")}</div>
+              ) : (
+                <PhotoTable data={pendingPhotos} showApprovalActions={true} />
+              )}
+            </div>
 
-              <TabsContent value="pending">
-                {loading ? <div>Loading...</div> : <PhotoTable data={pendingPhotos} showApprovalActions={true} />}
-              </TabsContent>
-              <TabsContent value="approved">
-                {loading ? <div>Loading...</div> : <PhotoTable data={approvedPhotos} />}
-              </TabsContent>
-              <TabsContent value="rejected">
-                {loading ? <div>Loading...</div> : <PhotoTable data={rejectedPhotos} />}
-              </TabsContent>
-            </Tabs>
+            <div className="flex flex-col gap-4 pt-6 border-t">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <h3 className="text-lg font-semibold">{t("tabs.approved")}</h3>
+                <Badge variant="secondary" className="ml-1">{approvedPhotos.length}</Badge>
+              </div>
+              {loading ? (
+                <div>{t("loading")}</div>
+              ) : (
+                <PhotoTable data={approvedPhotos} />
+              )}
+            </div>
+
+            <div className="flex flex-col gap-4 pt-6 border-t">
+              <div className="flex items-center gap-2">
+                <XCircle className="h-4 w-4 text-red-500" />
+                <h3 className="text-lg font-semibold">{t("tabs.rejected")}</h3>
+                <Badge variant="secondary" className="ml-1">{rejectedPhotos.length}</Badge>
+              </div>
+              {loading ? (
+                <div>{t("loading")}</div>
+              ) : (
+                <PhotoTable data={rejectedPhotos} />
+              )}
+            </div>
           </div>
         </TabsContent>
       </Tabs>

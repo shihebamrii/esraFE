@@ -23,11 +23,14 @@ import {
   X, 
   Check, 
   GripVertical,
+  ChevronUp,
+  ChevronDown,
   Layers
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AdminService } from "@/features/admin/api";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -67,6 +70,7 @@ interface Playlist {
 }
 
 export default function AdminPlaylistsPage() {
+  const t = useTranslations("AdminDashboard.playlists");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [availableContent, setAvailableContent] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +97,7 @@ export default function AdminPlaylistsPage() {
       const res = await AdminService.getPlaylists({ search });
       setPlaylists(res.data?.playlists || []);
     } catch (e) {
-      toast.error("Failed to load playlists");
+      toast.error(t("messages.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -104,7 +108,7 @@ export default function AdminPlaylistsPage() {
       const res = await AdminService.getContent({ limit: 100 });
       setAvailableContent(res.data?.contents || []);
     } catch (e) {
-      console.error(e);
+      toast.error(t("messages.contentFailed"));
     }
   };
 
@@ -123,13 +127,13 @@ export default function AdminPlaylistsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm(t("messages.deleteConfirm"))) return;
     try {
       await AdminService.deletePlaylist(id);
-      toast.success("Playlist deleted");
+      toast.success(t("messages.deleteSuccess"));
       fetchPlaylists();
     } catch (e) {
-      toast.error("Failed to delete");
+      toast.error(t("messages.deleteFailed"));
     }
   };
 
@@ -145,16 +149,16 @@ export default function AdminPlaylistsPage() {
 
       if (editingPlaylist) {
         await AdminService.updatePlaylist(editingPlaylist._id, data);
-        toast.success("Playlist updated");
+        toast.success(t("messages.saveSuccess"));
       } else {
         await AdminService.createPlaylist(data);
-        toast.success("Playlist created");
+        toast.success(t("messages.saveSuccess"));
       }
       setIsDialogOpen(false);
       fetchPlaylists();
       resetForm();
     } catch (e) {
-      toast.error("Failed to save playlist");
+      toast.error(t("messages.saveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -216,32 +220,43 @@ export default function AdminPlaylistsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Playlists & Series</h2>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm}>
-              <Plus className="me-2 h-4 w-4" /> Create Playlist
+            <Button
+              onClick={() => {
+                resetForm();
+                setEditingPlaylist(null);
+                setIsDialogOpen(true);
+              }}
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              {t("createPlaylist")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingPlaylist ? "Edit Playlist" : "New Playlist"}</DialogTitle>
-              <DialogDescription>Create a series of videos or podcasts for the Impact module.</DialogDescription>
+              <DialogTitle>{editingPlaylist ? t("editPlaylist") : t("createPlaylist")}</DialogTitle>
+              <DialogDescription>{t("form.descriptionPlaceholder")}</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Title</Label>
+                  <Label>{t("form.title")}</Label>
                   <Input 
                     value={formData.title} 
                     onChange={e => setFormData({...formData, title: e.target.value})}
+                    placeholder={t("form.titlePlaceholder")}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Type</Label>
+                  <Label>{t("form.type")}</Label>
                   <Select 
                     value={formData.type} 
                     onValueChange={(v: any) => setFormData({...formData, type: v})}
@@ -250,29 +265,30 @@ export default function AdminPlaylistsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="series">Story Series</SelectItem>
-                      <SelectItem value="podcast_series">Podcast Series</SelectItem>
-                      <SelectItem value="collection">General Collection</SelectItem>
+                      <SelectItem value="series">{t("form.series")}</SelectItem>
+                      <SelectItem value="podcast_series">{t("form.podcast")}</SelectItem>
+                      <SelectItem value="collection">{t("form.collection")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label>Description</Label>
+                <Label>{t("form.description")}</Label>
                 <Textarea 
                   value={formData.description} 
                   onChange={e => setFormData({...formData, description: e.target.value})}
+                  placeholder={t("form.descriptionPlaceholder")}
                 />
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-bold">Playlist Items</Label>
+                  <Label className="text-base font-bold">{t("form.content")}</Label>
                   <div className="flex gap-2 w-1/2">
                     <Select onValueChange={addItem}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Add content to playlist..." />
+                        <SelectValue placeholder={t("form.selectContent")} />
                       </SelectTrigger>
                       <SelectContent>
                         {availableContent.map(c => (
@@ -298,10 +314,10 @@ export default function AdminPlaylistsPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => moveItem(idx, 'up')} disabled={idx === 0}>
-                              <Check className="h-4 w-4 rotate-180" />
+                              <ChevronUp className="h-4 w-4" />
                             </Button>
                             <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => moveItem(idx, 'down')} disabled={idx === (formData.items?.length || 0) - 1}>
-                              <Check className="h-4 w-4" />
+                              <ChevronDown className="h-4 w-4" />
                             </Button>
                             <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => removeItem(item.contentId)}>
                               <X className="h-4 w-4" />
@@ -312,7 +328,7 @@ export default function AdminPlaylistsPage() {
                     })
                   ) : (
                     <div className="p-8 text-center text-muted-foreground text-sm italic">
-                      No items in this playlist yet. Select content above to add.
+                      {t("form.noItems", { defaultValue: "No items in this playlist yet. Select content above to add." })}
                     </div>
                   )}
                 </div>
@@ -323,13 +339,13 @@ export default function AdminPlaylistsPage() {
                   checked={formData.isActive} 
                   onCheckedChange={v => setFormData({...formData, isActive: v})}
                 />
-                <Label>Active and visible on Impact module</Label>
+                <Label>{t("form.active")}</Label>
               </div>
 
               <DialogFooter>
-                <Button type="submit" disabled={submitting}>
+                <Button type="submit" disabled={submitting} className="bg-amber-600 hover:bg-amber-700 text-white">
                   {submitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
-                  {editingPlaylist ? "Update" : "Create"}
+                  {editingPlaylist ? t("editPlaylist") : t("createPlaylist")}
                 </Button>
               </DialogFooter>
             </form>
@@ -341,11 +357,11 @@ export default function AdminPlaylistsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Playlist Title</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Items</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="pl-6">{t("table.name")}</TableHead>
+              <TableHead>{t("table.type")}</TableHead>
+              <TableHead>{t("table.items")}</TableHead>
+              <TableHead>{t("table.status")}</TableHead>
+              <TableHead className="text-right pr-6">{t("table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -355,31 +371,33 @@ export default function AdminPlaylistsPage() {
               </TableRow>
             ) : playlists.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">No playlists found</TableCell>
+                <TableCell colSpan={5} className="h-24 text-center">{t("messages.noPlaylists", { defaultValue: "No playlists found" })}</TableCell>
               </TableRow>
             ) : (
               playlists.map((pl) => (
                 <TableRow key={pl._id}>
-                  <TableCell className="font-medium">{pl.title}</TableCell>
+                  <TableCell className="pl-6 font-medium">{pl.title}</TableCell>
                   <TableCell className="capitalize">{pl.type.replace('_', ' ')}</TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1.5">
-                      <Layers className="h-4 w-4 text-muted-foreground" />
-                      {pl.items.length} items
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+                      {pl.items?.length || 0} {t("table.items")}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={pl.isActive ? "default" : "secondary"}>
-                      {pl.isActive ? "Active" : "Hidden"}
+                    <Badge variant={pl.isActive ? "success" : "secondary"}>
+                      {pl.isActive ? t("table.active") : t("table.inactive")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(pl)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(pl._id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                  <TableCell className="text-right pr-6">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(pl)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => handleDelete(pl._id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

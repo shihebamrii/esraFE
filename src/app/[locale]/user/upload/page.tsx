@@ -5,16 +5,17 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, Image as ImageIcon, Upload, Loader2, AlertCircle, RefreshCcw, Sparkles, CheckCircle2, XCircle } from "lucide-react";
+import { Camera, Image as ImageIcon, Upload, Loader2, AlertCircle, RefreshCcw, CheckCircle2, XCircle } from "lucide-react";
 import { PhotoService } from "@/features/photos/api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 
 export default function UserUploadPage() {
+  const t = useTranslations("UserDashboard.upload");
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
-  const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [uploadStep, setUploadStep] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -24,13 +25,13 @@ export default function UserUploadPage() {
   const [description, setDescription] = useState("");
   const [governorate, setGovernorate] = useState("");
   const [landscapeType, setLandscapeType] = useState("other");
-  const [priceTND, setPriceTND] = useState("0");
+  const [pricePersonalTND, setPricePersonalTND] = useState("0");
+  const [priceCommercialTND, setPriceCommercialTND] = useState("0");
   const [tags, setTags] = useState("");
   const [watermark, setWatermark] = useState(true);
   const [attributionText, setAttributionText] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [aiTags, setAiTags] = useState<string[]>([]);
 
   const [mediaType, setMediaType] = useState<'photo' | 'video'>('photo');
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
@@ -50,12 +51,12 @@ export default function UserUploadPage() {
         const types = landRes.data?.landscapeTypes?.map((l: any) => l._id) || [];
         setLandscapeTypes(types.length ? types : ['sea', 'desert', 'mountain', 'village', 'oasis', 'forest', 'city', 'historical', 'other']);
       } catch (e) {
-        console.error("Failed to load dropdowns");
+        console.error(t("errors.failedToLoad"));
         setLandscapeTypes(['sea', 'desert', 'mountain', 'village', 'oasis', 'forest', 'city', 'historical', 'other']);
       }
     };
     fetchDropdowns();
-  }, []);
+  }, [t]);
 
   const tGovs = [
     "Ariana", "Béja", "Ben Arous", "Bizerte", "Gabès", "Gafsa", "Jendouba",
@@ -75,39 +76,6 @@ export default function UserUploadPage() {
       
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
-
-      // Trigger Real-Time AI Tagging for images
-      if (mediaType === 'photo') {
-        setIsAnalyzingAI(true);
-        try {
-          const formData = new FormData();
-          formData.append("photo", file);
-          const result = await PhotoService.analyzePhoto(formData);
-          
-          if (result.data?.tags && result.data.tags.length > 0) {
-            // Append new tags to existing tags (if any)
-            setTags((prev) => {
-              const currentTags = prev.split(',').map(t => t.trim()).filter(Boolean);
-              const newTags = [...new Set([...currentTags, ...result.data.tags])];
-              return newTags.join(', ');
-            });
-          }
-          
-          if (result.data?.description) {
-            setDescription((prev) => {
-               // Only autofill if the user hasn't already typed a detailed description
-               if (!prev || prev.trim() === "") {
-                 return result.data.description;
-               }
-               return prev;
-            });
-          }
-        } catch (error) {
-          console.error("AI Analysis failed", error);
-        } finally {
-          setIsAnalyzingAI(false);
-        }
-      }
     }
   };
 
@@ -128,7 +96,8 @@ export default function UserUploadPage() {
     setDescription("");
     setGovernorate("");
     setLandscapeType("other");
-    setPriceTND("0");
+    setPricePersonalTND("0");
+    setPriceCommercialTND("0");
     setTags("");
     setWatermark(true);
     setAttributionText("");
@@ -137,7 +106,6 @@ export default function UserUploadPage() {
     setMediaType('photo');
     setThumbnailFile(null);
     setThumbnailPreviewUrl(null);
-    setAiTags([]);
     setUploadSuccess(false);
     setUploadError("");
     setUploadStep("");
@@ -153,20 +121,20 @@ export default function UserUploadPage() {
     setUploadError("");
     
     if (!title) {
-       return setUploadError("Title is required");
+       return setUploadError(t("errors.titleRequired"));
     }
     if (!selectedFile) {
-       return setUploadError(`Please select a ${mediaType} file`);
+       return setUploadError(t("errors.fileRequired", { type: t(mediaType) }));
     }
     if (mediaType === 'video' && !thumbnailFile) {
-       return setUploadError("For video uploads, please provide a thumbnail image");
+       return setUploadError(t("errors.thumbnailRequired"));
     }
     if (!governorate) {
-       return setUploadError("Governorate is required");
+       return setUploadError(t("errors.governorateRequired"));
     }
 
     setIsUploading(true);
-    setUploadStep("Preparing your file...");
+    setUploadStep(t("steps.preparing"));
 
     try {
       const formData = new FormData();
@@ -178,23 +146,23 @@ export default function UserUploadPage() {
       formData.append("description", description);
       formData.append("governorate", governorate);
       formData.append("landscapeType", landscapeType);
-      formData.append("priceTND", priceTND);
+      formData.append("pricePersonalTND", pricePersonalTND);
+      formData.append("priceCommercialTND", priceCommercialTND);
       formData.append("watermark", String(watermark));
       if (attributionText) {
         formData.append("attributionText", attributionText);
       }
       
-      // The background AI logic is gone. 
-      // User tags state already contains the AI-generated tags!
+      // Parse tags to array
       if (tags) {
         const tagsArray = tags.split(",").map(t => t.trim()).filter(Boolean);
         formData.append("tags", JSON.stringify(tagsArray));
       }
 
-      setUploadStep("Uploading to server...");
+      setUploadStep(t("steps.uploading"));
       await PhotoService.uploadPhoto(formData);
       
-      setUploadStep("Processing complete!");
+      setUploadStep(t("steps.complete"));
       setUploadSuccess(true);
       
       // Navigate to dashboard after 5 seconds so user can see success
@@ -205,7 +173,7 @@ export default function UserUploadPage() {
     } catch (err: any) {
       const errorMsg = err.response?.data?.message 
         || err.message 
-        || "Failed to upload photo. Please try again.";
+        || t("errors.failedToUpload");
       setUploadError(errorMsg);
       // Scroll error into view
       setTimeout(() => {
@@ -221,30 +189,10 @@ export default function UserUploadPage() {
     <div className="max-w-4xl mx-auto pb-12 relative">
 
       {/* ═══ Full-screen Upload Overlay ═══ */}
-      {(isUploading || isAnalyzingAI) && (
+      {isUploading && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-300">
           <div className="bg-card border border-border/50 rounded-3xl p-10 shadow-2xl max-w-md w-full mx-4 text-center animate-in zoom-in-95 duration-500">
-            {isAnalyzingAI ? (
-              // AI Processing State
-              <>
-                <div className="relative mx-auto mb-6 h-20 w-20">
-                  <div className="absolute inset-0 rounded-full border-4 border-amber-500/20" />
-                  <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-500 animate-spin" />
-                  <div className="absolute inset-3 rounded-full bg-amber-500/10 flex items-center justify-center">
-                    <Sparkles className="h-7 w-7 text-amber-500" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-400 mb-2">
-                  AI is processing...
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">Generating tags for your photo</p>
-                <div className="flex items-center justify-center gap-2 text-amber-500 text-sm font-medium">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Analyzing image content</span>
-                </div>
-              </>
-            ) : (
-              // Uploading State
+              {/* Uploading State */}
               <>
                 <div className="relative mx-auto mb-6 h-20 w-20">
                   <div className="absolute inset-0 rounded-full border-4 border-fuchsia-500/20" />
@@ -253,14 +201,13 @@ export default function UserUploadPage() {
                     <Upload className="h-7 w-7 text-fuchsia-500" />
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">Uploading Your {mediaType === 'photo' ? 'Photo' : 'Video'}...</h3>
-                <p className="text-sm text-muted-foreground mb-4">Please don't close this page</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">{t("uploading", { type: t(mediaType) })}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{t("dontClose")}</p>
                 <div className="flex items-center justify-center gap-2 text-fuchsia-500 text-sm font-medium">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span>{uploadStep}</span>
                 </div>
               </>
-            )}
           </div>
         </div>
       )}
@@ -268,10 +215,10 @@ export default function UserUploadPage() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-600 to-pink-600">
-            Upload to Tounesna
+            {t("title")}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Share your beautiful photos of Tunisia. Submissions require Admin approval.
+            {t("subtitle")}
           </p>
         </div>
       </div>
@@ -281,30 +228,20 @@ export default function UserUploadPage() {
           <div className="h-20 w-20 bg-emerald-500/20 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="h-10 w-10" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-3">Upload Successful! 🎉</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-3">{t("success")}</h2>
           <p className="text-muted-foreground max-w-md mx-auto mb-2">
-            Your {mediaType === 'photo' ? 'photo' : 'video'} has been uploaded and is now <span className="text-amber-600 font-semibold">pending admin approval</span>.
+            {t("pendingApproval", { type: t(mediaType === 'photo' ? 'photo' : 'video').toLowerCase() })}
           </p>
           <p className="text-xs text-muted-foreground max-w-md mx-auto mb-6">
-            You'll be notified once reviewed. Redirecting to dashboard in a few seconds...
+            {t("notification")}
           </p>
-          
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 max-w-md mx-auto mb-8 animate-in fade-in slide-in-from-bottom-2">
-            <div className="flex items-center justify-center gap-2 text-amber-600 mb-3">
-              <Sparkles className="h-4 w-4" />
-              <span className="text-sm font-bold uppercase tracking-wider">AI Auto-Tagging</span>
-            </div>
-            <div className="text-sm text-amber-700 font-medium">
-              Your photo was successfully uploaded with the following tags:
-            </div>
-          </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button onClick={() => router.push("/user/dashboard")} variant="outline" className="w-full sm:w-auto">
-              Go to Dashboard
+              {t("goDashboard")}
             </Button>
             <Button onClick={resetForm} className="w-full sm:w-auto bg-fuchsia-600 hover:bg-fuchsia-700">
-              <RefreshCcw className="mr-2 h-4 w-4" /> Upload Another
+              <RefreshCcw className="mr-2 h-4 w-4" /> {t("uploadAnother")}
             </Button>
           </div>
         </div>
@@ -313,25 +250,25 @@ export default function UserUploadPage() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
               <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                <ImageIcon className="h-5 w-5 text-fuchsia-500" /> Photo Details
+                <ImageIcon className="h-5 w-5 text-fuchsia-500" /> {t("details")}
               </h2>
               
               <div className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Photo Title <span className="text-red-500">*</span></Label>
+                  <Label htmlFor="title">{t("formTitle")} <span className="text-red-500">*</span></Label>
                   <Input 
                     id="title" 
-                    placeholder="E.g., Sunset in Sidi Bou Said" 
+                    placeholder={t("titlePlaceholder")}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t("description")}</Label>
                   <Textarea 
                     id="description" 
-                    placeholder="Tell us about this photo... where was it taken? What's the story?"
+                    placeholder={t("descriptionPlaceholder")}
                     className="min-h-[100px] resize-y"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -340,29 +277,31 @@ export default function UserUploadPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label htmlFor="governorate">Governorate <span className="text-red-500">*</span></Label>
+                    <Label htmlFor="governorate">{t("governorate")} <span className="text-red-500">*</span></Label>
                     <Select value={governorate} onValueChange={setGovernorate}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Governorate" />
+                        <SelectValue placeholder={t("selectGovernorate")} />
                       </SelectTrigger>
                       <SelectContent>
                         {tGovs.map(gov => (
-                          <SelectItem key={gov} value={gov}>{gov}</SelectItem>
+                          <SelectItem key={gov} value={gov}>
+                            {t(`governorates.${gov}`)}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="landscape">Landscape Type</Label>
+                    <Label htmlFor="landscape">{t("landscapeType")}</Label>
                     <Select value={landscapeType} onValueChange={setLandscapeType}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Type" />
+                        <SelectValue placeholder={t("selectType")} />
                       </SelectTrigger>
                       <SelectContent>
                         {landscapeTypes.map((type) => (
                           <SelectItem key={type} value={type}>
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                            {t(`landscapeTypes.${type}`)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -371,58 +310,77 @@ export default function UserUploadPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tags">Tags (comma separated)</Label>
+                  <Label htmlFor="tags">{t("tags")}</Label>
                   <Input 
                     id="tags" 
-                    placeholder="e.g. nature, sunset, architecture" 
+                    placeholder={t("tagsPlaceholder")}
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                   />
-                  <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-500/15 rounded-lg">
-                    <Sparkles className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-700">
-                      <span className="font-semibold">AI Auto-Tagging:</span> The tags above are automatically generated when you select a photo. You can edit or add more tags before submitting!
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
-              <h2 className="text-xl font-semibold mb-6">Pricing & Licensing</h2>
+              <h2 className="text-xl font-semibold mb-6">{t("pricing")}</h2>
               
               <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="price">Price (TND)</Label>
-                  <div className="relative">
-                    <Input 
-                      id="price" 
-                      type="number" 
-                      min="0"
-                      step="0.5"
-                      value={priceTND}
-                      onChange={(e) => setPriceTND(e.target.value)}
-                      className="pl-8"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">DT</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="pricePersonal" className="flex items-center gap-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+                      Personal License
+                    </Label>
+                    <div className="relative">
+                      <Input 
+                        id="pricePersonal" 
+                        type="number" 
+                        min="0"
+                        step="0.5"
+                        value={pricePersonalTND}
+                        onChange={(e) => setPricePersonalTND(e.target.value)}
+                        className="pl-8"
+                      />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">DT</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">For personal projects, blogs, non-commercial use</p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">Set to 0 to make it free</p>
+                  <div className="space-y-2">
+                    <Label htmlFor="priceCommercial" className="flex items-center gap-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+                      Commercial License
+                    </Label>
+                    <div className="relative">
+                      <Input 
+                        id="priceCommercial" 
+                        type="number" 
+                        min="0"
+                        step="0.5"
+                        value={priceCommercialTND}
+                        onChange={(e) => setPriceCommercialTND(e.target.value)}
+                        className="pl-8"
+                      />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">DT</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">For business, advertising, commercial projects</p>
+                  </div>
                 </div>
+                <p className="text-xs text-muted-foreground italic">Set both to 0 for free content. Leave Commercial at 0 to offer only Personal license.</p>
 
                 <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-accent/30">
                   <div className="space-y-0.5">
-                    <Label className="text-base font-medium">Add Watermark to Preview</Label>
-                    <p className="text-xs text-muted-foreground">Protect your high-res image with a tiled watermark on the preview</p>
+                    <Label className="text-base font-medium">{t("watermark")}</Label>
+                    <p className="text-xs text-muted-foreground">{t("watermarkInfo")}</p>
                   </div>
                   <Switch checked={watermark} onCheckedChange={setWatermark} />
                 </div>
                 
                 {watermark && (
                   <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                    <Label htmlFor="attribution">Custom Watermark Text (Optional)</Label>
+                    <Label htmlFor="attribution">{t("customWatermark")}</Label>
                     <Input 
                       id="attribution" 
-                      placeholder="e.g. Photo by Jane Doe" 
+                      placeholder={t("customWatermarkPlaceholder")}
                       value={attributionText}
                       onChange={(e) => setAttributionText(e.target.value)}
                     />
@@ -434,22 +392,22 @@ export default function UserUploadPage() {
 
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm sticky top-24">
-              <h2 className="text-xl font-semibold mb-4">Select Media Type</h2>
+              <h2 className="text-xl font-semibold mb-4">{t("mediaType")}</h2>
               
               <div className="space-y-4 mb-6">
                 <div className="flex gap-4">
                   <label className={`flex items-center gap-3 cursor-pointer border p-3 rounded-xl flex-1 transition-colors ${mediaType === 'photo' ? 'border-fuchsia-500 bg-fuchsia-500/5' : 'hover:bg-muted/50'}`}>
                     <input type="radio" name="mediaType" className="w-4 h-4 text-fuchsia-600" checked={mediaType === 'photo'} onChange={() => { setMediaType('photo'); setSelectedFile(null); setPreviewUrl(null); }} />
-                    <span className="font-medium text-sm">Photo</span>
+                    <span className="font-medium text-sm">{t("photo")}</span>
                   </label>
                   <label className={`flex items-center gap-3 cursor-pointer border p-3 rounded-xl flex-1 transition-colors ${mediaType === 'video' ? 'border-fuchsia-500 bg-fuchsia-500/5' : 'hover:bg-muted/50'}`}>
                     <input type="radio" name="mediaType" className="w-4 h-4 text-fuchsia-600" checked={mediaType === 'video'} onChange={() => { setMediaType('video'); setSelectedFile(null); setPreviewUrl(null); setThumbnailFile(null); setThumbnailPreviewUrl(null); }} />
-                    <span className="font-medium text-sm">Video</span>
+                    <span className="font-medium text-sm">{t("video")}</span>
                   </label>
                 </div>
               </div>
 
-              <h2 className="text-xl font-semibold mb-4">Upload {mediaType === 'photo' ? 'Photo' : 'Video' } <span className="text-red-500">*</span></h2>
+              <h2 className="text-xl font-semibold mb-4">{t("uploadLabel", { type: t(mediaType) })} <span className="text-red-500">*</span></h2>
               
               <div 
                 onClick={handleFileClick}
@@ -469,13 +427,13 @@ export default function UserUploadPage() {
                 {previewUrl ? (
                   <div className="relative w-full h-full rounded-lg overflow-hidden group bg-black/10 flex items-center justify-center">
                     {mediaType === 'photo' ? (
-                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                        <img src={previewUrl} alt={t("photo")} className="w-full h-full object-cover" />
                     ) : (
                         <video src={previewUrl} className="w-full h-full object-contain" controls />
                     )}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <p className="text-white font-medium flex items-center gap-2">
-                        <Camera className="h-5 w-5" /> Change {mediaType === 'photo' ? 'Photo' : 'Video'}
+                        <Camera className="h-5 w-5" /> {t("changeMedia", { type: t(mediaType) })}
                       </p>
                     </div>
                   </div>
@@ -484,12 +442,12 @@ export default function UserUploadPage() {
                     <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                       <Upload className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium text-foreground mb-1">Click to upload {mediaType}</p>
+                    <p className="font-medium text-foreground mb-1">{t("clickToUpload", { type: t(mediaType).toLowerCase() })}</p>
                     <p className="text-xs text-muted-foreground max-w-[180px] mx-auto mb-4">
-                      {mediaType === 'photo' ? 'JPEG, PNG or WEBP (Max 10MB)' : 'MP4, WEBM (Max 500MB)'}
+                      {t("fileInfo", { type: mediaType === 'photo' ? 'JPEG, PNG, WEBP' : 'MP4, WEBM', size: mediaType === 'photo' ? '10' : '500' })}
                     </p>
                     <Button variant="outline" size="sm" type="button" className="pointer-events-none">
-                      Browse Files
+                      {t("browseFiles")}
                     </Button>
                   </div>
                 )}
@@ -508,7 +466,7 @@ export default function UserUploadPage() {
 
               {mediaType === 'video' && (
                 <div className="mt-6">
-                  <h2 className="text-xl font-semibold mb-4">Video Thumbnail <span className="text-red-500">*</span></h2>
+                  <h2 className="text-xl font-semibold mb-4">{t("videoThumbnail")} <span className="text-red-500">*</span></h2>
                   <div 
                     onClick={handleThumbnailClick}
                     className={`
@@ -526,18 +484,18 @@ export default function UserUploadPage() {
                     
                     {thumbnailPreviewUrl ? (
                       <div className="relative w-full h-full rounded-lg overflow-hidden group">
-                        <img src={thumbnailPreviewUrl} alt="Thumbnail Preview" className="w-full h-full object-cover" />
+                        <img src={thumbnailPreviewUrl} alt={t("videoThumbnail")} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <p className="text-white font-medium flex items-center gap-2">
-                            <Camera className="h-5 w-5" /> Change Thumbnail
+                            <Camera className="h-5 w-5" /> {t("changeThumbnail")}
                           </p>
                         </div>
                       </div>
                     ) : (
                       <div className="text-center">
                         <ImageIcon className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-                        <p className="text-sm font-medium text-foreground mb-1">Upload an image thumbnail</p>
-                        <p className="text-xs text-muted-foreground mt-1">Required for videos</p>
+                        <p className="text-sm font-medium text-foreground mb-1">{t("uploadThumbnail")}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{t("requiredForVideos")}</p>
                       </div>
                     )}
                   </div>
@@ -548,14 +506,14 @@ export default function UserUploadPage() {
                 <div id="upload-error" className="mt-4 p-4 rounded-xl border-2 border-red-500/30 bg-red-500/10 animate-in shake-x duration-500">
                   <div className="flex items-center gap-2 mb-2">
                     <XCircle className="h-5 w-5 text-red-500 shrink-0" />
-                    <span className="font-semibold text-red-600 text-sm">Upload Failed</span>
+                    <span className="font-semibold text-red-600 text-sm">{t("uploadFailed")}</span>
                   </div>
                   <p className="text-red-500 text-sm ml-7">{uploadError}</p>
                   <button 
                     onClick={() => setUploadError('')} 
                     className="mt-3 ml-7 text-xs text-red-400 hover:text-red-600 underline transition-colors"
                   >
-                    Dismiss
+                    {t("dismiss")}
                   </button>
                 </div>
               )}
@@ -566,7 +524,7 @@ export default function UserUploadPage() {
                 disabled={isUploading}
               >
                 <Upload className="mr-2 h-5 w-5" />
-                Submit for Approval
+                {t("submit")}
               </Button>
             </div>
           </div>

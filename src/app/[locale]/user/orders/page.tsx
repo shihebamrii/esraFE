@@ -15,8 +15,11 @@ import { Badge } from "@/components/ui/badge";
 import { UserService } from "@/features/user/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function UserOrdersPage() {
+  const t = useTranslations("UserDashboard.orders");
+  const locale = useLocale();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -48,17 +51,17 @@ export default function UserOrdersPage() {
       >
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Order History
+            {t("title")}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            View and manage your purchases
+            {t("subtitle")}
           </p>
         </div>
         {orders.length > 0 && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
             <Receipt className="h-3.5 w-3.5 text-blue-500" />
             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-              {orders.length} order{orders.length > 1 ? "s" : ""}
+              {t("orderCount", { count: orders.length })}
             </span>
           </div>
         )}
@@ -88,16 +91,16 @@ export default function UserOrdersPage() {
                   <Sparkles className="h-3 w-3 text-white" />
                 </div>
               </div>
-              <h3 className="font-semibold text-lg mb-1.5">No orders yet</h3>
+              <h3 className="font-semibold text-lg mb-1.5">{t("noOrders")}</h3>
               <p className="text-sm text-muted-foreground text-center max-w-sm mb-5">
-                When you purchase content, your order history will appear here.
+                {t("noOrdersSubtitle")}
               </p>
               <Button
                 variant="outline"
                 className="rounded-xl border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10"
                 asChild
               >
-                <Link href="/tounesna">Browse Content</Link>
+                <Link href="/tounesna">{t("browseContent", { defaultValue: "Browse Content" })}</Link>
               </Button>
             </CardContent>
           </Card>
@@ -147,27 +150,26 @@ export default function UserOrdersPage() {
                             </span>
                             <div>
                               <CardTitle className="text-sm font-semibold">
-                                Order #
+                                {t("orderId")}
                                 {order._id.substring(0, 8).toUpperCase()}
                               </CardTitle>
                               <p className="text-xs text-muted-foreground mt-0.5">
                                 {new Date(
                                   order.createdAt
-                                ).toLocaleDateString("en-US", {
+                                ).toLocaleDateString(locale === "ar" ? "ar-TN" : locale === "fr" ? "fr-FR" : "en-US", {
                                   year: "numeric",
                                   month: "short",
                                   day: "numeric",
                                 })}
                                 {" · "}
-                                {order.items?.length || 0} item
-                                {(order.items?.length || 0) > 1 ? "s" : ""}
+                                {t("itemCount", { count: order.items?.length || 0 })}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="text-right hidden sm:block">
                               <span className="font-bold text-sm block">
-                                {order.total} {order.currency}
+                                {order.total} {order.currency === "TND" ? (locale === "ar" ? "د.ت" : "DT") : order.currency}
                               </span>
                             </div>
                             <Badge
@@ -177,7 +179,7 @@ export default function UserOrdersPage() {
                                   : "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20"
                               }`}
                             >
-                              {order.paymentStatus}
+                              {order.paymentStatus === "paid" ? t("paid") : t("pending")}
                             </Badge>
                             <ChevronDown
                               className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${

@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { AdminService } from "@/features/admin/api";
 import { PhotoService } from "@/features/photos/api";
 import { toast } from "sonner";
-import { Loader2, UploadCloud, Sparkles, Upload } from "lucide-react";
+import { Loader2, UploadCloud, Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface UploadPhotoFormProps {
   initialData?: any;
@@ -18,9 +19,10 @@ interface UploadPhotoFormProps {
 }
 
 export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhotoFormProps) {
+  const t = useTranslations("AdminDashboard.upload.form.photo");
+  const tDashboard = useTranslations("AdminDashboard");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [uploadStep, setUploadStep] = useState("");
   const [mediaType, setMediaType] = useState<'photo' | 'video'>('photo');
   const [formData, setFormData] = useState({
@@ -28,7 +30,8 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
     description: initialData?.description || "",
     governorate: initialData?.governorate || "",
     landscapeType: initialData?.landscapeType || "sea",
-    priceTND: initialData?.priceTND?.toString() || "0",
+    pricePersonalTND: initialData?.pricePersonalTND?.toString() || initialData?.priceTND?.toString() || "0",
+    priceCommercialTND: initialData?.priceCommercialTND?.toString() || "0",
     watermark: initialData?.watermark !== undefined ? initialData.watermark.toString() : "true",
     attributionText: initialData?.attributionText || "Tounesna Official Content",
     tags: initialData?.tags ? JSON.stringify(initialData.tags) : "[]",
@@ -46,43 +49,6 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setFiles({ ...files, [type]: file });
-      
-      // Trigger AI tags if we selected a highRes photo and aren't editing
-      if (type === 'highRes' && mediaType === 'photo' && !photoId) {
-        setIsAnalyzingAI(true);
-        try {
-          const form = new FormData();
-          form.append('photo', file);
-          const result = await PhotoService.analyzePhoto(form);
-          
-          setFormData(prev => {
-            let nextState = { ...prev };
-            
-            // Handle Tags
-            if (result.data?.tags && result.data.tags.length > 0) {
-              const currentTags = prev.tags === "[]" ? [] : JSON.parse(prev.tags);
-              const newTags = [...new Set([...currentTags, ...result.data.tags])];
-              nextState.tags = JSON.stringify(newTags);
-            }
-            
-            // Handle Description (only if empty to avoid overwriting user text)
-            if (result.data?.description && !prev.description) {
-               nextState.description = result.data.description;
-            }
-            
-            return nextState;
-          });
-          
-          if (result.data?.tags?.length || result.data?.description) {
-            toast.success("AI generated tags and description successfully!");
-          }
-        } catch (error) {
-          console.error("AI Analysis failed", error);
-          toast.error("Failed to auto-analyze image.");
-        } finally {
-          setIsAnalyzingAI(false);
-        }
-      }
     }
   };
 
@@ -127,10 +93,10 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
       setUploadStep(isEditing ? "Saving changes..." : "Uploading to server...");
       if (isEditing) {
         await AdminService.updatePhoto(photoId, data);
-        toast.success("Photo updated successfully!");
+        toast.success(tDashboard("photos.messages.saveSuccess"));
       } else {
         await AdminService.uploadPhoto(data);
-        toast.success("Photo uploaded successfully!");
+        toast.success(tDashboard("photos.messages.saveSuccess"));
       }
       
       if (onSuccess) {
@@ -140,7 +106,7 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
         router.refresh();
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || `Failed to ${isEditing ? 'update' : 'upload'} photo`);
+      toast.error(error.response?.data?.message || tDashboard("photos.messages.saveFailed"));
       console.error(error);
     } finally {
       setLoading(false);
@@ -151,30 +117,10 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
   return (
     <>
       {/* ═══ Full-screen Upload Overlay ═══ */}
-      {(loading || isAnalyzingAI) && (
+      {loading && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-300">
           <div className="bg-card border border-border/50 rounded-3xl p-10 shadow-2xl max-w-md w-full mx-4 text-center animate-in zoom-in-95 duration-500">
-            {isAnalyzingAI ? (
-               // AI Processing State
-               <>
-                 <div className="relative mx-auto mb-6 h-20 w-20">
-                   <div className="absolute inset-0 rounded-full border-4 border-amber-500/20" />
-                   <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-500 animate-spin" />
-                   <div className="absolute inset-3 rounded-full bg-amber-500/10 flex items-center justify-center">
-                     <Sparkles className="h-7 w-7 text-amber-500" />
-                   </div>
-                 </div>
-                 <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-400 mb-2">
-                   AI is processing...
-                 </h3>
-                 <p className="text-sm text-muted-foreground mb-4">Generating tags for your photo</p>
-                 <div className="flex items-center justify-center gap-2 text-amber-500 text-sm font-medium">
-                   <Loader2 className="h-4 w-4 animate-spin" />
-                   <span>Analyzing image content</span>
-                 </div>
-               </>
-            ) : (
-               // Uploading State
+               {/* Uploading State */}
                <>
                  <div className="relative mx-auto mb-6 h-20 w-20">
                    <div className="absolute inset-0 rounded-full border-4 border-amber-500/20" />
@@ -190,7 +136,6 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
                    <span>{uploadStep}</span>
                  </div>
                </>
-            )}
           </div>
         </div>
       )}
@@ -199,38 +144,38 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
       
       {!photoId && (
         <div className="space-y-4">
-          <Label className="text-base font-semibold">Asset Type</Label>
+          <Label className="text-base font-semibold">{t("assetType")}</Label>
           <div className="flex gap-4">
             <label className={`flex items-center gap-3 cursor-pointer border p-4 rounded-xl flex-1 transition-colors ${mediaType === 'photo' ? 'border-amber-500 bg-amber-500/5' : 'hover:bg-muted/50'}`}>
               <input type="radio" name="mediaType" className="w-4 h-4 text-amber-600 focus:ring-amber-500" checked={mediaType === 'photo'} onChange={() => setMediaType('photo')} />
-              <span className="font-medium">Photo / Image</span>
+              <span className="font-medium">{t("photo")}</span>
             </label>
             <label className={`flex items-center gap-3 cursor-pointer border p-4 rounded-xl flex-1 transition-colors ${mediaType === 'video' ? 'border-amber-500 bg-amber-500/5' : 'hover:bg-muted/50'}`}>
               <input type="radio" name="mediaType" className="w-4 h-4 text-amber-600 focus:ring-amber-500" checked={mediaType === 'video'} onChange={() => setMediaType('video')} />
-              <span className="font-medium">Video</span>
+              <span className="font-medium">{t("video")}</span>
             </label>
           </div>
         </div>
       )}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="photo-title">Title *</Label>
-          <Input id="photo-title" name="title" required value={formData.title} onChange={handleChange} placeholder="Photo title" />
+          <Label htmlFor="photo-title">{t("title")} *</Label>
+          <Input id="photo-title" name="title" required value={formData.title} onChange={handleChange} placeholder={t("title")} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="photo-gov">Governorate *</Label>
-          <Input id="photo-gov" name="governorate" required value={formData.governorate} onChange={handleChange} placeholder="e.g., Nabeul" />
+          <Label htmlFor="photo-gov">{t("governorate")} *</Label>
+          <Input id="photo-gov" name="governorate" required value={formData.governorate} onChange={handleChange} placeholder={t("governorate")} />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="photo-desc">Description *</Label>
-        <Textarea id="photo-desc" name="description" required value={formData.description} onChange={handleChange} placeholder="Photo description..." rows={4} />
+        <Label htmlFor="photo-desc">{t("description")} *</Label>
+        <Textarea id="photo-desc" name="description" required value={formData.description} onChange={handleChange} placeholder={t("description")} rows={4} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="photo-type">Landscape Type *</Label>
+          <Label htmlFor="photo-type">{t("landscape")} *</Label>
           <select 
             id="photo-type" 
             name="landscapeType" 
@@ -238,27 +183,23 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
             onChange={handleChange}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
           >
-            <option value="sea">Sea / Beach</option>
-            <option value="desert">Desert</option>
-            <option value="mountain">Mountain</option>
-            <option value="village">Village</option>
-            <option value="oasis">Oasis</option>
-            <option value="forest">Forest</option>
-            <option value="city">City</option>
-            <option value="historical">Historical</option>
-            <option value="other">Other</option>
+            <option value="sea">{t("landscapes.sea")}</option>
+            <option value="desert">{t("landscapes.desert")}</option>
+            <option value="mountain">{t("landscapes.mountain")}</option>
+            <option value="village">{t("landscapes.village")}</option>
+            <option value="oasis">{t("landscapes.oasis")}</option>
+            <option value="forest">{t("landscapes.forest")}</option>
+            <option value="city">{t("landscapes.city")}</option>
+            <option value="historical">{t("landscapes.historical")}</option>
+            <option value="other">{t("landscapes.other")}</option>
           </select>
-        </div>
-         <div className="space-y-2">
-          <Label htmlFor="photo-price">Price (TND)</Label>
-          <Input id="photo-price" name="priceTND" type="number" min="0" step="0.1" value={formData.priceTND} onChange={handleChange} />
-        </div>
+      </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="photo-attr">Attribution Text</Label>
-          <Input id="photo-attr" name="attributionText" value={formData.attributionText} onChange={handleChange} placeholder="Watermark text" />
+          <Label htmlFor="photo-attr">{t("attribution")}</Label>
+          <Input id="photo-attr" name="attributionText" value={formData.attributionText} onChange={handleChange} placeholder={t("attributionPlaceholder")} />
         </div>
         <div className="flex items-center space-x-2 pt-6">
           <input 
@@ -269,37 +210,52 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
             onChange={handleChange}
             className="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-600"
           />
-          <Label htmlFor="photo-watermark">Auto-generate Watermark</Label>
+          <Label htmlFor="photo-watermark">{t("autoWatermark")}</Label>
         </div>
       </div>
 
-      {!photoId && (
-        <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-500/15 rounded-lg">
-          <Sparkles className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-700">
-            <span className="font-semibold">AI Auto-Tagging:</span> Tags are automatically generated when you select a photo above. You can edit them freely before submitting.
-          </p>
+      <div className="space-y-3 p-4 border border-amber-200/50 bg-amber-50/30 rounded-xl dark:bg-amber-900/10 dark:border-amber-800/50">
+        <Label className="text-base font-semibold flex items-center gap-2">💰 {t("price")} — License Pricing</Label>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="photo-price-personal" className="text-sm flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+              Personal License (TND)
+            </Label>
+            <Input id="photo-price-personal" name="pricePersonalTND" type="number" min="0" step="0.1" value={formData.pricePersonalTND} onChange={handleChange} placeholder="0" />
+            <p className="text-xs text-muted-foreground">For personal projects, blogs, non-commercial use</p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="photo-price-commercial" className="text-sm flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+              Commercial License (TND)
+            </Label>
+            <Input id="photo-price-commercial" name="priceCommercialTND" type="number" min="0" step="0.1" value={formData.priceCommercialTND} onChange={handleChange} placeholder="0" />
+            <p className="text-xs text-muted-foreground">For business, advertising, commercial projects</p>
+          </div>
         </div>
-      )}
+        <p className="text-xs text-muted-foreground italic">Set both to 0 for free content. Leave Commercial at 0 to offer only Personal license.</p>
+      </div>
+
 
     <div className="grid gap-6 sm:grid-cols-2 pt-4 border-t border-border/50">
         <div className="space-y-2">
-          <Label className="text-base font-semibold block mb-2">{mediaType === 'photo' ? 'High-Res Image' : 'Video File'} {photoId ? "(Optional to change)" : "*"}</Label>
+          <Label className="text-base font-semibold block mb-2">{mediaType === 'photo' ? t("highResLabel") : t("videoFileLabel")} {photoId ? t("optionalToChange") : "*"}</Label>
           <div className="border-2 border-dashed border-border/50 rounded-xl p-6 text-center hover:bg-muted/30 transition-colors cursor-pointer relative">
             <input type="file" accept={mediaType === 'photo' ? "image/*" : "video/*"} required={!photoId} onChange={(e) => handleFileChange(e, 'highRes')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
-            <p className="text-sm font-medium">{files.highRes ? files.highRes.name : photoId ? `Click to replace ${mediaType}` : `Click or drag ${mediaType} file`}</p>
-            <p className="text-xs text-muted-foreground mt-1">Full quality for buyers</p>
+            <p className="text-sm font-medium">{files.highRes ? files.highRes.name : photoId ? t("clickToReplace", { type: t(mediaType) }) : t("clickToUpload", { type: t(mediaType) })}</p>
+            <p className="text-xs text-muted-foreground mt-1">{t("fullQuality")}</p>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label className="text-base font-semibold block mb-2">{mediaType === 'video' ? 'Video Thumbnail (Image)' : 'Low-Res Preview (Optional)'} {mediaType === 'video' && !photoId ? "*" : ""}</Label>
+          <Label className="text-base font-semibold block mb-2">{mediaType === 'video' ? t("videoThumbnail") : t("lowResPreview")} {mediaType === 'video' && !photoId ? "*" : ""}</Label>
           <div className="border-2 border-dashed border-border/50 rounded-xl p-6 text-center hover:bg-muted/30 transition-colors cursor-pointer relative">
             <input type="file" accept="image/*" required={mediaType === 'video' && !photoId} onChange={(e) => handleFileChange(e, 'lowRes')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
-            <p className="text-sm font-medium">{files.lowRes ? files.lowRes.name : "Click or drag preview image"}</p>
-            <p className="text-xs text-muted-foreground mt-1">{mediaType === 'video' ? 'Required for video' : 'Auto-generated if left empty'}</p>
+            <p className="text-sm font-medium">{files.lowRes ? files.lowRes.name : t("clickToUploadPreview")}</p>
+            <p className="text-xs text-muted-foreground mt-1">{mediaType === 'video' ? t("requiredForVideo") : t("autoGenerated")}</p>
           </div>
         </div>
       </div>
@@ -311,9 +267,9 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
           className="w-full sm:w-auto min-w-[150px] bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md shadow-amber-500/20"
         >
           {loading ? (
-             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {photoId ? "Updating..." : "Uploading..."}</>
+             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {photoId ? t("updating") : t("uploading")}</>
           ) : (
-            photoId ? "Update Photo" : "Upload Photo"
+            photoId ? t("update") : t("submit")
           )}
         </Button>
       </div>

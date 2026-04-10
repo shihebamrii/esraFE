@@ -5,9 +5,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, DollarSign, Video, Image as ImageIcon } from "lucide-react";
 import { AdminService, AdminStats } from "@/features/admin/api";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<AdminStats | null>(null);
+  const t = useTranslations("AdminDashboard.home");
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,9 +26,48 @@ export default function AdminDashboardPage() {
     fetchStats();
   }, []);
 
+  const statCards = [
+    {
+      title: t("totalRevenue"),
+      value: stats ? `${stats.totalRevenue || 0} DT` : "0 DT",
+      icon: DollarSign,
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-100",
+      description: t("paidOrders"),
+    },
+    {
+      title: t("activeUsers"),
+      value: stats ? stats.activeUsers : 0,
+      icon: Users,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+      description: t("totalRegistered"),
+    },
+    {
+      title: t("contentCount"),
+      value: stats ? stats.videoCount : 0,
+      icon: Video,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
+      description: t("videoPlatform"),
+    },
+    {
+      title: t("tounesnaPhotos"),
+      value: stats ? stats.photoCount : 0,
+      icon: ImageIcon,
+      color: "text-amber-600",
+      bgColor: "bg-amber-100",
+      description: t("photoGallery"),
+    },
+  ];
+
   return (
     <div className="space-y-8">
-      <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        </div>
+      </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         

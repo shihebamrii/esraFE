@@ -17,32 +17,37 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { UserService, DownloadItem } from "@/features/user/api";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const typeConfig: Record<
-  string,
-  { icon: typeof Video; gradient: string; bg: string; label: string }
-> = {
-  Video: {
-    icon: Video,
-    gradient: "from-blue-500 to-cyan-500",
-    bg: "from-blue-500/10 to-cyan-500/5",
-    label: "Videos",
-  },
-  Pack: {
-    icon: Package,
-    gradient: "from-purple-500 to-fuchsia-500",
-    bg: "from-purple-500/10 to-fuchsia-500/5",
-    label: "Packs",
-  },
-  Photo: {
-    icon: ImageIcon,
-    gradient: "from-amber-500 to-orange-500",
-    bg: "from-amber-500/10 to-orange-500/5",
-    label: "Photos",
-  },
-};
+import { useTranslations, useLocale } from "next-intl";
 
 export default function UserDownloadsPage() {
+  const t = useTranslations("UserDashboard.downloads");
+  const tStats = useTranslations("UserDashboard.stats");
+  const locale = useLocale();
+
+  const typeConfig: Record<
+    string,
+    { icon: typeof Video; gradient: string; bg: string; label: string }
+  > = {
+    Video: {
+      icon: Video,
+      gradient: "from-blue-500 to-cyan-500",
+      bg: "from-blue-500/10 to-cyan-500/5",
+      label: tStats("videos"),
+    },
+    Pack: {
+      icon: Package,
+      gradient: "from-purple-500 to-fuchsia-500",
+      bg: "from-purple-500/10 to-fuchsia-500/5",
+      label: tStats("packs"),
+    },
+    Photo: {
+      icon: ImageIcon,
+      gradient: "from-amber-500 to-orange-500",
+      bg: "from-amber-500/10 to-orange-500/5",
+      label: tStats("photos"),
+    },
+  };
+
   const [downloads, setDownloads] = useState<DownloadItem[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -94,10 +99,10 @@ export default function UserDownloadsPage() {
       {/* Header */}
       <div className="animate-slide-up">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          My Downloads
+          {t("title")}
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Access and download your purchased content
+          {t("subtitle")}
         </p>
       </div>
 
@@ -132,7 +137,7 @@ export default function UserDownloadsPage() {
         <div className="relative max-w-md animate-slide-up">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search downloads..."
+            placeholder={t("searchPlaceholder")}
             className="pl-10 pr-10 rounded-xl border-border/50 bg-muted/30 focus:bg-background h-11"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -175,12 +180,12 @@ export default function UserDownloadsPage() {
                 </div>
               </div>
               <h3 className="font-semibold text-base mb-1.5">
-                {search ? "No matches found" : "No downloads yet"}
+                {search ? t("noMatches") : t("noDownloads")}
               </h3>
               <p className="text-sm text-muted-foreground text-center max-w-xs">
                 {search
-                  ? "Try a different search term"
-                  : "Your purchased content will appear here for easy access."}
+                  ? t("noMatchesSubtitle")
+                  : t("noDownloadsSubtitle")}
               </p>
             </CardContent>
           </Card>
@@ -234,7 +239,7 @@ export default function UserDownloadsPage() {
                           <Calendar className="h-3 w-3" />
                           <span>
                             {new Date(item.purchaseDate).toLocaleDateString(
-                              "en-US",
+                              locale === "ar" ? "ar-TN" : locale === "fr" ? "fr-FR" : "en-US",
                               {
                                 year: "numeric",
                                 month: "short",
@@ -246,11 +251,6 @@ export default function UserDownloadsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2.5 sm:shrink-0">
-                      {!item.downloadToken && (
-                        <span className="text-[11px] font-medium text-red-500 bg-red-500/10 px-2.5 py-1 rounded-lg ring-1 ring-red-500/20">
-                          Expired
-                        </span>
-                      )}
                       <a
                         href={
                           item.downloadToken
@@ -268,7 +268,7 @@ export default function UserDownloadsPage() {
                           disabled={!item.downloadToken}
                         >
                           <Download className="me-2 h-4 w-4" />
-                          Download
+                          {t("download")}
                         </Button>
                       </a>
                     </div>

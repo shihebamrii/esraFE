@@ -19,9 +19,11 @@ import { format } from "date-fns";
 import { AdminService } from "@/features/admin/api";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { ShieldAlert, User } from "lucide-react";
 
 export default function AdminContentPage() {
+  const t = useTranslations("AdminDashboard.content");
   const [contents, setContents] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,7 @@ export default function AdminContentPage() {
       setContents(res.data?.contents || []);
     } catch (e) {
       console.error(e);
-      toast.error("Failed to load content");
+      toast.error(t("messages.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -46,11 +48,11 @@ export default function AdminContentPage() {
   const handleApprove = async (id: string, status: 'approved' | 'rejected') => {
     try {
       await AdminService.approveContent(id, status);
-      toast.success(`Content ${status} successfully`);
+      toast.success(t("messages.approveSuccess", { status: t(`table.${status}`) }));
       fetchContents();
     } catch (e) {
       console.error(e);
-      toast.error(`Failed to ${status} content`);
+      toast.error(t("messages.approveFailed", { status: t(`table.${status}`) }));
     }
   };
 
@@ -69,56 +71,61 @@ export default function AdminContentPage() {
     <div className="rounded-md border bg-card">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>User</TableHead>
-            <TableHead>User</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+            <TableRow>
+              <TableHead>{t("table.title")}</TableHead>
+              <TableHead>{t("table.user")}</TableHead>
+              <TableHead>{t("table.type")}</TableHead>
+              <TableHead>{t("table.status")}</TableHead>
+              <TableHead>{t("table.date")}</TableHead>
+              <TableHead className="text-right">{t("table.actions")}</TableHead>
+            </TableRow>
+          </TableHeader>
         <TableBody>
           {data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                No content found
+              <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                {t("table.noContent")}
               </TableCell>
             </TableRow>
           ) : (
             data.map((item) => (
               <TableRow key={item._id}>
                 <TableCell className="font-medium truncate max-w-[200px]">{item.title}</TableCell>
-                <TableCell>{item.createdBy?.name || 'Unknown'}</TableCell>
+                <TableCell>{item.createdBy?.name || t("table.unknown")}</TableCell>
 
                 <TableCell className="capitalize">{item.type}</TableCell>
                 <TableCell>
-                  <Badge variant={item.approvalStatus === 'approved' ? "default" : "secondary"}>
+                  <Badge variant="outline" className={`capitalize ${ 
+                    (item.approvalStatus || 'approved') === 'approved' ? 'text-green-600 border-green-200 bg-green-50' : 
+                    item.approvalStatus === 'rejected' ? 'text-red-600 border-red-200 bg-red-50' : 
+                    'text-amber-600 border-amber-200 bg-amber-50'
+                  }`}>
                     {item.approvalStatus || 'approved'}
                   </Badge>
                 </TableCell>
-                <TableCell>{format(new Date(item.createdAt), 'dd MMM yyyy')}</TableCell>
-                <TableCell className="text-right space-x-2">
-                  {showApprovalActions ? (
-                    <>
-                      <Button variant="outline" size="sm" className="text-emerald-500 border-emerald-200 hover:bg-emerald-50" onClick={() => handleApprove(item._id, 'approved')}>
-                        <CheckCircle className="mr-2 h-4 w-4" /> Approve
-                      </Button>
-                      <Button variant="outline" size="sm" className="text-rose-500 border-rose-200 hover:bg-rose-50" onClick={() => handleApprove(item._id, 'rejected')}>
-                        <XCircle className="mr-2 h-4 w-4" /> Reject
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button variant="ghost" size="icon">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-destructive">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </>
-                  )}
+                <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    {showApprovalActions ? (
+                      <>
+                        <Button variant="outline" size="sm" className="text-emerald-500 border-emerald-200 hover:bg-emerald-50" onClick={() => handleApprove(item._id, 'approved')}>
+                          <CheckCircle className="mr-2 h-4 w-4" /> {t("table.approve")}
+                        </Button>
+                        <Button variant="outline" size="sm" className="text-rose-500 border-rose-200 hover:bg-rose-50" onClick={() => handleApprove(item._id, 'rejected')}>
+                          <XCircle className="mr-2 h-4 w-4" /> {t("table.reject")}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button variant="ghost" size="icon">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))
@@ -129,75 +136,97 @@ export default function AdminContentPage() {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Content Management</h2>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1 max-w-sm">
-           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-           <Input 
-             placeholder="Search content..."
-             className="pl-9"
-             value={search}
-             onChange={(e) => setSearch(e.target.value)}
-           />
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Plus className="mr-2 h-4 w-4" />
+          {t("addContent", { defaultValue: "Add Content" })}
+        </Button>
       </div>
 
-      <Tabs defaultValue="official" className="w-full mt-6">
-        <TabsList className="mb-4">
-          <TabsTrigger value="official" className="flex gap-2 text-base px-6 py-3">
-            <ShieldAlert className="h-5 w-5 text-amber-500" /> Official Content
-             <Badge variant="secondary" className="ml-1">{officialContent.length}</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="community" className="flex gap-2 text-base px-6 py-3">
-            <User className="h-5 w-5 text-slate-500" /> Community Submissions
-            {pendingContent.length > 0 && (
-              <Badge variant="destructive" className="ml-1">{pendingContent.length} pending</Badge>
-            )}
-            {pendingContent.length === 0 && (
-              <Badge variant="secondary" className="ml-1">{communityContent.length}</Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+      <Tabs
+        defaultValue="official"
+        className="space-y-4"
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <TabsList className="bg-muted/50 p-1">
+            <TabsTrigger value="official" className="flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4" />
+              {t("tabs.official")}
+              <Badge variant="secondary" className="ml-1">{officialContent.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="community" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              {t("tabs.community")}
+              {pendingContent.length > 0 && (
+                <Badge variant="destructive" className="ml-1">{pendingContent.length}</Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </div>
         
         <TabsContent value="official" className="mt-6">
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Content uploaded by system administrators. Automatically approved.</p>
-          </div>
-          {loading ? <div>Loading...</div> : <ContentTable data={officialContent} />}
-        </TabsContent>
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">{t("officialDescription")}</p>
+            </div>
+            {loading ? <div>{t("loading")}</div> : <ContentTable data={officialContent} />}
+          </TabsContent>
 
         <TabsContent value="community" className="mt-6">
-          <div className="bg-slate-50 border rounded-lg p-4 mb-6">
-            <Tabs defaultValue="pending" className="w-full">
-              <TabsList className="mb-4 bg-white border">
-                <TabsTrigger value="pending" className="flex gap-2">
-                  <Clock className="h-4 w-4" /> Pending Approvals 
-                  <Badge variant="secondary" className="ml-1">{pendingContent.length}</Badge>
-                </TabsTrigger>
-                <TabsTrigger value="approved" className="flex gap-2">
-                  <CheckCircle className="h-4 w-4" /> Approved
-                </TabsTrigger>
-                <TabsTrigger value="rejected" className="flex gap-2">
-                  <XCircle className="h-4 w-4" /> Rejected
-                </TabsTrigger>
-              </TabsList>
+            <div className="space-y-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-amber-500" />
+                  <h3 className="text-lg font-semibold">{t("tabs.pending")}</h3>
+                  <Badge variant="destructive" className="ml-1">{pendingContent.length}</Badge>
+                </div>
+                {loading ? (
+                  <div>{t("loading")}</div>
+                ) : (
+                  <ContentTable data={pendingContent} showApprovalActions={true} />
+                )}
+              </div>
 
-              <TabsContent value="pending">
-                {loading ? <div>Loading...</div> : <ContentTable data={pendingContent} showApprovalActions={true} />}
-              </TabsContent>
-              <TabsContent value="approved">
-                {loading ? <div>Loading...</div> : <ContentTable data={approvedContent} />}
-              </TabsContent>
-              <TabsContent value="rejected">
-                {loading ? <div>Loading...</div> : <ContentTable data={rejectedContent} />}
-              </TabsContent>
-            </Tabs>
-          </div>
-        </TabsContent>
+              <div className="flex flex-col gap-4 pt-6 border-t">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <h3 className="text-lg font-semibold">{t("tabs.approved")}</h3>
+                  <Badge variant="secondary" className="ml-1">{approvedContent.length}</Badge>
+                </div>
+                {loading ? (
+                  <div>{t("loading")}</div>
+                ) : (
+                  <ContentTable data={approvedContent} />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-4 pt-6 border-t">
+                <div className="flex items-center gap-2">
+                  <XCircle className="h-4 w-4 text-red-500" />
+                  <h3 className="text-lg font-semibold">{t("tabs.rejected")}</h3>
+                  <Badge variant="secondary" className="ml-1">{rejectedContent.length}</Badge>
+                </div>
+                {loading ? (
+                  <div>{t("loading")}</div>
+                ) : (
+                  <ContentTable data={rejectedContent} />
+                )}
+              </div>
+            </div>
+          </TabsContent>
       </Tabs>
     </div>
   );

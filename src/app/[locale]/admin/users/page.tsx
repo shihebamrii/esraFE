@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { AdminService } from "@/features/admin/api";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -62,6 +63,7 @@ interface User {
 }
 
 export default function AdminUsersPage() {
+  const t = useTranslations("AdminDashboard.users");
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -84,7 +86,7 @@ export default function AdminUsersPage() {
         setUsers(response.data.users);
       }
     } catch (error) {
-      toast.error("Failed to fetch users");
+      toast.error(t("messages.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -95,15 +97,16 @@ export default function AdminUsersPage() {
       fetchUsers();
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, t]);
 
   const toggleUserStatus = async (user: User) => {
+    const newStatus = user.isActive ? "deactivated" : "active";
     try {
       await AdminService.updateUserStatus(user._id, !user.isActive);
-      toast.success(`User ${user.isActive ? "deactivated" : "activated"} successfully`);
+      toast.success(t("messages.updateStatusSuccess", { status: t(`status.${newStatus}`) }));
       fetchUsers();
     } catch (error) {
-      toast.error("Failed to update user status");
+      toast.error(t("messages.updateStatusFailed"));
     }
   };
 
@@ -126,30 +129,32 @@ export default function AdminUsersPage() {
     setSubmitting(true);
     try {
       await AdminService.updateUserPackQuota(editingUser._id, editingPack._id, quotas);
-      toast.success("Quotas updated successfully");
+      toast.success(t("messages.updateQuotasSuccess"));
       setIsQuotaDialogOpen(false);
       fetchUsers();
     } catch (error) {
-      toast.error("Failed to update quotas");
+      toast.error(t("messages.updateQuotasFailed"));
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">User Management</h2>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        </div>
       </div>
 
-      <div className="flex items-center space-x-2 max-w-sm">
-        <div className="relative w-full">
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name or email..."
-            className="pl-10"
+            placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
           />
         </div>
       </div>
@@ -158,11 +163,11 @@ export default function AdminUsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Active Packs & Quotas</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t("table.user")}</TableHead>
+            <TableHead>{t("table.role")}</TableHead>
+            <TableHead>{t("table.status")}</TableHead>
+            <TableHead>{t("table.quotas")}</TableHead>
+            <TableHead className="text-right">{t("table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -194,11 +199,11 @@ export default function AdminUsersPage() {
                   <TableCell>
                     {user.isActive ? (
                       <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
-                        Active
+                        {t("status.active")}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="text-red-600 border-red-200 bg-red-50">
-                        Deactivated
+                        {t("status.deactivated")}
                       </Badge>
                     )}
                   </TableCell>
@@ -220,26 +225,28 @@ export default function AdminUsersPage() {
                             </div>
                             <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
                               <div className="flex justify-between">
-                                <span className="opacity-60">Photos:</span>
+                                <span className="opacity-60">{t("packs.photos")}:</span>
                                 <span className="font-mono">{up.quotas.photosRemaining}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="opacity-60">Reels:</span>
+                                <span className="opacity-60">{t("packs.reels")}:</span>
                                 <span className="font-mono">{up.quotas.reelsRemaining}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="opacity-60">Videos:</span>
+                                <span className="opacity-60">{t("packs.videos")}:</span>
                                 <span className="font-mono">{up.quotas.videosRemaining}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="opacity-60">Docs:</span>
+                                <span className="opacity-60">{t("packs.docs")}:</span>
                                 <span className="font-mono">{up.quotas.documentariesRemaining}</span>
                               </div>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <span className="text-xs text-muted-foreground italic">No active packs</span>
+                        <span className="text-xs text-muted-foreground italic">
+                          {t("packs.noPacks")}
+                        </span>
                       )}
                     </div>
                   </TableCell>
@@ -251,9 +258,9 @@ export default function AdminUsersPage() {
                       onClick={() => toggleUserStatus(user)}
                     >
                       {user.isActive ? (
-                        <><Ban className="h-4 w-4 me-2" /> Deactivate</>
+                        <><Ban className="h-4 w-4 me-2" /> {t("status.deactivate")}</>
                       ) : (
-                        <><CheckCircle2 className="h-4 w-4 me-2" /> Activate</>
+                        <><CheckCircle2 className="h-4 w-4 me-2" /> {t("status.activate")}</>
                       )}
                     </Button>
                   </TableCell>
@@ -271,58 +278,102 @@ export default function AdminUsersPage() {
       </div>
 
       <Dialog open={isQuotaDialogOpen} onOpenChange={setIsQuotaDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Quotas</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil className="h-5 w-5 text-violet-600" />
+              {t("dialog.editQuotas")}
+            </DialogTitle>
             <DialogDescription>
-              Manually adjust the remaining quotas for {editingUser?.name}'s {editingPack?.packId?.title}.
+              {t("dialog.editDescription", {
+                name: editingUser?.name,
+                pack: editingPack?.packId?.title,
+              })}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleUpdateQuota} className="space-y-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Photos Remaining</Label>
-                <Input
-                  type="number"
-                  value={quotas.photosRemaining}
-                  onChange={(e) => setQuotas({ ...quotas, photosRemaining: parseInt(e.target.value) })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Reels Remaining</Label>
-                <Input
-                  type="number"
-                  value={quotas.reelsRemaining}
-                  onChange={(e) => setQuotas({ ...quotas, reelsRemaining: parseInt(e.target.value) })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Videos Remaining</Label>
-                <Input
-                  type="number"
-                  value={quotas.videosRemaining}
-                  onChange={(e) => setQuotas({ ...quotas, videosRemaining: parseInt(e.target.value) })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Docs Remaining</Label>
-                <Input
-                  type="number"
-                  value={quotas.documentariesRemaining}
-                  onChange={(e) => setQuotas({ ...quotas, documentariesRemaining: parseInt(e.target.value) })}
-                />
-              </div>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="photos" className="text-right">
+                {t("dialog.photosRemaining")}
+              </Label>
+              <Input
+                id="photos"
+                type="number"
+                value={quotas.photosRemaining}
+                onChange={(e) =>
+                  setQuotas({
+                    ...quotas,
+                    photosRemaining: parseInt(e.target.value) || 0,
+                  })
+                }
+                className="col-span-3"
+              />
             </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsQuotaDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={submitting}>
-                {submitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
-                Save Changes
-              </Button>
-            </DialogFooter>
-          </form>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="reels" className="text-right">
+                {t("dialog.reelsRemaining")}
+              </Label>
+              <Input
+                id="reels"
+                type="number"
+                value={quotas.reelsRemaining}
+                onChange={(e) =>
+                  setQuotas({
+                    ...quotas,
+                    reelsRemaining: parseInt(e.target.value) || 0,
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="videos" className="text-right">
+                {t("dialog.videosRemaining")}
+              </Label>
+              <Input
+                id="videos"
+                type="number"
+                value={quotas.videosRemaining}
+                onChange={(e) =>
+                  setQuotas({
+                    ...quotas,
+                    videosRemaining: parseInt(e.target.value) || 0,
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="docs" className="text-right">
+                {t("dialog.docsRemaining")}
+              </Label>
+              <Input
+                id="docs"
+                type="number"
+                value={quotas.documentariesRemaining}
+                onChange={(e) =>
+                  setQuotas({
+                    ...quotas,
+                    documentariesRemaining: parseInt(e.target.value) || 0,
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              onClick={handleUpdateQuota}
+              disabled={submitting}
+              className="bg-violet-600 hover:bg-violet-700 text-white"
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
+              {t("dialog.saveChanges")}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

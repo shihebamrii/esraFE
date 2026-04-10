@@ -23,37 +23,41 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 import { Link } from "@/i18n/navigation";
-
-const typeConfig: Record<
-  string,
-  {
-    icon: typeof ImageIcon;
-    gradient: string;
-    bg: string;
-    label: string;
-    emoji: string;
-    link: string;
-  }
-> = {
-  Photo: {
-    icon: ImageIcon,
-    gradient: "from-amber-500 to-orange-500",
-    bg: "from-amber-500/10 to-orange-500/5",
-    label: "Photos",
-    emoji: "🖼️",
-    link: "/tounesna",
-  },
-  Content: {
-    icon: Video,
-    gradient: "from-blue-500 to-cyan-500",
-    bg: "from-blue-500/10 to-cyan-500/5",
-    label: "Videos",
-    emoji: "🎬",
-    link: "/impact",
-  },
-};
+import { useTranslations } from "next-intl";
 
 export default function UserFavoritesPage() {
+  const t = useTranslations("UserDashboard.favorites");
+  const tStats = useTranslations("UserDashboard.stats");
+
+  const typeConfig: Record<
+    string,
+    {
+      icon: typeof ImageIcon;
+      gradient: string;
+      bg: string;
+      label: string;
+      emoji: string;
+      link: string;
+    }
+  > = {
+    Photo: {
+      icon: ImageIcon,
+      gradient: "from-amber-500 to-orange-500",
+      bg: "from-amber-500/10 to-orange-500/5",
+      label: tStats("photos"),
+      emoji: "🖼️",
+      link: "/tounesna",
+    },
+    Content: {
+      icon: Video,
+      gradient: "from-blue-500 to-cyan-500",
+      bg: "from-blue-500/10 to-cyan-500/5",
+      label: tStats("videos"),
+      emoji: "🎬",
+      link: "/impact",
+    },
+  };
+
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [removingId, setRemovingId] = useState<string | null>(null);
@@ -81,10 +85,10 @@ export default function UserFavoritesPage() {
     try {
       await UserService.toggleFavorite(itemType, itemId);
       setFavorites(favorites.filter((f) => f.itemId._id !== itemId));
-      toast.success("Removed from favorites");
+      toast.success(t("removed"));
     } catch (error) {
       console.error("Failed to remove favorite:", error);
-      toast.error("Failed to remove");
+      toast.error(t("removeFailed"));
     } finally {
       setRemovingId(null);
     }
@@ -100,7 +104,7 @@ export default function UserFavoritesPage() {
       price: item.priceTND || item.price || 0,
       thumbnail: item.thumbnailUrl || item.watermarkedUrl,
     });
-    toast.success(`${item.title} added to cart`);
+    toast.success(t("addedToCart", { title: item.title }));
   };
 
   // Filter and search
@@ -141,12 +145,12 @@ export default function UserFavoritesPage() {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 animate-slide-up">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            My Favorites
+            {t("title")}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
             {favorites.length > 0
-              ? `${favorites.length} item${favorites.length > 1 ? "s" : ""} saved`
-              : "Items you've saved for later"}
+              ? t("subtitle", { count: favorites.length })
+              : t("emptySubtitle")}
           </p>
         </div>
         {favorites.length > 0 && (
@@ -166,7 +170,7 @@ export default function UserFavoritesPage() {
           <div className="flex flex-wrap gap-2">
             {(
               [
-                { key: "all", label: "All", icon: Heart },
+                { key: "all", label: t("all"), icon: Heart },
                 ...Object.entries(typeConfig).map(([key, cfg]) => ({
                   key,
                   label: cfg.label,
@@ -209,7 +213,7 @@ export default function UserFavoritesPage() {
           <div className="relative sm:ml-auto sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search favorites..."
+              placeholder={t("searchPlaceholder")}
               className="pl-9 pr-9 h-10 rounded-xl border-border/50 bg-muted/30 focus:bg-background"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -247,33 +251,32 @@ export default function UserFavoritesPage() {
                 <Heart className="h-10 w-10 text-rose-500/40" />
               </div>
               <div className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg shadow-rose-500/30">
-                <Sparkles className="h-3 w-3 text-white" />
+                  <Sparkles className="h-3 w-3 text-white" />
+                </div>
               </div>
-            </div>
-            <h3 className="font-semibold text-lg mb-1.5">No favorites yet</h3>
-            <p className="text-sm text-muted-foreground text-center max-w-sm mb-5">
-              Browse our collection and tap the heart icon to save items you
-              love.
-            </p>
-            <Button
-              variant="outline"
-              className="rounded-xl border-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
-              asChild
-            >
-              <Link href="/tounesna">Explore Content</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      ) : filteredFavorites.length === 0 ? (
-        <Card className="border border-border/50">
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <Search className="h-10 w-10 text-muted-foreground/30 mb-4" />
-            <h3 className="font-semibold text-base mb-1">No matches found</h3>
-            <p className="text-sm text-muted-foreground text-center max-w-xs">
-              Try a different search term or filter
-            </p>
-          </CardContent>
-        </Card>
+              <h3 className="font-semibold text-lg mb-1.5">{t("noFavorites")}</h3>
+              <p className="text-sm text-muted-foreground text-center max-w-sm mb-5">
+                {t("noFavoritesSubtitle")}
+              </p>
+              <Button
+                variant="outline"
+                className="rounded-xl border-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
+                asChild
+              >
+                <Link href="/tounesna">{t("exploreContent")}</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : filteredFavorites.length === 0 ? (
+          <Card className="border border-border/50">
+            <CardContent className="flex flex-col items-center justify-center py-16">
+              <Search className="h-10 w-10 text-muted-foreground/30 mb-4" />
+              <h3 className="font-semibold text-base mb-1">{t("noMatches")}</h3>
+              <p className="text-sm text-muted-foreground text-center max-w-xs">
+                {t("noMatchesSubtitle")}
+              </p>
+            </CardContent>
+          </Card>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredFavorites.map((fav) => {

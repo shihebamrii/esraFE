@@ -18,46 +18,48 @@ import { UserService, UserStats } from "@/features/user/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/store/authStore";
 import { QuotaTracker } from "@/features/user/components/QuotaTracker";
-
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-}
-
-const statCards = [
-  {
-    key: "totalOrders",
-    title: "Total Orders",
-    icon: ShoppingBag,
-    gradient: "from-blue-500 to-cyan-500",
-    bgGradient: "from-blue-500/10 to-cyan-500/5",
-    shadow: "shadow-blue-500/10",
-    subtitle: "Successfully placed",
-  },
-  {
-    key: "totalSpent",
-    title: "Total Spent",
-    icon: DollarSign,
-    gradient: "from-emerald-500 to-teal-500",
-    bgGradient: "from-emerald-500/10 to-teal-500/5",
-    shadow: "shadow-emerald-500/10",
-    subtitle: "Lifetime purchases",
-  },
-  {
-    key: "downloadCount",
-    title: "Downloads",
-    icon: Download,
-    gradient: "from-violet-500 to-purple-500",
-    bgGradient: "from-violet-500/10 to-purple-500/5",
-    shadow: "shadow-violet-500/10",
-    subtitle: "Photos & videos",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function UserDashboardPage() {
+  const t = useTranslations("UserDashboard");
   const [stats, setStats] = useState<UserStats | null>(null);
+
+  function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return t("greeting.morning");
+    if (hour < 18) return t("greeting.afternoon");
+    return t("greeting.evening");
+  }
+
+  const statCards = [
+    {
+      key: "totalOrders",
+      title: t("stats.totalOrders"),
+      icon: ShoppingBag,
+      gradient: "from-blue-500 to-cyan-500",
+      bgGradient: "from-blue-500/10 to-cyan-500/5",
+      shadow: "shadow-blue-500/10",
+      subtitle: t("stats.totalOrdersSubtitle"),
+    },
+    {
+      key: "totalSpent",
+      title: t("stats.totalSpent"),
+      icon: DollarSign,
+      gradient: "from-emerald-500 to-teal-500",
+      bgGradient: "from-emerald-500/10 to-teal-500/5",
+      shadow: "shadow-emerald-500/10",
+      subtitle: t("stats.totalSpentSubtitle"),
+    },
+    {
+      key: "downloadCount",
+      title: t("stats.downloads"),
+      icon: Download,
+      gradient: "from-violet-500 to-purple-500",
+      bgGradient: "from-violet-500/10 to-purple-500/5",
+      shadow: "shadow-violet-500/10",
+      subtitle: t("stats.downloadsSubtitle"),
+    },
+  ];
   const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
 
@@ -102,19 +104,19 @@ export default function UserDashboardPage() {
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              Welcome back,{" "}
+              {t("home.welcomeBack")},{" "}
               <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-                {user?.name?.split(" ")[0] || "User"}
+                {user?.name?.split(" ")[0] || t("sidebar.dashboard")}
               </span>
             </h2>
             <p className="text-sm text-muted-foreground mt-1.5 max-w-md">
-              Here&apos;s an overview of your account activity and recent purchases.
+              {t("home.overviewSubtitle")}
             </p>
           </div>
           <Link href="/tounesna">
             <Button className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white border-0 rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300 hover:-translate-y-0.5 px-5">
               <Sparkles className="me-2 h-4 w-4" />
-              Browse Content
+              {t("home.browseContent")}
             </Button>
           </Link>
         </div>
@@ -185,7 +187,7 @@ export default function UserDashboardPage() {
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
               <Clock className="h-4 w-4" />
             </span>
-            <CardTitle className="text-base">Recent Orders</CardTitle>
+            <CardTitle className="text-base">{t("home.recentOrders")}</CardTitle>
           </div>
           <Link href="/user/orders">
             <Button
@@ -193,7 +195,7 @@ export default function UserDashboardPage() {
               size="sm"
               className="text-violet-600 dark:text-violet-400 hover:text-violet-700 hover:bg-violet-500/10 gap-1 rounded-lg"
             >
-              View All
+              {t("home.viewAll")}
               <ArrowUpRight className="h-3.5 w-3.5" />
             </Button>
           </Link>
