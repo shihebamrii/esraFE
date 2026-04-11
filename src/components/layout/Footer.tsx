@@ -25,7 +25,7 @@ export function Footer() {
   // Shared styles
   const footerStyle = isTounesna 
     ? {
-        background: `linear-gradient(to bottom, ${bgColor}, #6a0d2e67)`, 
+        backgroundColor: bgColor, 
         color: `${mainColor}`,
       }
     : { 

@@ -346,6 +346,25 @@ export default function TounesnaPage() {
           </div>
         </div>
       </div>
+
+      {/* ─── Refined Tile Band Divider ─── */}
+      <div className="relative z-20 w-full h-[80px] bg-[#fff9e6] flex items-center justify-center border-y border-[#6a0d2e]/10 shadow-sm mt-[-1px] overflow-hidden">
+        {/* Provided Divider Image */}
+        <div 
+           className="absolute inset-0 w-full h-full"
+           style={{
+             backgroundImage: `url("/divider.png")`,
+             backgroundSize: "contain",
+             backgroundRepeat: "repeat-x",
+             backgroundPosition: "center"
+           }}
+        />
+        
+        {/* Subtle Gold Accents on the edges */}
+        <div className="absolute top-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ffcc1a]/60 to-transparent" />
+        <div className="absolute bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ffcc1a]/60 to-transparent" />
+      </div>
+
       <PacksSection />
     </div>
   );

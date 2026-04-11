@@ -147,57 +147,75 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {packs.map((pack) => (
-            <div 
-              key={pack._id} 
-              className={`group relative flex flex-col p-8 rounded-[2.5rem] transition-all duration-500 hover:translate-y-[-8px] bg-[#faf9f6] border shadow-[0_15px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] ${
-                isImpact ? 'border-[#1f3a5f]/10 text-[#1f3a5f]' : 'border-[#6a0d2e]/10 text-[#6a0d2e]'
-              }`}
-            >
-              {/* Card Geometric Pattern Overlay */}
+          {packs.map((pack, index) => {
+            const isMiddle = index === 1;
+            const cardBg = isMiddle 
+              ? (isImpact ? 'bg-[#1f3a5f]' : 'bg-[#6a0d2e]') 
+              : (isImpact ? 'bg-[#1f3a5f]/5' : 'bg-[#6a0d2e]/5');
+            const cardText = isMiddle 
+              ? 'text-white' 
+              : (isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]');
+            const cardBorder = isMiddle 
+              ? (isImpact ? 'border-[#1f3a5f]' : 'border-[#6a0d2e]')
+              : (isImpact ? 'border-[#1f3a5f]/20' : 'border-[#6a0d2e]/20');
+            
+            return (
               <div 
-                className={`absolute inset-0 opacity-[0.03] pointer-events-none rounded-[2.5rem]`}
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='${isImpact ? '%231f3a5f' : '%236a0d2e'}' stroke-width='0.5'%3E%3Cpath d='M40 0L50 10L40 20L30 10Z'/%3E%3Cpath d='M40 60L50 70L40 80L30 70Z'/%3E%3Cpath d='M0 40L10 30L20 40L10 50Z'/%3E%3Cpath d='M60 40L70 30L80 40L70 50Z'/%3E%3C/g%3E%3C/svg%3E")`,
-                }}
-              />
-              
-              <div className="mb-8">
-                <span className={`text-[10px] tracking-[0.2em] uppercase font-bold opacity-60 block mb-2`}>
-                   {getArabicTitle(pack.title)}
-                </span>
-                <h3 className="text-2xl font-serif font-bold mb-4">{pack.title}</h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-serif font-bold">{pack.priceTND}</span>
-                  <span className="text-sm opacity-60 font-bold uppercase tracking-tighter">TND</span>
-                </div>
-              </div>
-              
-              <ul className="flex-1 space-y-5 mb-10">
-                 {getFeatures(pack).map((feature, i) => (
-                    <li key={i} className="flex items-start gap-4 text-sm leading-tight">
-                       <div className={`mt-0.5 h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${isImpact ? 'bg-[#1f3a5f]/10 text-[#1f3a5f]' : 'bg-[#6a0d2e]/10 text-[#6a0d2e]'}`}>
-                         <Check className="h-3 w-3 " strokeWidth={3} />
-                       </div>
-                       <span className="opacity-90">{feature}</span>
-                    </li>
-                 ))}
-              </ul>
-
-              <Button 
-                onClick={() => handleBuy(pack)}
-                size="lg" 
-                className={`w-full h-14 rounded-2xl font-bold transition-all duration-300 ${
-                  isImpact 
-                  ? 'bg-[#1f3a5f] text-[#fff9e6] hover:bg-[#fff9e6] hover:text-[#1f3a5f] border hover:border-[#1f3a5f]' 
-                  : 'bg-[#6a0d2e] text-[#fff9e6] hover:bg-[#fff9e6] hover:text-[#6a0d2e] border hover:border-[#6a0d2e]'
-                }`}
+                key={pack._id} 
+                className={`group relative flex flex-col p-8 rounded-[2.5rem] transition-all duration-500 hover:translate-y-[-8px] border shadow-[0_15px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] ${cardBg} ${cardText} ${cardBorder}`}
               >
-                 <Sparkles className="mr-2 h-4 w-4 fill-current opacity-70" />
-                 Secure This Collection
-              </Button>
-            </div>
-          ))}
+                {/* Card Geometric Pattern Overlay */}
+                <div 
+                  className={`absolute inset-0 ${isMiddle ? 'opacity-[0.1]' : 'opacity-[0.03]'} pointer-events-none rounded-[2.5rem]`}
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='${isMiddle ? '%23ffffff' : (isImpact ? '%231f3a5f' : '%236a0d2e')}' stroke-width='0.5'%3E%3Cpath d='M40 0L50 10L40 20L30 10Z'/%3E%3Cpath d='M40 60L50 70L40 80L30 70Z'/%3E%3Cpath d='M0 40L10 30L20 40L10 50Z'/%3E%3Cpath d='M60 40L70 30L80 40L70 50Z'/%3E%3C/g%3E%3C/svg%3E")`,
+                  }}
+                />
+                
+                <div className="mb-8">
+                  <span className={`text-[10px] tracking-[0.2em] uppercase font-bold ${isMiddle ? 'opacity-80' : 'opacity-60'} block mb-2`}>
+                     {getArabicTitle(pack.title)}
+                  </span>
+                  <h3 className="text-2xl font-serif font-bold mb-4">{pack.title}</h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-5xl font-serif font-bold">{pack.priceTND}</span>
+                    <span className="text-sm opacity-60 font-bold uppercase tracking-tighter">TND</span>
+                  </div>
+                </div>
+                
+                <ul className="flex-1 space-y-5 mb-10">
+                   {getFeatures(pack).map((feature, i) => (
+                      <li key={i} className="flex items-start gap-4 text-sm leading-tight">
+                         <div className={`mt-0.5 h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${
+                           isMiddle 
+                           ? 'bg-white/20 text-white' 
+                           : (isImpact ? 'bg-[#1f3a5f]/10 text-[#1f3a5f]' : 'bg-[#6a0d2e]/10 text-[#6a0d2e]')
+                         }`}>
+                           <Check className="h-3 w-3 " strokeWidth={3} />
+                         </div>
+                         <span className={isMiddle ? 'opacity-100' : 'opacity-90'}>{feature}</span>
+                      </li>
+                   ))}
+                </ul>
+
+                <Button 
+                  onClick={() => handleBuy(pack)}
+                  size="lg" 
+                  className={`w-full h-14 rounded-2xl font-bold transition-all duration-300 ${
+                    isMiddle
+                    ? 'bg-[#ffcc1a] text-[#1f3a5f] hover:bg-transparent hover:text-[#ffcc1a] border border-[#ffcc1a]'
+                    : (isImpact 
+                      ? 'bg-[#1f3a5f] text-[#fff9e6] hover:bg-transparent hover:text-[#1f3a5f] border hover:border-[#1f3a5f]' 
+                      : 'bg-[#6a0d2e] text-[#fff9e6] hover:bg-transparent hover:text-[#6a0d2e] border hover:border-[#6a0d2e]')
+                  }`}
+                  style={isMiddle && !isImpact ? { color: '#6a0d2e' } : {}}
+                >
+                   <Sparkles className="mr-2 h-4 w-4 fill-current opacity-70" />
+                   Secure This Collection
+                </Button>
+              </div>
+            );
+          })}
         </div>
       </div>
 

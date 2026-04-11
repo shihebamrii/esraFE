@@ -21,12 +21,10 @@ export function MissionSection() {
                transition={{ duration: 0.8 }}
                className="relative w-[60%] h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-[#1f3a5f]/20"
              >
-                <Image
+                <img
                   src="https://travel.com/wp-content/uploads/2025/09/Aerial-view-of-Sousse-Tunisia-showing-the-UNESCO-World-Heritage-medina-and-Mediterranean.webp"
                   alt="Tunisian landscape"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover hover:scale-105 transition-transform duration-700"
+                  className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
              </motion.div>
 
@@ -37,12 +35,10 @@ export function MissionSection() {
                transition={{ duration: 0.8, delay: 0.2 }}
                className="relative w-[40%] h-[80%] my-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-[#1f3a5f]/20"
              >
-                <Image
+                <img
                   src="https://travel.com/wp-content/uploads/2025/09/Monastir-beach-during-spring-with-perfect-weather-few-tourists-and-clear-blue-water.webp"
                   alt="Tunisian crafts"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover hover:scale-105 transition-transform duration-700"
+                  className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
              </motion.div>
           </div>

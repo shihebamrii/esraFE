@@ -49,12 +49,10 @@ export default function MapComponent({ groupedPhotos, coordinates, onGovClick }:
                 <div className="grid grid-cols-2 gap-1 mt-2">
                   {photos.slice(0, 4).map(p => (
                     <Link href={`/tounesna/${p.id}`} key={p.id} className="relative aspect-square rounded-md overflow-hidden bg-muted group cursor-pointer block">
-                      <Image 
+                      <img 
                         src={p.url} 
                         alt={p.title || p.id} 
-                        fill 
-                        className="object-cover transition-transform group-hover:scale-110"
-                        unoptimized
+                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                     </Link>

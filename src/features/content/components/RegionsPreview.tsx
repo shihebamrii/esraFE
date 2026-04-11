@@ -64,14 +64,10 @@ export function RegionsPreview() {
               >
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
                   
-                  <Image
+                  <img
                     src={region.image}
                     alt={region.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    loading={i === 0 ? "eager" : "lazy"}
-                    priority={i === 0}
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   
                   <div className="absolute bottom-0 left-0 w-full p-6 z-30 transform group-hover:-translate-y-1 transition-transform duration-300">
