@@ -284,6 +284,38 @@
       "failedToFetch": "Échec du chargement des packs utilisateur"
     }
   },
+  "AboutUs": {
+    "badge": "Notre Histoire",
+    "titleLine1": "Préserver l'",
+    "titleHighlight": "Âme de la Tunisie",
+    "paragraph1": "BeeStory est plus qu'une simple plateforme médiatique ; c'est une archive numérique de la riche mosaïque culturelle de la Tunisie. Nous nous consacrons à capturer l'essence authentique de nos territoires, des sables dorés du Sahara aux côtes azurées de la Méditerranée.",
+    "paragraph2": "Notre mission est de donner aux créateurs et aux conteurs les moyens d'utiliser un contenu tunisien authentique et de haute qualité, tout en promouvant le tourisme durable et la valorisation du patrimoine.",
+    "vision": "Notre Vision",
+    "visionText": "Être la première porte d'entrée mondiale vers le patrimoine numérique de la Tunisie, en favorisant une connexion plus profonde entre le monde et notre culture authentique.",
+    "values": "Nos Valeurs",
+    "authenticity": "Authenticité",
+    "quality": "Qualité",
+    "community": "Communauté"
+  },
+  "Contact": {
+    "badge": "Contactez-nous",
+    "title": "Nous aimerions avoir de vos nouvelles",
+    "subtitle": "Vous avez des questions, des suggestions ou vous souhaitez collaborer ? Remplissez le formulaire ci-dessous et notre équipe vous répondra dans les plus brefs délais.",
+    "name": "Nom complet",
+    "email": "Adresse e-mail",
+    "subject": "Sujet",
+    "message": "Message",
+    "send": "Envoyer le message",
+    "sending": "Envoi en cours...",
+    "success": "Message envoyé avec succès ! Nous vous répondrons bientôt.",
+    "error": "Échec de l'envoi du message. Veuillez réessayer.",
+    "formTitle": "Envoyez-nous un message",
+    "infoTitle": "Informations de contact",
+    "emailLabel": "E-mail",
+    "phoneLabel": "Téléphone",
+    "addressLabel": "Adresse",
+    "address": "Tunis, Tunisie"
+  },
   "AdminDashboard": {
     "sidebar": {
       "dashboard": "Tableau de bord",
@@ -294,6 +326,7 @@
       "contentImpact": "Contenu (Impact)",
       "photosTounesna": "Photos (Tounesna)",
       "orders": "Commandes",
+      "inquiries": "Demandes",
       "overview": "Aperçu"
     },
     "home": {

@@ -13,7 +13,8 @@ import {
   Settings,
   LogOut,
   Upload,
-  Users
+  Users,
+  MessageSquare
 } from "lucide-react";
 
 export function AdminSidebar() {
@@ -69,6 +70,12 @@ export function AdminSidebar() {
       href: "/admin/orders",
       icon: ShoppingCart,
       gradient: "from-orange-600 to-red-600",
+    },
+    {
+      title: t("inquiries"),
+      href: "/admin/inquiries",
+      icon: MessageSquare,
+      gradient: "from-indigo-600 to-blue-600",
     },
   ];
 

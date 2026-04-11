@@ -5,6 +5,8 @@ import { RegionsPreview } from "@/features/content/components/RegionsPreview";
 import { ImpactPreview } from "@/features/content/components/ImpactPreview";
 import { StatsSection } from "@/features/content/components/StatsSection";
 import { NewsletterSection } from "@/features/content/components/NewsletterSection";
+import { AboutUsSection } from "@/features/content/components/AboutUsSection";
+import { ContactForm } from "@/features/content/components/ContactForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
@@ -30,6 +32,11 @@ export default async function Home() {
         <RegionsPreview />
       </div>
 
+      {/* ── About Us Detailed Section ── */}
+      <div className="relative z-10 w-full">
+        <AboutUsSection />
+      </div>
+
       {/* ── Impact (Videos/Documentary) Preview ── */}
       <div className="relative z-10 w-full">
         <ImpactPreview />
@@ -43,6 +50,11 @@ export default async function Home() {
       {/* ── Featured Grid / Collections ── */}
       <div className="relative z-10 w-full">
          <FeaturedGrid />
+      </div>
+
+      {/* ── Contact Form Section ── */}
+      <div className="relative z-10 w-full" id="contact">
+        <ContactForm />
       </div>
       
       {/* ── Premium CTA ── */}
