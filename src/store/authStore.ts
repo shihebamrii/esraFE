@@ -5,6 +5,8 @@ interface User {
   id: string;
   name: string;
   email: string;
+  phone?: string;
+  locale?: string;
   role: 'user' | 'admin';
 }
 
@@ -17,6 +19,7 @@ interface AuthState {
   logout: () => void;
   setToken: (token: string) => void;
   setHasHydrated: (state: boolean) => void;
+  updateUser: (data: Partial<User>) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -30,6 +33,9 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ user: null, token: null, isAuthenticated: false }),
       setToken: (token) => set({ token }),
       setHasHydrated: (state) => set({ _hasHydrated: state }),
+      updateUser: (data) => set((state) => ({ 
+        user: state.user ? { ...state.user, ...data } : null 
+      })),
     }),
     {
       name: 'auth-storage',
