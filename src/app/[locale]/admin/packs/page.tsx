@@ -10,9 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, Plus, Loader2, Check, X } from "lucide-react";
+import { Pencil, Trash2, Plus, Loader2, Check, X, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AdminService } from "@/features/admin/api";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import {
@@ -43,6 +44,7 @@ interface Pack {
   type: "collection" | "membership";
   priceTND: number;
   photoIds?: string[];
+  contentIds?: string[];
   membershipFeatures?: {
     photosLimit?: number;
     reelsLimit?: number;
@@ -55,13 +57,24 @@ interface Pack {
   popular?: boolean;
 }
 
+interface MediaItem {
+  _id: string;
+  title: string;
+  previewUrl: string;
+  type?: 'photo' | 'video';
+  mediaType?: 'photo' | 'video';
+}
+
 export default function AdminPacksPage() {
   const t = useTranslations("AdminDashboard.packs");
   const [packs, setPacks] = useState<Pack[]>([]);
+  const [allMedia, setAllMedia] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
   const [editingPack, setEditingPack] = useState<Pack | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [mediaSearch, setMediaSearch] = useState("");
 
   // Form state
   const [formData, setFormData] = useState<Partial<Pack>>({
@@ -70,6 +83,8 @@ export default function AdminPacksPage() {
     type: "membership",
     priceTND: 0,
     isActive: true,
+    photoIds: [],
+    contentIds: [],
     membershipFeatures: {
       quality: "standard",
       module: "tounesna",
@@ -87,6 +102,26 @@ export default function AdminPacksPage() {
       if (response.status === "success") {
         setPacks(response.data.packs);
       }
+
+      // Fetch all photos & videos for collection picker
+      const [photosRes, contentRes] = await Promise.all([
+        api.get("/photos", { params: { limit: 500, approvalStatus: 'all' } }),
+        api.get("/contents", { params: { limit: 500, visibility: 'all' } })
+      ]);
+
+      const photos = (photosRes.data?.data?.photos || []).map((p: any) => ({ 
+        ...p, 
+        type: 'photo',
+        title: p.title || 'Untitled Photo'
+      }));
+      const contents = (contentRes.data?.data?.contents || []).map((c: any) => ({ 
+        ...c, 
+        type: 'video', 
+        previewUrl: c.thumbnailUrl,
+        title: c.title || 'Untitled Video'
+      }));
+      
+      setAllMedia([...photos, ...contents]);
     } catch (error) {
       toast.error(t("messages.fetchFailed"));
     } finally {
@@ -97,6 +132,42 @@ export default function AdminPacksPage() {
   useEffect(() => {
     fetchPacks();
   }, []);
+
+  const handleToggleMedia = (media: MediaItem) => {
+    if (media.type === 'photo') {
+      const currentIds = formData.photoIds || [];
+      if (currentIds.includes(media._id)) {
+        setFormData({
+          ...formData,
+          photoIds: currentIds.filter((mid) => mid !== media._id),
+        });
+      } else {
+        setFormData({
+          ...formData,
+          photoIds: [...currentIds, media._id],
+        });
+      }
+    } else {
+      const currentIds = formData.contentIds || [];
+      if (currentIds.includes(media._id)) {
+        setFormData({
+          ...formData,
+          contentIds: currentIds.filter((mid) => mid !== media._id),
+        });
+      } else {
+        setFormData({
+          ...formData,
+          contentIds: [...currentIds, media._id],
+        });
+      }
+    }
+  };
+
+  const filteredMedia = allMedia.filter((m) => {
+    const searchTerm = mediaSearch.toLowerCase().trim();
+    if (!searchTerm) return true;
+    return (m.title || "").toLowerCase().includes(searchTerm);
+  });
 
   const handleEdit = (pack: Pack) => {
     setEditingPack(pack);
@@ -154,6 +225,8 @@ export default function AdminPacksPage() {
       type: "membership",
       priceTND: 0,
       isActive: true,
+      photoIds: [],
+      contentIds: [],
       membershipFeatures: {
         quality: "standard",
         module: "tounesna",
@@ -216,7 +289,7 @@ export default function AdminPacksPage() {
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        priceTND: parseFloat(e.target.value),
+                        priceTND: e.target.value === "" ? 0 : parseFloat(e.target.value),
                       })
                     }
                     required
@@ -265,6 +338,114 @@ export default function AdminPacksPage() {
                   <Label htmlFor="active">{t("form.active")}</Label>
                 </div>
               </div>
+
+              {formData.type === "collection" && (
+                <div className="space-y-4 border p-4 rounded-lg bg-muted/30">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <h3 className="font-semibold text-sm">Media Collection</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {(formData.photoIds?.length || 0) + (formData.contentIds?.length || 0)} items selected
+                      </p>
+                    </div>
+                    <Dialog 
+                      open={isMediaPickerOpen} 
+                      onOpenChange={(open) => {
+                        setIsMediaPickerOpen(open);
+                        if (open && allMedia.length === 0) fetchPacks();
+                      }}
+                    >
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="bg-white">
+                          Select Photos & Videos
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
+                        <DialogHeader>
+                          <DialogTitle>Select Content for Pack</DialogTitle>
+                          <DialogDescription>
+                            Choose the photos and videos you want to include in this static collection.
+                          </DialogDescription>
+                        </DialogHeader>
+                        
+                        <div className="relative my-4">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search by title..."
+                            value={mediaSearch}
+                            onChange={(e) => setMediaSearch(e.target.value)}
+                            className="pl-10"
+                          />
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto pr-2">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-1">
+                            {filteredMedia.map((media) => {
+                              const isSelected = (media.type === 'photo' && formData.photoIds?.includes(media._id)) || 
+                                                 (media.type === 'video' && formData.contentIds?.includes(media._id));
+                              return (
+                                <div
+                                  key={media._id}
+                                  onClick={() => handleToggleMedia(media)}
+                                  className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all group ${
+                                    isSelected 
+                                      ? "border-emerald-500 ring-2 ring-emerald-500/20 scale-[0.98]" 
+                                      : "border-border hover:border-emerald-300 opacity-80 hover:opacity-100"
+                                  }`}
+                                >
+                                  <img
+                                    src={media.previewUrl}
+                                    alt={media.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                  
+                                  {/* Type Badge */}
+                                  <div className="absolute top-1.5 left-1.5">
+                                    <Badge className={`text-[9px] px-1.5 py-0 border-none ${
+                                      media.type === 'video' ? 'bg-fuchsia-600' : 'bg-amber-500'
+                                    }`}>
+                                      {media.type?.toUpperCase()}
+                                    </Badge>
+                                  </div>
+
+                                  {/* Selection Overlay */}
+                                  <div className={`absolute inset-0 transition-opacity duration-200 ${
+                                    isSelected ? "bg-emerald-500/10 opacity-100" : "bg-black/20 opacity-0 group-hover:opacity-100"
+                                  }`} />
+
+                                  <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-black/80 to-transparent">
+                                    <p className="text-[10px] text-white truncate font-medium">
+                                      {media.title}
+                                    </p>
+                                  </div>
+
+                                  {isSelected && (
+                                    <div className="absolute top-1.5 right-1.5 bg-emerald-500 text-white rounded-full p-1 shadow-lg">
+                                      <Check className="h-3 w-3 stroke-[3px]" />
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          
+                          {filteredMedia.length === 0 && (
+                            <div className="text-center py-20 text-muted-foreground">
+                              No media found matching your search.
+                            </div>
+                          )}
+                        </div>
+
+                        <DialogFooter className="mt-4 pt-4 border-t">
+                          <Button onClick={() => setIsMediaPickerOpen(false)}>
+                            Done ({(formData.photoIds?.length || 0) + (formData.contentIds?.length || 0)} selected)
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              )}
 
               {formData.type === "membership" && (
                 <div className="space-y-4 border p-4 rounded-lg bg-muted/30">
@@ -332,7 +513,7 @@ export default function AdminPacksPage() {
                             ...formData,
                             membershipFeatures: {
                               ...formData.membershipFeatures!,
-                              photosLimit: parseInt(e.target.value),
+                              photosLimit: e.target.value === "" ? 0 : parseInt(e.target.value),
                             },
                           })
                         }
@@ -349,7 +530,7 @@ export default function AdminPacksPage() {
                             ...formData,
                             membershipFeatures: {
                               ...formData.membershipFeatures!,
-                              reelsLimit: parseInt(e.target.value),
+                              reelsLimit: e.target.value === "" ? 0 : parseInt(e.target.value),
                             },
                           })
                         }
@@ -366,7 +547,7 @@ export default function AdminPacksPage() {
                             ...formData,
                             membershipFeatures: {
                               ...formData.membershipFeatures!,
-                              videosLimit: parseInt(e.target.value),
+                              videosLimit: e.target.value === "" ? 0 : parseInt(e.target.value),
                             },
                           })
                         }
@@ -383,7 +564,7 @@ export default function AdminPacksPage() {
                             ...formData,
                             membershipFeatures: {
                               ...formData.membershipFeatures!,
-                              documentariesLimit: parseInt(e.target.value),
+                              documentariesLimit: e.target.value === "" ? 0 : parseInt(e.target.value),
                             },
                           })
                         }
@@ -461,7 +642,7 @@ export default function AdminPacksPage() {
                       </div>
                     ) : (
                       <span className="text-sm opacity-70">
-                        {pack.photoIds?.length || 0} {t("table.photos")}
+                        {((pack.photoIds?.length || 0) + (pack.contentIds?.length || 0))} {t("table.photos")}
                       </span>
                     )}
                   </TableCell>

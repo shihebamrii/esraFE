@@ -110,7 +110,11 @@ export default function ImpactDetailsPage({ params }: { params: Promise<{ id: st
               className="rounded-2xl overflow-hidden shadow-2xl"
               style={{ boxShadow: "0 25px 60px -15px rgba(31,58,95,0.25)" }}
             >
-              <VideoPlayer src={content.videoUrl} poster={content.poster} />
+              <VideoPlayer 
+                src={content.videoUrl} 
+                poster={content.poster} 
+                maxPercentage={10} 
+              />
             </motion.div>
 
             {/* Title & Meta */}
@@ -258,6 +262,12 @@ export default function ImpactDetailsPage({ params }: { params: Promise<{ id: st
                 </div>
               ) : (
                 <button
+                  onClick={() => {
+                    const downloadUrl = content.videoUrl.startsWith('/api/media/') 
+                      ? `${content.videoUrl}/download` 
+                      : content.videoUrl;
+                    window.open(downloadUrl, '_blank');
+                  }}
                   className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-base transition-all hover:scale-[1.02]"
                   style={{
                     backgroundColor: "#fff9e6",

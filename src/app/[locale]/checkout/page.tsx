@@ -56,13 +56,16 @@ export default function CheckoutPage() {
         },
       });
 
-      // 4. Auto-complete mock payment (dev mode)
+      // 4. Redirect to payment provider (or auto-complete mock in dev)
       const paymentUrl = checkoutRes.data?.data?.payment?.url;
       if (paymentUrl) {
-        await fetch(paymentUrl);
+        // Clear cart before redirecting
+        clearCart();
+        window.location.href = paymentUrl;
+        return;
       }
 
-      toast.success("Payment successful! Order placed.");
+      toast.success("Order placed successfully!");
       clearCart();
       router.push("/orders");
     } catch (error: any) {

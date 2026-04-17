@@ -9,6 +9,8 @@ export interface Photo {
   landscapeType: string;
   priceTND: number;
   previewUrl: string;
+  highResUrl?: string;
+  videoUrl?: string;
   tags: string[];
   createdAt: string;
 }

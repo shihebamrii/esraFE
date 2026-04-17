@@ -100,9 +100,9 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
             <div className="relative aspect-video rounded-[32px] overflow-hidden shadow-2xl bg-black group">
                <VideoPlayer 
                   key={currentItem?._id}
-                  videoUrl={currentItem?.contentUrl || "/Impact.mp4"}
+                  src={currentItem?.contentUrl || "/Impact.mp4"}
                   poster={currentItem?.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=1200&auto=format&fit=crop"}
-                  title={currentItem?.title}
+                  maxPercentage={10}
                />
                
                {/* Overlay Navigation */}
@@ -137,7 +137,17 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
                     <Button variant="outline" size="icon" className="rounded-full border-[#1f3a5f20] hover:bg-[#1f3a5f05]">
                       <Share2 className="h-4 w-4" />
                     </Button>
-                    <Button className="bg-[#1f3a5f] text-white hover:bg-[#1f3a5f]/90 rounded-full px-6 h-12 shadow-lg shadow-[#1f3a5f20]">
+                    <Button 
+                      onClick={() => {
+                        if (currentItem?.contentUrl) {
+                          const downloadUrl = currentItem.contentUrl.startsWith('/api/media/') 
+                            ? `${currentItem.contentUrl}/download` 
+                            : currentItem.contentUrl;
+                          window.open(downloadUrl, '_blank');
+                        }
+                      }}
+                      className="bg-[#1f3a5f] text-white hover:bg-[#1f3a5f]/90 rounded-full px-6 h-12 shadow-lg shadow-[#1f3a5f20]"
+                    >
                       <Download className="h-4 w-4 mr-2" /> Download Episode
                     </Button>
                   </div>

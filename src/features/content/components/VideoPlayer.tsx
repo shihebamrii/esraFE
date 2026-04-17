@@ -7,14 +7,17 @@ import { Button } from "@/components/ui/button";
 interface VideoPlayerProps {
   src: string;
   poster?: string;
+  maxPercentage?: number; // 0 to 100
 }
 
-export function VideoPlayer({ src, poster }: VideoPlayerProps) {
+export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [showLimitReached, setShowLimitReached] = useState(false);
 
   const togglePlay = () => {
+    if (showLimitReached) return;
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
@@ -22,6 +25,19 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
         videoRef.current.play();
       }
       setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current && maxPercentage && maxPercentage < 100) {
+      const duration = videoRef.current.duration;
+      const currentTime = videoRef.current.currentTime;
+      if (duration > 0 && (currentTime / duration) * 100 >= maxPercentage) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = (duration * maxPercentage) / 100;
+        setIsPlaying(false);
+        setShowLimitReached(true);
+      }
     }
   };
 
@@ -46,13 +62,37 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
         ref={videoRef}
         src={src}
         poster={poster}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover cursor-pointer"
         onClick={togglePlay}
         onEnded={() => setIsPlaying(false)}
-      />
+        onTimeUpdate={handleTimeUpdate}
+        playsInline
+        preload="metadata"
+      >
+        Your browser does not support the video tag.
+      </video>
       
+      {/* Limit Reached Overlay */}
+      {showLimitReached && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-[#ffcc1a] flex items-center justify-center mb-4 shadow-lg shadow-[#ffcc1a]/20">
+             <span className="text-2xl">🔒</span>
+          </div>
+          <h3 className="text-white font-bold text-xl mb-2">Preview Limit Reached</h3>
+          <p className="text-white/70 text-sm max-w-[280px]">
+            Unlock the full version to continue watching this content.
+          </p>
+          <Button 
+            className="mt-6 bg-[#ffcc1a] text-[#1f3a5f] hover:bg-white font-bold"
+            onClick={() => window.location.hash = "pricing"}
+          >
+            Unlock Full Access
+          </Button>
+        </div>
+      )}
+
       {/* Controls Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1f3a5f]/90 via-[#1f3a5f]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-[2px]">
+      <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1f3a5f]/90 via-[#1f3a5f]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-[2px] ${showLimitReached ? 'hidden' : ''}`}>
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-4">
             <button 
@@ -80,7 +120,7 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
       </div>
 
        {/* Centered Play Button when paused */}
-       {!isPlaying && (
+       {!isPlaying && !showLimitReached && (
          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div 
               className="p-6 rounded-full shadow-2xl transform scale-100 transition-transform"

@@ -67,7 +67,7 @@ export default function UserDownloadsPage() {
   }, []);
 
   const filteredDownloads = downloads.filter((d) =>
-    d.title.toLowerCase().includes(search.toLowerCase())
+    d.type !== "Membership" && d.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const getBackendUrl = (url?: string) => {
@@ -89,9 +89,9 @@ export default function UserDownloadsPage() {
   const getType = (type: string) => typeConfig[type] || typeConfig.Photo;
 
   const typeCounts = {
-    Photo: downloads.filter((d) => d.type === "Photo").length,
-    Video: downloads.filter((d) => d.type === "Video").length,
-    Pack: downloads.filter((d) => d.type === "Pack").length,
+    Photo: filteredDownloads.filter((d) => d.type === "Photo").length,
+    Video: filteredDownloads.filter((d) => d.type === "Video").length,
+    Pack: filteredDownloads.filter((d) => d.type === "Pack").length,
   };
 
   return (
@@ -108,28 +108,30 @@ export default function UserDownloadsPage() {
 
       {/* Stats Pills */}
       <div className="flex flex-wrap gap-3 animate-slide-up">
-        {Object.entries(typeConfig).map(([key, config]) => {
-          const Icon = config.icon;
-          const count = typeCounts[key as keyof typeof typeCounts] || 0;
-          return (
-            <div
-              key={key}
-              className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r ${config.bg} border border-border/50`}
-            >
-              <span
-                className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${config.gradient} text-white shadow-sm`}
+        {Object.entries(typeConfig)
+          .filter(([key]) => key !== "Pack")
+          .map(([key, config]) => {
+            const Icon = config.icon;
+            const count = typeCounts[key as keyof typeof typeCounts] || 0;
+            return (
+              <div
+                key={key}
+                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r ${config.bg} border border-border/50`}
               >
-                <Icon className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-lg font-bold leading-none">{count}</p>
-                <p className="text-[11px] text-muted-foreground font-medium">
-                  {config.label}
-                </p>
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${config.gradient} text-white shadow-sm`}
+                >
+                  <Icon className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="text-lg font-bold leading-none">{count}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium">
+                    {config.label}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
 
       {/* Search */}

@@ -69,7 +69,7 @@ export function InstagramReelsViewer({
                 className="w-full h-full object-cover"
                 autoPlay
                 loop
-                muted={false}
+                muted={true}
                 playsInline
               />
             </div>

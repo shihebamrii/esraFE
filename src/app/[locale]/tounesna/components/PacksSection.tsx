@@ -2,7 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, Eye, Image as ImageIcon, Film } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
@@ -16,6 +24,8 @@ interface Pack {
   type: "collection" | "membership";
   title: string;
   priceTND: number;
+  photoIds?: any[];
+  contentIds?: any[];
   membershipFeatures?: {
     photosLimit?: number;
     reelsLimit?: number;
@@ -39,6 +49,8 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
   const isImpact = type === "impact";
   const { addItem } = useCartStore();
   const router = useRouter();
+  const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     const fetchPacksAndSubscription = async () => {
@@ -49,11 +61,11 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
         const response = await api.get("/packs");
         if (response.data?.status === "success") {
           const allPacks = response.data.data.packs;
-          // Filter by membership type, the correct module, and hide free "Welcome" packs
+          // Filter by membership OR collection type, the correct module, and hide free "Welcome" packs
           const filtered = allPacks.filter((p: any) => 
-            p.type === "membership" && 
+            (p.type === "membership" || p.type === "collection") && 
             p.priceTND > 0 &&
-            (p.membershipFeatures?.module === type || p.membershipFeatures?.module === "both")
+            (p.membershipFeatures?.module === type || p.membershipFeatures?.module === "both" || p.type === "collection")
           );
           
           // Sort them to match Silver, Gold, Premium order
@@ -87,7 +99,8 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
       type: "pack",
       title: pack.title,
       price: pack.priceTND,
-    });
+      licenseType: "standard",
+    } as any);
     toast.success(`${pack.title} added to cart!`);
     router.push("/cart");
   };
@@ -100,11 +113,21 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
   };
 
   const getFeatures = (pack: Pack) => {
+    if (pack.type === "collection") {
+      return [
+        "Full static collection access",
+        "High-resolution files",
+        "Single ZIP download",
+        "Permanent license",
+        "Thematic selection"
+      ];
+    }
+    
     const f = pack.membershipFeatures;
     if (!f) return [];
     
     const features = [];
-    if (pack.membershipFeatures?.module === "tounesna") {
+    if (f.module === "tounesna") {
       if (f.photosLimit) features.push(`${f.photosLimit} photos professionnelles`);
       if (f.reelsLimit) features.push(`${f.reelsLimit} reels`);
       if (f.videosLimit) features.push(`${f.videosLimit} vidéos professionnelles`);
@@ -213,6 +236,84 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
                    <Sparkles className="mr-2 h-4 w-4 fill-current opacity-70" />
                    Secure This Collection
                 </Button>
+                
+                {pack.type === "collection" && (
+                  <Dialog open={isPreviewOpen && selectedPack?._id === pack._id} onOpenChange={(open) => {
+                    setIsPreviewOpen(open);
+                    if (open) setSelectedPack(pack);
+                    else setSelectedPack(null);
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        className={`w-full mt-3 h-10 rounded-xl font-medium transition-colors ${
+                          isMiddle ? 'text-white/80 hover:text-white hover:bg-white/10' : (isImpact ? 'text-[#1f3a5f]/80 hover:text-[#1f3a5f] hover:bg-[#1f3a5f]/5' : 'text-[#6a0d2e]/80 hover:text-[#6a0d2e] hover:bg-[#6a0d2e]/5')
+                        }`}
+                      >
+                         <Eye className="mr-2 h-4 w-4" />
+                         Preview Contents
+                      </Button>
+                    </DialogTrigger>
+                    {selectedPack?._id === pack._id && (
+                      <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
+                        <DialogHeader>
+                          <DialogTitle className={`text-2xl font-serif ${isImpact ? 'text-[#1f3a5f]' : 'text-[#6a0d2e]'}`}>
+                            {pack.title} Contents
+                          </DialogTitle>
+                          <DialogDescription>
+                            Preview the high-resolution media included in this collection.
+                          </DialogDescription>
+                        </DialogHeader>
+                        
+                        <div className="flex-1 overflow-y-auto pr-2 mt-4">
+                          {((pack.photoIds?.length || 0) === 0 && (pack.contentIds?.length || 0) === 0) ? (
+                            <div className="text-center py-20 text-muted-foreground">
+                              This collection seems to be empty.
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pb-4">
+                              {pack.photoIds?.map((photo: any) => (
+                                <div key={photo._id} className="group relative aspect-square rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                                  {(photo.previewUrl || photo.thumbnailUrl) ? (
+                                    <img src={photo.previewUrl || photo.thumbnailUrl} alt={photo.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-muted/50">
+                                      <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
+                                    </div>
+                                  )}
+                                  <div className="absolute top-2 left-2">
+                                    <Badge className="bg-amber-500/90 hover:bg-amber-500 text-white border-none shadow-sm text-[10px] px-2 py-0">Photo</Badge>
+                                  </div>
+                                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                                    <p className="text-white text-xs font-medium truncate">{photo.title}</p>
+                                  </div>
+                                </div>
+                              ))}
+                              
+                              {pack.contentIds?.map((content: any) => (
+                                <div key={content._id} className="group relative aspect-[9/16] sm:aspect-square rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                                  {content.thumbnailUrl ? (
+                                    <img src={content.thumbnailUrl} alt={content.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-muted/50">
+                                      <Film className="h-8 w-8 text-muted-foreground/30" />
+                                    </div>
+                                  )}
+                                  <div className="absolute top-2 left-2">
+                                    <Badge className="bg-fuchsia-600/90 hover:bg-fuchsia-600 text-white border-none shadow-sm text-[10px] px-2 py-0">Video</Badge>
+                                  </div>
+                                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                                    <p className="text-white text-xs font-medium truncate">{content.title}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </DialogContent>
+                    )}
+                  </Dialog>
+                )}
               </div>
             );
           })}

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Download, ShoppingCart, Info, MapPin, Loader2, ArrowLeft, Heart, Sparkles, User, Briefcase, Check, Package, Zap, ExternalLink } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { VideoPlayer } from "@/features/content/components/VideoPlayer";
 import { PhotoService } from "@/features/photos/api";
 import { UserService } from "@/features/user/api";
 import { useCartStore } from "@/store/cartStore";
@@ -216,18 +217,18 @@ export default function PhotoDetailsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Media Preview */}
         <div className="relative rounded-2xl overflow-hidden bg-muted shadow-2xl group flex items-center justify-center min-h-[300px]">
-          <img
-            src={photo.previewUrl}
-            alt={photo.title}
-            className="w-full h-auto object-cover max-h-[80vh]"
-          />
-          {photo.mediaType === 'video' && (
-             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                 <div className="bg-black/40 backdrop-blur-md rounded-full px-6 py-4 text-white text-center shadow-2xl border border-white/20">
-                     <span className="block text-3xl mb-1 ml-1 opacity-90">▶</span>
-                     <span className="text-[10px] uppercase tracking-widest font-bold text-white/80">Video Asset</span>
-                 </div>
-             </div>
+          {photo.mediaType === 'video' ? (
+             <VideoPlayer 
+                src={photo.highResUrl || photo.videoUrl || photo.previewUrl} 
+                poster={photo.previewUrl} 
+                maxPercentage={100} 
+             />
+          ) : (
+            <img
+              src={photo.previewUrl}
+              alt={photo.title}
+              className="w-full h-auto object-cover max-h-[80vh]"
+            />
           )}
           <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors pointer-events-none" />
         </div>

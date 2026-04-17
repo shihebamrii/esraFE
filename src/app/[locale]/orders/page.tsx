@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,17 +17,53 @@ import { Badge } from "@/components/ui/badge";
 import { UserService } from "@/features/user/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
+import { api } from "@/lib/api";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams?.get("success") === "true") {
+      toast.success("Payment successful! Your order has been placed.");
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await UserService.getMyOrders();
-        setOrders(response.data?.orders || []);
+        const ordersData = response.data?.orders || [];
+        setOrders(ordersData);
+
+        // Check if any order is still pending and poll its status
+        const pendingOrders = ordersData.filter((o: any) => o.paymentStatus === 'pending');
+        if (pendingOrders.length > 0) {
+          const pollInterval = setInterval(async () => {
+            let allPaid = true;
+            for (const order of pendingOrders) {
+              try {
+                const statusRes = await api.get(`/payments/status/${order._id}`);
+                if (statusRes.data?.data?.paymentStatus === 'paid') {
+                  // Refresh all orders if one is paid
+                  const refreshed = await UserService.getMyOrders();
+                  setOrders(refreshed.data?.orders || []);
+                  clearInterval(pollInterval);
+                  return;
+                } else {
+                  allPaid = false;
+                }
+              } catch (e) {
+                console.error("Error polling order status:", e);
+              }
+            }
+            if (allPaid) clearInterval(pollInterval);
+          }, 3000);
+
+          return () => clearInterval(pollInterval);
+        }
       } catch (error) {
         console.error("Failed to fetch orders:", error);
       } finally {

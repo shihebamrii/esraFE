@@ -133,7 +133,9 @@ export function Navbar() {
             alt="Bee Story Logo" 
             width={115}
             height={32}
-            style={{ width: 'auto' }}
+            priority
+            loading="eager"
+            style={{ width: 'auto', height: 'auto' }}
             className={cn(
               "h-8 transition-all duration-500",
               isHeroPage && !isScrolled ? "brightness-0 invert" : "" // Make logo white if on hero and not scrolled
