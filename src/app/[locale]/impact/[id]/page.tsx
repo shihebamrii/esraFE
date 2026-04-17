@@ -6,6 +6,7 @@ import { Download, Share2, Unlock, ArrowLeft, Tag } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { api } from "@/lib/api";
+import { resolveMediaUrl } from "@/lib/media";
 
 const formatDuration = (seconds?: number) => {
   if (!seconds) return "0:00";
@@ -31,7 +32,7 @@ export default function ImpactDetailsPage({ params }: { params: Promise<{ id: st
             id: c._id,
             title: c.title,
             description: c.description || c.title,
-            videoUrl: c.contentUrl || "/Impact.mp4",
+            videoUrl: c.contentUrl || c.thumbnailUrl || "/Impact.mp4",
             poster: c.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=1200&auto=format&fit=crop",
             duration: formatDuration(c.duration),
             type: c.type || "video",
@@ -167,7 +168,7 @@ export default function ImpactDetailsPage({ params }: { params: Promise<{ id: st
 
               {/* Tags */}
               <div className="mt-6 flex flex-wrap gap-2">
-                {content.tags.map((tag) => (
+                {content.tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:scale-105 cursor-default"

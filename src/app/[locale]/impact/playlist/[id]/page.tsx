@@ -6,6 +6,7 @@ import { ArrowLeft, Play, List, ChevronRight, ChevronLeft, Clock, Share2, Downlo
 import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
+import { resolveMediaUrl } from "@/lib/media";
 
 const formatDuration = (seconds?: number) => {
   if (!seconds) return "0:00";
@@ -100,8 +101,8 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
             <div className="relative aspect-video rounded-[32px] overflow-hidden shadow-2xl bg-black group">
                <VideoPlayer 
                   key={currentItem?._id}
-                  src={currentItem?.contentUrl || "/Impact.mp4"}
-                  poster={currentItem?.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=1200&auto=format&fit=crop"}
+                  src={resolveMediaUrl(currentItem?.contentUrl) || "/Impact.mp4"}
+                  poster={resolveMediaUrl(currentItem?.thumbnailUrl) || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=1200&auto=format&fit=crop"}
                   maxPercentage={10}
                />
                
@@ -184,7 +185,7 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
                       >
                         <div className="relative h-16 w-24 shrink-0 rounded-xl overflow-hidden shadow-md">
                           <img 
-                            src={item.contentId?.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=400&auto=format&fit=crop"} 
+                            src={resolveMediaUrl(item.contentId?.thumbnailUrl) || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=400&auto=format&fit=crop"} 
                             alt={item.contentId?.title}
                             className="h-full w-full object-cover"
                           />

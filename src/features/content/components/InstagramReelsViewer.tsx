@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, MessageCircle, Share2, MoreHorizontal, X, Music } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, X, Music, Volume2, VolumeX, Play } from "lucide-react";
+import { resolveMediaUrl } from "@/lib/media";
 
 interface InstagramReelsViewerProps {
   isOpen: boolean;
@@ -26,6 +28,68 @@ export function InstagramReelsViewer({
   comments = 89,
   instagramUsername,
 }: InstagramReelsViewerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  const resolvedSrc = resolveMediaUrl(videoSrc);
+  const resolvedThumbnail = resolveMediaUrl(thumbnail);
+
+  // Auto-play when opened
+  useEffect(() => {
+    if (isOpen && videoRef.current) {
+      setHasError(false);
+      const playVideo = async () => {
+        try {
+          videoRef.current!.currentTime = 0;
+          await videoRef.current!.play();
+          setIsPlaying(true);
+        } catch {
+          // Autoplay blocked, try muted
+          videoRef.current!.muted = true;
+          setIsMuted(true);
+          try {
+            await videoRef.current!.play();
+            setIsPlaying(true);
+          } catch {
+            setIsPlaying(false);
+          }
+        }
+      };
+      // Small delay to let the DOM render
+      setTimeout(playVideo, 100);
+    }
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+    };
+  }, [isOpen, resolvedSrc]);
+
+  const toggleMute = useCallback(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  }, [isMuted]);
+
+  const togglePlay = useCallback(async () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      try {
+        await videoRef.current.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+      }
+    }
+  }, [isPlaying]);
+
   if (!isOpen) return null;
 
   return (
@@ -59,19 +123,48 @@ export function InstagramReelsViewer({
             {/* Top Bar inside reel */}
             <div className="absolute top-0 inset-x-0 p-4 flex justify-between items-center z-20">
                <span className="text-white font-bold text-lg tracking-wide shadow-sm">Reels</span>
+               {/* Mute/Unmute Button */}
+               <button
+                 onClick={toggleMute}
+                 className="p-2 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors"
+               >
+                 {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+               </button>
             </div>
 
-            {/* Video Player (Mock) */}
-            <div className="absolute inset-0 w-full h-full bg-[#111]">
+            {/* Video Player */}
+            <div className="absolute inset-0 w-full h-full bg-[#111]" onClick={togglePlay}>
               <video
-                src={videoSrc}
-                poster={thumbnail}
+                ref={videoRef}
+                src={resolvedSrc}
+                poster={resolvedThumbnail}
                 className="w-full h-full object-cover"
-                autoPlay
                 loop
-                muted={true}
+                muted={isMuted}
                 playsInline
+                onError={() => setHasError(true)}
+                onPlaying={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
               />
+
+              {/* Play button overlay when paused */}
+              {!isPlaying && !hasError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center">
+                    <Play className="w-10 h-10 text-white fill-white ml-1" />
+                  </div>
+                </div>
+              )}
+
+              {/* Error overlay */}
+              {hasError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                  <div className="text-center text-white">
+                    <p className="text-lg font-bold mb-2">Video Unavailable</p>
+                    <p className="text-sm text-white/60">Tap to retry</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Dark Gradient Overlay for Bottom Info */}

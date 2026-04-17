@@ -19,6 +19,7 @@ import { GOV_PHOTOS } from "../tounesna/constants";
 import { PacksSection } from "../tounesna/components/PacksSection";
 import { InstagramReelsViewer } from "@/features/content/components/InstagramReelsViewer";
 import { api } from "@/lib/api";
+import { resolveMediaUrl } from "@/lib/media";
 import { Link } from "@/i18n/navigation";
 
 const formatDuration = (seconds?: number) => {
@@ -271,12 +272,12 @@ export default function ImpactPage() {
           setContents(contentRes.data.data.contents.map((c: any) => ({
             id: c._id,
             title: c.title,
-            thumbnail: c.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
+            thumbnail: resolveMediaUrl(c.thumbnailUrl) || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop",
             duration: formatDuration(c.duration),
             type: c.type,
             isPremium: c.rights !== 'free',
             category: c.type === 'reel' ? 'Reel' : (c.type === 'podcast' ? 'Podcast' : 'Documentary'),
-            contentUrl: c.contentUrl,
+            contentUrl: resolveMediaUrl(c.contentUrl),
             theme: c.themes?.[0] || "Impact",
             region: c.region,
             metadata: c.metadata
@@ -418,7 +419,7 @@ export default function ImpactPage() {
                       <Link key={pl._id} href={`/impact/playlist/${pl._id}`}>
                         <div className="group relative h-64 rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
                           <img 
-                            src={pl.items[0]?.contentId?.thumbnailUrl || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop"} 
+                          src={resolveMediaUrl(pl.items[0]?.contentId?.thumbnailUrl) || "https://images.unsplash.com/photo-1542401886-65d6c61db217?q=80&w=800&auto=format&fit=crop"} 
                             alt={pl.title}
                             className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
                           />

@@ -13,6 +13,7 @@ import {
 import { Search, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { PhotoService, Photo } from "@/features/photos/api";
+import { resolveMediaUrl } from "@/lib/media";
 
 import { TounesnaHero } from "./components/TounesnaHero";
 import { InteractiveMap } from "./components/InteractiveMap";
@@ -94,7 +95,7 @@ export default function TounesnaPage() {
   const adaptedPhotos = photos.map(p => ({
     id: p._id,
     title: p.title,
-    url: p.previewUrl,
+    url: resolveMediaUrl(p.previewUrl),
     location: p.governorate,
     price: p.priceTND,
     width: 800, // Fallback width

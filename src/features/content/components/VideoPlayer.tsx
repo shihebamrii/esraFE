@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Play, Pause, Volume2, VolumeX, Maximize } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Play, Pause, Volume2, VolumeX, Maximize, RotateCcw, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { resolveMediaUrl } from "@/lib/media";
 
 interface VideoPlayerProps {
   src: string;
@@ -15,18 +16,67 @@ export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showLimitReached, setShowLimitReached] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const togglePlay = () => {
-    if (showLimitReached) return;
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
+  // Resolve the media URLs to full backend URLs
+  const resolvedSrc = resolveMediaUrl(src);
+  const resolvedPoster = resolveMediaUrl(poster);
+
+  // Reset state when src changes
+  useEffect(() => {
+    setHasError(false);
+    setShowLimitReached(false);
+    setIsPlaying(false);
+    setIsLoading(true);
+  }, [resolvedSrc]);
+
+  const attemptPlay = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video || showLimitReached || hasError) return;
+
+    try {
+      await video.play();
+      setIsPlaying(true);
+    } catch (err: any) {
+      // NotAllowedError = autoplay blocked, user needs to interact
+      if (err.name === "NotAllowedError") {
+        // Try muted autoplay as fallback
+        video.muted = true;
+        setIsMuted(true);
+        try {
+          await video.play();
+          setIsPlaying(true);
+        } catch {
+          // Even muted play failed, just show play button
+          setIsPlaying(false);
+        }
       } else {
-        videoRef.current.play();
+        console.error("Video play error:", err);
+        setIsPlaying(false);
       }
-      setIsPlaying(!isPlaying);
     }
-  };
+  }, [showLimitReached, hasError]);
+
+  const togglePlay = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video || showLimitReached) return;
+
+    if (hasError) {
+      // Retry: reload the video on click
+      setHasError(false);
+      setIsLoading(true);
+      video.load();
+      return;
+    }
+
+    if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      await attemptPlay();
+    }
+  }, [isPlaying, showLimitReached, hasError, attemptPlay]);
 
   const handleTimeUpdate = () => {
     if (videoRef.current && maxPercentage && maxPercentage < 100) {
@@ -56,21 +106,72 @@ export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
     }
   };
 
+  const handleError = () => {
+    setHasError(true);
+    setIsPlaying(false);
+    setIsLoading(false);
+    console.error("Video failed to load:", resolvedSrc);
+  };
+
+  const handleCanPlay = () => {
+    setIsLoading(false);
+    setHasError(false);
+  };
+
+  const handleRetry = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    setHasError(false);
+    setIsLoading(true);
+    video.load();
+  };
+
   return (
     <div className="relative group rounded-xl overflow-hidden bg-[#1f3a5f] aspect-video shadow-2xl">
       <video
         ref={videoRef}
-        src={src}
-        poster={poster}
+        src={resolvedSrc}
+        poster={resolvedPoster}
         className="w-full h-full object-cover cursor-pointer"
         onClick={togglePlay}
         onEnded={() => setIsPlaying(false)}
         onTimeUpdate={handleTimeUpdate}
+        onError={handleError}
+        onCanPlay={handleCanPlay}
+        onWaiting={() => setIsLoading(true)}
+        onPlaying={() => { setIsLoading(false); setIsPlaying(true); }}
         playsInline
         preload="metadata"
       >
         Your browser does not support the video tag.
       </video>
+
+      {/* Loading Spinner */}
+      {isLoading && !hasError && !showLimitReached && (
+        <div className="absolute inset-0 z-15 flex items-center justify-center bg-black/30">
+          <div className="w-12 h-12 border-4 border-white/30 border-t-[#ffcc1a] rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Error Overlay */}
+      {hasError && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+            <AlertCircle className="h-8 w-8 text-red-400" />
+          </div>
+          <h3 className="text-white font-bold text-lg mb-2">Video Unavailable</h3>
+          <p className="text-white/60 text-sm max-w-[280px] mb-6">
+            The video failed to load. Please try again.
+          </p>
+          <Button
+            className="bg-[#ffcc1a] text-[#1f3a5f] hover:bg-white font-bold gap-2"
+            onClick={handleRetry}
+          >
+            <RotateCcw className="h-4 w-4" />
+            Retry
+          </Button>
+        </div>
+      )}
       
       {/* Limit Reached Overlay */}
       {showLimitReached && (
@@ -92,7 +193,7 @@ export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
       )}
 
       {/* Controls Overlay */}
-      <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1f3a5f]/90 via-[#1f3a5f]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-[2px] ${showLimitReached ? 'hidden' : ''}`}>
+      <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1f3a5f]/90 via-[#1f3a5f]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-[2px] ${showLimitReached || hasError ? 'hidden' : ''}`}>
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-4">
             <button 
@@ -120,7 +221,7 @@ export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
       </div>
 
        {/* Centered Play Button when paused */}
-       {!isPlaying && !showLimitReached && (
+       {!isPlaying && !showLimitReached && !hasError && !isLoading && (
          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div 
               className="p-6 rounded-full shadow-2xl transform scale-100 transition-transform"

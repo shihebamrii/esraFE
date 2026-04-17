@@ -12,6 +12,7 @@ import { PhotoService } from "@/features/photos/api";
 import { UserService } from "@/features/user/api";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
+import { resolveMediaUrl } from "@/lib/media";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslations } from "next-intl";
@@ -219,8 +220,8 @@ export default function PhotoDetailsPage() {
         <div className="relative rounded-2xl overflow-hidden bg-muted shadow-2xl group flex items-center justify-center min-h-[300px]">
           {photo.mediaType === 'video' ? (
              <VideoPlayer 
-                src={photo.highResUrl || photo.videoUrl || photo.previewUrl} 
-                poster={photo.previewUrl} 
+                src={resolveMediaUrl(photo.highResUrl) || resolveMediaUrl(photo.previewUrl) || resolveMediaUrl(`/api/media/${photo.highResFileId}`)} 
+                poster={resolveMediaUrl(photo.previewUrl)} 
                 maxPercentage={100} 
              />
           ) : (

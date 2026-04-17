@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { resolveMediaUrl } from "@/lib/media";
 
 interface Pack {
   _id: string;
@@ -275,7 +276,7 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
                               {pack.photoIds?.map((photo: any) => (
                                 <div key={photo._id} className="group relative aspect-square rounded-xl overflow-hidden border border-border/50 bg-muted/30">
                                   {(photo.previewUrl || photo.thumbnailUrl) ? (
-                                    <img src={photo.previewUrl || photo.thumbnailUrl} alt={photo.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                    <img src={resolveMediaUrl(photo.previewUrl || photo.thumbnailUrl)} alt={photo.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-muted/50">
                                       <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
@@ -293,7 +294,7 @@ export function PacksSection({ type = "tounesna" }: PacksSectionProps) {
                               {pack.contentIds?.map((content: any) => (
                                 <div key={content._id} className="group relative aspect-[9/16] sm:aspect-square rounded-xl overflow-hidden border border-border/50 bg-muted/30">
                                   {content.thumbnailUrl ? (
-                                    <img src={content.thumbnailUrl} alt={content.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                    <img src={resolveMediaUrl(content.thumbnailUrl)} alt={content.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-muted/50">
                                       <Film className="h-8 w-8 text-muted-foreground/30" />
