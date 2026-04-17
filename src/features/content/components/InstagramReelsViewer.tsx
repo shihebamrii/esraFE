@@ -136,7 +136,6 @@ export function InstagramReelsViewer({
             <div className="absolute inset-0 w-full h-full bg-[#111]" onClick={togglePlay}>
               <video
                 ref={videoRef}
-                src={resolvedSrc}
                 poster={resolvedThumbnail}
                 className="w-full h-full object-cover"
                 loop
@@ -145,7 +144,10 @@ export function InstagramReelsViewer({
                 onError={() => setHasError(true)}
                 onPlaying={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
-              />
+              >
+                <source src={resolvedSrc} type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+                <source src={resolvedSrc} type="video/mp4" />
+              </video>
 
               {/* Play button overlay when paused */}
               {!isPlaying && !hasError && (

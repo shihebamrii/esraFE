@@ -130,7 +130,6 @@ export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
     <div className="relative group rounded-xl overflow-hidden bg-[#1f3a5f] aspect-video shadow-2xl">
       <video
         ref={videoRef}
-        src={resolvedSrc}
         poster={resolvedPoster}
         className="w-full h-full object-cover cursor-pointer"
         onClick={togglePlay}
@@ -143,6 +142,8 @@ export function VideoPlayer({ src, poster, maxPercentage }: VideoPlayerProps) {
         playsInline
         preload="metadata"
       >
+        <source src={resolvedSrc} type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+        <source src={resolvedSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
