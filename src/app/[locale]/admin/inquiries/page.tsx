@@ -107,7 +107,7 @@ export default function AdminInquiriesPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-black text-[#1f3a5f]">Inquiries & Messages</h1>
+          <h1 className="text-3xl font-black text-[#1f3a5f]">Messages</h1>
           <p className="text-[#1f3a5f]/60">Manage messages sent from the contact form.</p>
         </div>
       </div>

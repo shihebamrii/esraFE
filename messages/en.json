@@ -323,10 +323,10 @@
       "packs": "Packs",
       "playlists": "Playlists",
       "upload": "Upload",
-      "contentImpact": "Content (Impact)",
-      "photosTounesna": "Photos (Tounesna)",
+      "contentImpact": "Impact",
+      "photosTounesna": "Tounesna",
       "orders": "Orders",
-      "inquiries": "Inquiries",
+      "inquiries": "Messages",
       "overview": "Overview"
     },
     "home": {
