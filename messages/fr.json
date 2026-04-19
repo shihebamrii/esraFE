@@ -102,7 +102,16 @@
     "oasis": "Oasis",
     "village": "Village",
     "photos": "Photos, Vidéos, Réels",
-    "governorates": "Gouvernorats"
+    "governorates": "Gouvernorats",
+    "theme": "Thème",
+    "allThemes": "Tous les Thèmes",
+    "youth": "Jeunesse",
+    "womenArtisans": "Femmes Artisanes",
+    "environment": "Environnement",
+    "access": "Accès",
+    "allAccess": "Tous les Accès",
+    "free": "Gratuit",
+    "premium": "Premium"
   },
   "UserDashboard": {
     "greeting": {
@@ -511,6 +520,10 @@
         "oasis": "Oasis",
         "village": "Village"
       },
+      "actions": {
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
       "messages": {
         "fetchFailed": "Échec du chargement des photos",
         "deleteSuccess": "Photo supprimée avec succès",
@@ -518,7 +531,9 @@
         "approveSuccess": "Photo {status} avec succès",
         "approveFailed": "Échec de l'action {status} sur la photo",
         "updateSuccess": "Photo mise à jour avec succès",
-        "updateFailed": "Échec de la mise à jour de la photo"
+        "updateFailed": "Échec de la mise à jour de la photo",
+        "saveSuccess": "Photo enregistrée avec succès",
+        "saveFailed": "Échec de l'enregistrement de la photo"
       }
     },
     "content": {
@@ -635,8 +650,8 @@
     },
     "upload": {
       "title": "Téléversement de Médias",
-      "photoTab": "Photo (Tounesna)",
-      "videoTab": "Vidéo/Contenu (Impact)",
+      "photoTab": "Tounesna",
+      "videoTab": "Impact",
       "form": {
         "photo": {
           "title": "Titre de la Photo",

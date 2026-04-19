@@ -102,7 +102,16 @@
     "oasis": "Oasis",
     "village": "Village",
     "photos": "Photos, Videos, Reels",
-    "governorates": "Governorates"
+    "governorates": "Governorates",
+    "theme": "Theme",
+    "allThemes": "All Themes",
+    "youth": "Youth",
+    "womenArtisans": "Women Artisans",
+    "environment": "Environment",
+    "access": "Access",
+    "allAccess": "All Access",
+    "free": "Free",
+    "premium": "Premium"
   },
   "UserDashboard": {
     "greeting": {
@@ -511,6 +520,10 @@
         "oasis": "Oasis",
         "village": "Village"
       },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
       "messages": {
         "fetchFailed": "Failed to load photos",
         "deleteSuccess": "Photo deleted successfully",
@@ -518,7 +531,9 @@
         "approveSuccess": "Photo {status} successfully",
         "approveFailed": "Failed to {status} photo",
         "updateSuccess": "Photo updated successfully",
-        "updateFailed": "Failed to update photo"
+        "updateFailed": "Failed to update photo",
+        "saveSuccess": "Photo saved successfully",
+        "saveFailed": "Failed to save photo"
       }
     },
     "content": {
@@ -635,8 +650,8 @@
     },
     "upload": {
       "title": "Media Upload",
-      "photoTab": "Photo (Tounesna)",
-      "videoTab": "Video/Content (Impact)",
+      "photoTab": "Tounesna",
+      "videoTab": "Impact",
       "form": {
         "photo": {
           "title": "Photo Title",

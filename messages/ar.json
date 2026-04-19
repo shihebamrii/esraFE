@@ -127,7 +127,16 @@
     "oasis": "واحة",
     "village": "قرية",
     "photos": "صور، فيديو، ريلز",
-    "governorates": "ولايات"
+    "governorates": "ولايات",
+    "theme": "الموضوع",
+    "allThemes": "جميع المواضيع",
+    "youth": "رياضة وشباب",
+    "womenArtisans": "نساء حِرفيات",
+    "environment": "بيئة",
+    "access": "الوصول",
+    "allAccess": "جميع أنواع الوصول",
+    "free": "مجاني",
+    "premium": "مميز"
   },
   "UserDashboard": {
     "greeting": {
@@ -536,6 +545,10 @@
         "oasis": "الواحة",
         "village": "القرية"
       },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف"
+      },
       "messages": {
         "fetchFailed": "فشل تحميل الصور",
         "deleteSuccess": "تم حذف الصورة بنجاح",
@@ -543,7 +556,9 @@
         "approveSuccess": "تم {status} الصورة بنجاح",
         "approveFailed": "فشل {status} الصورة",
         "updateSuccess": "تم تحديث الصورة بنجاح",
-        "updateFailed": "فشل تحديث الصورة"
+        "updateFailed": "فشل تحديث الصورة",
+        "saveSuccess": "تم حفظ الصورة بنجاح",
+        "saveFailed": "فشل حفظ الصورة"
       }
     },
     "content": {
@@ -660,8 +675,8 @@
     },
     "upload": {
       "title": "تحميل الوسائط",
-      "photoTab": "صورة (تونسنا)",
-      "videoTab": "فيديو/محتوى (Impact)",
+      "photoTab": "تونسنا",
+      "videoTab": "Impact",
       "form": {
         "photo": {
           "title": "عنوان الصورة",
