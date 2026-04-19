@@ -21,9 +21,10 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
-import { Mail, MessageSquare, Trash2, Eye, Reply } from "lucide-react";
+import { Mail, MessageSquare, Trash2, Eye, Reply, Search } from "lucide-react";
 import { format } from "date-fns";
 
 interface Inquiry {
@@ -40,9 +41,22 @@ interface Inquiry {
 export default function AdminInquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+
+  const filteredInquiries = inquiries.filter((inquiry) => {
+    const searchTerm = search.toLowerCase().trim();
+    if (!searchTerm) return true;
+    return (
+      inquiry.name.toLowerCase().includes(searchTerm) ||
+      inquiry.email.toLowerCase().includes(searchTerm) ||
+      inquiry.subject.toLowerCase().includes(searchTerm) ||
+      inquiry.message.toLowerCase().includes(searchTerm) ||
+      inquiry.status.toLowerCase().includes(searchTerm)
+    );
+  });
 
   const fetchInquiries = async () => {
     try {
@@ -105,10 +119,19 @@ export default function AdminInquiriesPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-[#1f3a5f]">Messages</h1>
           <p className="text-[#1f3a5f]/60">Manage messages sent from the contact form.</p>
+        </div>
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search messages..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
         </div>
       </div>
 
@@ -128,12 +151,14 @@ export default function AdminInquiriesPage() {
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10">Loading messages...</TableCell>
               </TableRow>
-            ) : inquiries.length === 0 ? (
+            ) : filteredInquiries.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-10">No messages found.</TableCell>
+                <TableCell colSpan={5} className="text-center py-10">
+                  {search ? "No messages found matching your search." : "No messages found."}
+                </TableCell>
               </TableRow>
             ) : (
-              inquiries.map((inquiry) => (
+              filteredInquiries.map((inquiry) => (
                 <TableRow key={inquiry._id} className="hover:bg-gray-50/50 transition-colors">
                   <TableCell>
                     <div className="flex flex-col">

@@ -22,6 +22,7 @@ export function UploadVideoForm() {
     type: "video",
     themes: "[]",
     region: "",
+    city: "",
     tags: "[]",
     language: "ar",
     rights: "free",
@@ -118,6 +119,13 @@ export function UploadVideoForm() {
               <option key={gov} value={gov}>{gov}</option>
             ))}
           </select>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="video-city">{t("city")}</Label>
+          <Input id="video-city" name="city" value={formData.city} onChange={handleChange} placeholder={t("cityPlaceholder")} />
         </div>
       </div>
 

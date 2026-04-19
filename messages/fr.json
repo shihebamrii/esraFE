@@ -70,7 +70,9 @@
     "theme": "Thème",
     "allThemes": "Tous les Thèmes",
     "type": "Type",
-    "allTypes": "Tous les Types"
+    "allTypes": "Tous les Types",
+    "governorate": "Gouvernorat",
+    "allGovernorates": "Tous les Gouvernorats"
   },
   "ImpactHero": {
     "badge": "Contenus Multimédias Engageants",
@@ -331,6 +333,8 @@
     },
     "home": {
       "title": "Tableau de bord",
+      "downloads": "Téléchargements",
+      "totalDownloads": "Total des téléchargements de contenu",
       "totalRevenue": "Revenu Total",
       "paidOrders": "Toutes les commandes payées",
       "activeUsers": "Utilisateurs Actifs",
@@ -364,6 +368,10 @@
         "videos": "Vidéos",
         "docs": "Docs"
       },
+      "actions": {
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
       "dialog": {
         "editQuotas": "Modifier les Quotas",
         "editDescription": "Ajuster manuellement les quotas restants pour {name} ({pack}).",
@@ -371,14 +379,27 @@
         "reelsRemaining": "Réels Restants",
         "videosRemaining": "Vidéos Restantes",
         "docsRemaining": "Docs Restants",
-        "saveChanges": "Enregistrer les modifications"
+        "saveChanges": "Enregistrer les modifications",
+        "editUser": "Modifier l'Utilisateur",
+        "editUserDescription": "Mettre à jour les détails de {name}",
+        "name": "Nom",
+        "email": "Email",
+        "role": "Rôle",
+        "deleteUser": "Supprimer l'Utilisateur",
+        "deleteUserDescription": "Êtes-vous sûr de vouloir supprimer {name} ? Cette action ne peut pas être annulée.",
+        "cancel": "Annuler",
+        "delete": "Supprimer"
       },
       "messages": {
         "fetchFailed": "Échec de la récupération des utilisateurs",
         "updateStatusSuccess": "Utilisateur {status} avec succès",
         "updateStatusFailed": "Échec de la mise à jour du statut de l'utilisateur",
         "updateQuotasSuccess": "Quotas mis à jour avec succès",
-        "updateQuotasFailed": "Échec de la mise à jour des quotas"
+        "updateQuotasFailed": "Échec de la mise à jour des quotas",
+        "updateSuccess": "Utilisateur mis à jour avec succès",
+        "updateFailed": "Échec de la mise à jour de l'utilisateur",
+        "deleteSuccess": "Utilisateur supprimé avec succès",
+        "deleteFailed": "Échec de la suppression de l'utilisateur"
       }
     },
     "packs": {
@@ -429,6 +450,9 @@
         "videos": "Vidéos",
         "quality": "Qualité"
       },
+      "searchPlaceholder": "Rechercher des packs...",
+      "noSearchResults": "Aucun pack trouvé correspondant à votre recherche.",
+      "noPacks": "Aucun pack trouvé. Créez-en un pour commencer.",
       "messages": {
         "fetchFailed": "Échec de la récupération des packs",
         "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce pack ?",
@@ -468,14 +492,33 @@
       },
       "dialog": {
         "editPhoto": "Modifier la Photo",
-        "editDescription": "Mettre à jour les détails de la photo sélectionnée."
+        "editDescription": "Mettre à jour les détails de la photo sélectionnée.",
+        "editCommunityPhoto": "Modifier la Photo Communautaire",
+        "editCommunityDescription": "Mettre à jour les détails de la photo (le prix et la photo ne peuvent pas être modifiés pour les soumissions communautaires)",
+        "title": "Titre",
+        "titlePlaceholder": "Entrez le titre de la photo",
+        "description": "Description",
+        "descriptionPlaceholder": "Entrez la description de la photo",
+        "governorate": "Gouvernorat",
+        "governoratePlaceholder": "Entrez le gouvernorat",
+        "landscapeType": "Type de Paysage",
+        "saveChanges": "Enregistrer les modifications"
+      },
+      "landscape": {
+        "sea": "Mer",
+        "desert": "Désert",
+        "mountain": "Montagne",
+        "oasis": "Oasis",
+        "village": "Village"
       },
       "messages": {
         "fetchFailed": "Échec du chargement des photos",
         "deleteSuccess": "Photo supprimée avec succès",
         "deleteFailed": "Échec de la suppression de la photo",
         "approveSuccess": "Photo {status} avec succès",
-        "approveFailed": "Échec de l'action {status} sur la photo"
+        "approveFailed": "Échec de l'action {status} sur la photo",
+        "updateSuccess": "Photo mise à jour avec succès",
+        "updateFailed": "Échec de la mise à jour de la photo"
       }
     },
     "content": {
@@ -501,14 +544,37 @@
         "noContent": "Aucun contenu trouvé",
         "unknown": "Inconnu"
       },
+      "actions": {
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "dialog": {
+        "editContent": "Modifier le Contenu",
+        "editDescription": "Mettre à jour les détails de {title}",
+        "title": "Titre",
+        "titlePlaceholder": "Entrez le titre du contenu",
+        "description": "Description",
+        "descriptionPlaceholder": "Entrez la description du contenu",
+        "type": "Type",
+        "saveChanges": "Enregistrer les modifications",
+        "deleteContent": "Supprimer le Contenu",
+        "deleteDescription": "Êtes-vous sûr de vouloir supprimer {title} ? Cette action ne peut pas être annulée.",
+        "cancel": "Annuler",
+        "delete": "Supprimer"
+      },
       "messages": {
         "fetchFailed": "Échec du chargement du contenu",
         "approveSuccess": "Contenu {status} avec succès",
-        "approveFailed": "Échec de l'action {status} sur le contenu"
+        "approveFailed": "Échec de l'action {status} sur le contenu",
+        "updateSuccess": "Contenu mis à jour avec succès",
+        "updateFailed": "Échec de la mise à jour du contenu",
+        "deleteSuccess": "Contenu supprimé avec succès",
+        "deleteFailed": "Échec de la suppression du contenu"
       }
     },
     "orders": {
       "title": "Gestion des Commandes",
+      "searchPlaceholder": "Rechercher des commandes...",
       "table": {
         "orderId": "ID Commande",
         "customer": "Client",
@@ -527,6 +593,7 @@
       "createPlaylist": "Créer une Liste de Lecture",
       "editPlaylist": "Modifier la Liste de Lecture",
       "searchPlaceholder": "Rechercher des listes de lecture...",
+      "noSearchResults": "Aucune liste de lecture trouvée correspondant à votre recherche.",
       "messages": {
         "fetchFailed": "Échec du chargement des listes de lecture",
         "contentFailed": "Échec du chargement du contenu disponible",
@@ -535,7 +602,8 @@
         "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette liste de lecture ?",
         "deleteSuccess": "Liste de lecture supprimée avec succès",
         "deleteFailed": "Échec de la suppression de la liste de lecture",
-        "noPlaylists": "Aucune liste de lecture trouvée"
+        "noPlaylists": "Aucune liste de lecture trouvée",
+        "noSearchResults": "Aucune liste de lecture trouvée correspondant à votre recherche."
       },
       "form": {
         "title": "Titre de la Liste de Lecture",
@@ -611,7 +679,18 @@
           "uploading": "Téléversement...",
           "clickToReplace": "Cliquez pour remplacer {type}",
           "clickToUpload": "Cliquez ou glissez le fichier {type}",
-          "clickToUploadPreview": "Cliquez ou glissez l'image d'aperçu"
+          "clickToUploadPreview": "Cliquez ou glissez l'image d'aperçu",
+          "city": "Ville",
+          "cityPlaceholder": "ex. Tunis, Sfax, Sousse...",
+          "selectGovernorate": "Sélectionner un gouvernorat",
+          "contentType": "Type de Contenu",
+          "contentTypes": {
+            "photo": "Photo / Image",
+            "video": "Vidéo",
+            "reel": "Reel",
+            "podcast": "Podcast",
+            "documentary": "Documentaire"
+          }
         },
         "video": {
           "title": "Titre *",
@@ -624,6 +703,8 @@
           "themes": "Thèmes",
           "region": "Région (Gouvernorat)",
           "selectRegion": "Sélectionner la région",
+          "city": "Ville",
+          "cityPlaceholder": "ex. Tunis, Sfax, Sousse...",
           "tags": "Tags (tableau JSON)",
           "language": "Langue",
           "rights": "Droits d'Utilisation",
@@ -634,13 +715,19 @@
           "public": "Public",
           "private": "Privé",
           "instagram": "Nom d'utilisateur Instagram (pour Reels)",
+          "requiredForReels": "Requis pour les Reels",
+          "instagramInfo": "Cela permettra aux spectateurs de suivre directement le créateur sur Instagram.",
           "file": "Fichier Vidéo/Audio *",
           "thumbnail": "Image de Vignette",
           "submit": "Téléverser le Contenu",
           "uploading": "Téléversement...",
           "selectFile": "Veuillez sélectionner un fichier vidéo",
           "success": "Vidéo téléversée avec succès !",
-          "failed": "Échec du téléversement de la vidéo"
+          "failed": "Échec du téléversement de la vidéo",
+          "youth": "Jeunesse",
+          "womenArtisans": "Femmes Artisanes",
+          "environment": "Environnement",
+          "selectTheme": "Sélectionner un thème"
         }
       }
     },

@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock, Sparkles, Users } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock, Sparkles, Users, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -28,6 +28,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { useTranslations } from "next-intl";
 
@@ -38,6 +39,15 @@ export default function AdminPhotosPage() {
   const [loading, setLoading] = useState(true);
   const [editingPhoto, setEditingPhoto] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isSimpleEditDialogOpen, setIsSimpleEditDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("official");
+  const [submitting, setSubmitting] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    title: "",
+    description: "",
+    governorate: "",
+    landscapeType: "sea",
+  });
 
   const fetchPhotos = async () => {
     try {
@@ -74,6 +84,36 @@ export default function AdminPhotosPage() {
     fetchPhotos();
   };
 
+  const handleSimpleEdit = (photo: any) => {
+    setEditingPhoto(photo);
+    setEditFormData({
+      title: photo.title || "",
+      description: photo.description || "",
+      governorate: photo.governorate || "",
+      landscapeType: photo.landscapeType || "sea",
+    });
+    setIsSimpleEditDialogOpen(true);
+  };
+
+  const handleSimpleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPhoto) return;
+
+    setSubmitting(true);
+    try {
+      await AdminService.updatePhoto(editingPhoto._id, editFormData as any);
+      toast.success(t("messages.updateSuccess", { defaultValue: "Photo updated successfully" }));
+      setIsSimpleEditDialogOpen(false);
+      setEditingPhoto(null);
+      fetchPhotos();
+    } catch (e) {
+      console.error(e);
+      toast.error(t("messages.updateFailed", { defaultValue: "Failed to update photo" }));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleApprove = async (id: string, status: 'approved' | 'rejected') => {
     try {
       await AdminService.approvePhoto(id, status);
@@ -93,17 +133,17 @@ export default function AdminPhotosPage() {
   const approvedPhotos = communityPhotos.filter(p => (!p.approvalStatus || p.approvalStatus === 'approved'));
   const rejectedPhotos = communityPhotos.filter(p => p.approvalStatus === 'rejected');
 
-  const PhotoTable = ({ data, showApprovalActions = false }: { data: any[], showApprovalActions?: boolean }) => (
+  const PhotoTable = ({ data, showApprovalActions = false, isCommunity = false }: { data: any[], showApprovalActions?: boolean, isCommunity?: boolean }) => (
     <div className="rounded-md border bg-card">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t("table.preview")}</TableHead>
+            {!isCommunity && <TableHead>{t("table.preview")}</TableHead>}
             <TableHead>{t("table.title")}</TableHead>
             <TableHead>{t("table.user")}</TableHead>
 
             <TableHead>{t("table.location")}</TableHead>
-            <TableHead>{t("table.price")}</TableHead>
+            {!isCommunity && <TableHead>{t("table.price")}</TableHead>}
             <TableHead>{t("table.tags")}</TableHead>
             <TableHead>{t("table.date")}</TableHead>
             <TableHead className="text-right">{t("table.actions")}</TableHead>
@@ -112,34 +152,38 @@ export default function AdminPhotosPage() {
         <TableBody>
           {data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={isCommunity ? 6 : 8} className="h-24 text-center text-muted-foreground">
                 No photos found
               </TableCell>
             </TableRow>
           ) : (
             data.map((item) => (
               <TableRow key={item._id}>
-                <TableCell>
-                  <div className="relative h-12 w-12 rounded overflow-hidden">
-                    <img 
-                      src={item.previewUrl || '/placeholder.png'} 
-                      alt={item.title} 
-                      className="object-cover w-full h-full" 
-                    />
-                  </div>
-                </TableCell>
+                {!isCommunity && (
+                  <TableCell>
+                    <div className="relative h-12 w-12 rounded overflow-hidden">
+                      <img 
+                        src={item.previewUrl || '/placeholder.png'} 
+                        alt={item.title} 
+                        className="object-cover w-full h-full" 
+                      />
+                    </div>
+                  </TableCell>
+                )}
                 <TableCell className="font-medium truncate max-w-[150px]">{item.title}</TableCell>
                 <TableCell>{item.createdBy?.name || t("table.unknown")}</TableCell>
 
                 <TableCell>{item.governorate}</TableCell>
-                <TableCell>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-sm text-blue-600 dark:text-blue-400">P: {item.pricePersonalTND ?? item.priceTND ?? 0} DT</span>
-                    {(item.priceCommercialTND > 0) && (
-                      <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400">C: {item.priceCommercialTND} DT</span>
-                    )}
-                  </div>
-                </TableCell>
+                {!isCommunity && (
+                  <TableCell>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-mono text-sm text-blue-600 dark:text-blue-400">P: {item.pricePersonalTND ?? item.priceTND ?? 0} DT</span>
+                      {(item.priceCommercialTND > 0) && (
+                        <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400">C: {item.priceCommercialTND} DT</span>
+                      )}
+                    </div>
+                  </TableCell>
+                )}
                 <TableCell>
                   <div className="flex flex-wrap gap-1 max-w-[200px]">
                     {item.tags?.slice(0, 3).map((tag: string) => (
@@ -180,9 +224,16 @@ export default function AdminPhotosPage() {
                         variant="ghost" 
                         size="icon"
                         onClick={() => {
-                          setEditingPhoto(item);
-                          setIsEditDialogOpen(true);
+                          if (isCommunity) {
+                            // Community photo - use simple edit without price/photo
+                            handleSimpleEdit(item);
+                          } else {
+                            // Official photo - use full edit
+                            setEditingPhoto(item);
+                            setIsEditDialogOpen(true);
+                          }
                         }}
+                        title={t("actions.edit", { defaultValue: "Edit" })}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -213,16 +264,20 @@ export default function AdminPhotosPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
-        <Link href="/admin/upload">
-          <Button className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white">
-            <Plus className="mr-2 h-4 w-4" />
-            {t("addPhoto")}
-          </Button>
-        </Link>
+        {activeTab !== "community" && (
+          <Link href="/admin/upload">
+            <Button className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white">
+              <Plus className="mr-2 h-4 w-4" />
+              {t("addPhoto")}
+            </Button>
+          </Link>
+        )}
       </div>
 
       <Tabs
         defaultValue="official"
+        value={activeTab}
+        onValueChange={setActiveTab}
         className="space-y-4"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -270,7 +325,7 @@ export default function AdminPhotosPage() {
               {loading ? (
                 <div>{t("loading")}</div>
               ) : (
-                <PhotoTable data={pendingPhotos} showApprovalActions={true} />
+                <PhotoTable data={pendingPhotos} showApprovalActions={true} isCommunity={true} />
               )}
             </div>
 
@@ -283,7 +338,7 @@ export default function AdminPhotosPage() {
               {loading ? (
                 <div>{t("loading")}</div>
               ) : (
-                <PhotoTable data={approvedPhotos} />
+                <PhotoTable data={approvedPhotos} isCommunity={true} />
               )}
             </div>
 
@@ -296,7 +351,7 @@ export default function AdminPhotosPage() {
               {loading ? (
                 <div>{t("loading")}</div>
               ) : (
-                <PhotoTable data={rejectedPhotos} />
+                <PhotoTable data={rejectedPhotos} isCommunity={true} />
               )}
             </div>
           </div>
@@ -306,9 +361,9 @@ export default function AdminPhotosPage() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Photo</DialogTitle>
+            <DialogTitle>{t("dialog.editPhoto", { defaultValue: "Edit Photo" })}</DialogTitle>
             <DialogDescription>
-              Update the details of the selected photo.
+              {t("dialog.editDescription", { defaultValue: "Update the details of the selected photo." })}
             </DialogDescription>
           </DialogHeader>
           {editingPhoto && (
@@ -318,6 +373,79 @@ export default function AdminPhotosPage() {
               onSuccess={handleEditSuccess}
             />
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Simplified Edit Dialog for Community Submissions */}
+      <Dialog open={isSimpleEditDialogOpen} onOpenChange={setIsSimpleEditDialogOpen}>
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil className="h-5 w-5 text-fuchsia-600" />
+              {t("dialog.editCommunityPhoto", { defaultValue: "Edit Community Photo" })}
+            </DialogTitle>
+            <DialogDescription>
+              {t("dialog.editCommunityDescription", { defaultValue: "Update photo details (price and photo cannot be edited for community submissions)", title: editingPhoto?.title })}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSimpleUpdate} className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">{t("dialog.title", { defaultValue: "Title" })}</Label>
+              <Input
+                id="title"
+                value={editFormData.title}
+                onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                placeholder={t("dialog.titlePlaceholder", { defaultValue: "Enter photo title" })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">{t("dialog.description", { defaultValue: "Description" })}</Label>
+              <Input
+                id="description"
+                value={editFormData.description}
+                onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                placeholder={t("dialog.descriptionPlaceholder", { defaultValue: "Enter photo description" })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="governorate">{t("dialog.governorate", { defaultValue: "Governorate" })}</Label>
+              <Input
+                id="governorate"
+                value={editFormData.governorate}
+                onChange={(e) => setEditFormData({ ...editFormData, governorate: e.target.value })}
+                placeholder={t("dialog.governoratePlaceholder", { defaultValue: "Enter governorate" })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="landscapeType">{t("dialog.landscapeType", { defaultValue: "Landscape Type" })}</Label>
+              <select
+                id="landscapeType"
+                value={editFormData.landscapeType}
+                onChange={(e) => setEditFormData({ ...editFormData, landscapeType: e.target.value })}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+              >
+                <option value="sea">{t("landscape.sea", { defaultValue: "Sea" })}</option>
+                <option value="desert">{t("landscape.desert", { defaultValue: "Desert" })}</option>
+                <option value="mountain">{t("landscape.mountain", { defaultValue: "Mountain" })}</option>
+                <option value="oasis">{t("landscape.oasis", { defaultValue: "Oasis" })}</option>
+                <option value="village">{t("landscape.village", { defaultValue: "Village" })}</option>
+              </select>
+            </div>
+            <DialogFooter>
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white"
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                {t("dialog.saveChanges", { defaultValue: "Save Changes" })}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

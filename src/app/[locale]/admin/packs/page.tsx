@@ -75,6 +75,7 @@ export default function AdminPacksPage() {
   const [editingPack, setEditingPack] = useState<Pack | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [mediaSearch, setMediaSearch] = useState("");
+  const [packSearch, setPackSearch] = useState("");
 
   // Form state
   const [formData, setFormData] = useState<Partial<Pack>>({
@@ -169,6 +170,16 @@ export default function AdminPacksPage() {
     return (m.title || "").toLowerCase().includes(searchTerm);
   });
 
+  const filteredPacks = packs.filter((pack) => {
+    const searchTerm = packSearch.toLowerCase().trim();
+    if (!searchTerm) return true;
+    return (
+      pack.title.toLowerCase().includes(searchTerm) ||
+      pack.description.toLowerCase().includes(searchTerm) ||
+      pack.type.toLowerCase().includes(searchTerm)
+    );
+  });
+
   const handleEdit = (pack: Pack) => {
     setEditingPack(pack);
     setFormData({
@@ -243,6 +254,15 @@ export default function AdminPacksPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        </div>
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t("searchPlaceholder", { defaultValue: "Search packs..." })}
+            value={packSearch}
+            onChange={(e) => setPackSearch(e.target.value)}
+            className="pl-9"
+          />
         </div>
         <Dialog
           open={isDialogOpen}
@@ -611,8 +631,8 @@ export default function AdminPacksPage() {
                   <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
                 </TableCell>
               </TableRow>
-            ) : packs.length > 0 ? (
-              packs.map((pack) => (
+            ) : filteredPacks.length > 0 ? (
+              filteredPacks.map((pack) => (
                 <TableRow key={pack._id}>
                   <TableCell className="font-medium">
                     {pack.title}
@@ -679,7 +699,7 @@ export default function AdminPacksPage() {
             ) : (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
-                  No packs found. Create one to get started.
+                  {packSearch ? t("noSearchResults", { defaultValue: "No packs found matching your search." }) : t("noPacks", { defaultValue: "No packs found. Create one to get started." })}
                 </TableCell>
               </TableRow>
             )}

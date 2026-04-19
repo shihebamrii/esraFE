@@ -20,6 +20,7 @@ import { InteractiveMap } from "./components/InteractiveMap";
 import { PacksSection } from "./components/PacksSection";
 import { GOV_PHOTOS } from "./constants";
 
+
 export default function TounesnaPage() {
   const t = useTranslations("Tounesna");
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -27,8 +28,11 @@ export default function TounesnaPage() {
   const [search, setSearch] = useState("");
   const [filterGov, setFilterGov] = useState("all");
   const [filterType, setFilterType] = useState("all");
+  const [filterTheme, setFilterTheme] = useState("all");
+  const [filterAccess, setFilterAccess] = useState("all");
   const [governorates, setGovernorates] = useState<any[]>([]);
   const [visitedGovs, setVisitedGovs] = useState<Set<string>>(new Set());
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -65,6 +69,8 @@ export default function TounesnaPage() {
         };
         if (filterGov !== "all") params.governorate = filterGov;
         if (filterType !== "all") params.landscapeType = filterType;
+        if (filterTheme !== "all") params.theme = filterTheme;
+        if (filterAccess !== "all") params.access = filterAccess;
         
         const data = await PhotoService.getPhotos(params);
         let results = data.data.photos;
@@ -89,7 +95,7 @@ export default function TounesnaPage() {
 
     const timeoutId = setTimeout(fetchPhotos, 300);
     return () => clearTimeout(timeoutId);
-  }, [search, filterGov, filterType]);
+  }, [search, filterGov, filterType, filterTheme, filterAccess]);
 
   // Adapt backend photo to MasonryGrid/PhotoCard format if needed
   const adaptedPhotos = photos.map(p => ({
@@ -282,10 +288,10 @@ export default function TounesnaPage() {
                 />
               </div>
               
-              <div className="flex gap-4 w-full xl:w-auto">
+              <div className="flex gap-4 w-full xl:w-auto flex-wrap">
                 {/* Governorate */}
                 <Select value={filterGov} onValueChange={setFilterGov}>
-                  <SelectTrigger className="flex-1 xl:w-[200px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
+                  <SelectTrigger className="flex-1 xl:w-[180px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
                     <SelectValue placeholder={t("governorate")} />
                   </SelectTrigger>
                   <SelectContent className="bg-[#fff9e6] border-[#6a0d2e]/10 text-[#6a0d2e] rounded-xl shadow-2xl backdrop-blur-xl">
@@ -297,7 +303,7 @@ export default function TounesnaPage() {
                 </Select>
                 {/* Type */}
                 <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="flex-1 xl:w-[160px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
+                  <SelectTrigger className="flex-1 xl:w-[140px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
                     <SelectValue placeholder={t("type")} />
                   </SelectTrigger>
                   <SelectContent className="bg-[#fff9e6] border-[#6a0d2e]/10 text-[#6a0d2e] rounded-xl shadow-2xl backdrop-blur-xl">
@@ -309,10 +315,34 @@ export default function TounesnaPage() {
                     <SelectItem value="village" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">🏘️ {t("village")}</SelectItem>
                   </SelectContent>
                 </Select>
+                {/* Theme - Same as Impact */}
+                <Select value={filterTheme} onValueChange={setFilterTheme}>
+                  <SelectTrigger className="flex-1 xl:w-[160px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
+                    <SelectValue placeholder={t("theme", { defaultValue: "Theme" })} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#fff9e6] border-[#6a0d2e]/10 text-[#6a0d2e] rounded-xl shadow-2xl backdrop-blur-xl">
+                    <SelectItem value="all">{t("allThemes", { defaultValue: "All Themes" })}</SelectItem>
+                    <SelectItem value="youth" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("youth", { defaultValue: "Youth" })}</SelectItem>
+                    <SelectItem value="womenArtisans" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("womenArtisans", { defaultValue: "Women Artisans" })}</SelectItem>
+                    <SelectItem value="environment" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("environment", { defaultValue: "Environment" })}</SelectItem>
+                  </SelectContent>
+                </Select>
+                {/* Access - Same as Impact */}
+                <Select value={filterAccess} onValueChange={setFilterAccess}>
+                  <SelectTrigger className="flex-1 xl:w-[140px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
+                    <SelectValue placeholder={t("access", { defaultValue: "Access" })} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#fff9e6] border-[#6a0d2e]/10 text-[#6a0d2e] rounded-xl shadow-2xl backdrop-blur-xl">
+                    <SelectItem value="all">{t("allAccess", { defaultValue: "All Access" })}</SelectItem>
+                    <SelectItem value="free" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("free", { defaultValue: "Free" })}</SelectItem>
+                    <SelectItem value="premium" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("premium", { defaultValue: "Premium" })}</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Stats */}
-              <div className="flex items-center justify-end gap-8 w-full xl:w-auto xl:ml-auto text-[#6a0d2e]">
+              <div className="flex items-center justify-end gap-4 w-full xl:w-auto xl:ml-auto text-[#6a0d2e]">
+                <div className="w-px h-8 bg-[#6a0d2e]/20" />
                 <div className="text-right xl:text-center">
                   <span className="block text-[#6a0d2e] text-2xl lg:text-3xl font-serif leading-none drop-shadow-sm">{photos.length}</span>
                   <span className="uppercase text-[9px] tracking-[0.25em] font-bold mt-2 block opacity-60">{t("photos")}</span>

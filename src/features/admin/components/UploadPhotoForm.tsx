@@ -29,7 +29,9 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
     title: initialData?.title || "",
     description: initialData?.description || "",
     governorate: initialData?.governorate || "",
+    city: initialData?.city || "",
     landscapeType: initialData?.landscapeType || "sea",
+    contentType: initialData?.contentType || "video",
     pricePersonalTND: initialData?.pricePersonalTND?.toString() || initialData?.priceTND?.toString() || "0",
     priceCommercialTND: initialData?.priceCommercialTND?.toString() || "0",
     watermark: initialData?.watermark !== undefined ? initialData.watermark.toString() : "true",
@@ -164,8 +166,44 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
         </div>
         <div className="space-y-2">
           <Label htmlFor="photo-gov">{t("governorate")} *</Label>
-          <Input id="photo-gov" name="governorate" required value={formData.governorate} onChange={handleChange} placeholder={t("governorate")} />
+          <select
+            id="photo-gov"
+            name="governorate"
+            required
+            value={formData.governorate}
+            onChange={handleChange}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+          >
+            <option value="">{t("selectGovernorate", { defaultValue: "Select Governorate" })}</option>
+            {["Ariana", "Beja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"].map(gov => (
+              <option key={gov} value={gov}>{gov}</option>
+            ))}
+          </select>
         </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="photo-city">{t("city")}</Label>
+          <Input id="photo-city" name="city" value={formData.city} onChange={handleChange} placeholder={t("cityPlaceholder")} />
+        </div>
+        {mediaType === 'video' && (
+          <div className="space-y-2">
+            <Label htmlFor="photo-content-type">{t("contentType")}</Label>
+            <select
+              id="photo-content-type"
+              name="contentType"
+              value={formData.contentType}
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+            >
+              <option value="video">{t("contentTypes.video")}</option>
+              <option value="reel">{t("contentTypes.reel")}</option>
+              <option value="podcast">{t("contentTypes.podcast")}</option>
+              <option value="documentary">{t("contentTypes.documentary")}</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">

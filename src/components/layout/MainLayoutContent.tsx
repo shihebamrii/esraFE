@@ -8,11 +8,12 @@ export function MainLayoutContent({ children }: { children: React.ReactNode }) {
   const isImpact = pathname?.includes("/impact");
   const isTounesna = pathname?.includes("/tounesna");
   const isHeroPage = isImpact || isTounesna;
+  const isAdminPage = pathname?.includes("/admin");
 
   return (
     <main className={cn(
       "flex-1",
-      !isHeroPage && "pt-20" // Only add padding if NOT a hero page
+      !isHeroPage && !isAdminPage && "pt-20" // No padding for hero pages or admin
     )}>
       {children}
     </main>

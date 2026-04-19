@@ -83,5 +83,13 @@ export const UserService = {
   getUserPacks: async () => {
     const response = await api.get('/dashboard/packs');
     return response.data;
-  }
+  },
+
+  trackDownload: async (itemId: string, itemType: 'photo' | 'content' | 'pack') => {
+    try {
+      await api.post('/dashboard/track-download', { itemId, itemType });
+    } catch {
+      // Non-blocking — don't fail the download if tracking fails
+    }
+  },
 };

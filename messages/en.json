@@ -70,7 +70,9 @@
     "theme": "Theme",
     "allThemes": "All Themes",
     "type": "Type",
-    "allTypes": "All Types"
+    "allTypes": "All Types",
+    "governorate": "Governorate",
+    "allGovernorates": "All Governorates"
   },
   "ImpactHero": {
     "badge": "Engaging Multimedia Content",
@@ -330,7 +332,9 @@
       "overview": "Overview"
     },
     "home": {
-      "title": "Dashboard",
+      "title": "Dashboard Overview",
+      "downloads": "Downloads",
+      "totalDownloads": "Total content downloads",
       "totalRevenue": "Total Revenue",
       "paidOrders": "All paid orders",
       "activeUsers": "Active Users",
@@ -364,6 +368,10 @@
         "videos": "Videos",
         "docs": "Docs"
       },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
       "dialog": {
         "editQuotas": "Edit Quotas",
         "editDescription": "Manually adjust the remaining quotas for {name}'s {pack}.",
@@ -371,14 +379,27 @@
         "reelsRemaining": "Reels Remaining",
         "videosRemaining": "Videos Remaining",
         "docsRemaining": "Docs Remaining",
-        "saveChanges": "Save Changes"
+        "saveChanges": "Save Changes",
+        "editUser": "Edit User",
+        "editUserDescription": "Update user details for {name}",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "deleteUser": "Delete User",
+        "deleteUserDescription": "Are you sure you want to delete {name}? This action cannot be undone.",
+        "cancel": "Cancel",
+        "delete": "Delete"
       },
       "messages": {
         "fetchFailed": "Failed to fetch users",
         "updateStatusSuccess": "User {status} successfully",
         "updateStatusFailed": "Failed to update user status",
         "updateQuotasSuccess": "Quotas updated successfully",
-        "updateQuotasFailed": "Failed to update quotas"
+        "updateQuotasFailed": "Failed to update quotas",
+        "updateSuccess": "User updated successfully",
+        "updateFailed": "Failed to update user",
+        "deleteSuccess": "User deleted successfully",
+        "deleteFailed": "Failed to delete user"
       }
     },
     "packs": {
@@ -429,6 +450,9 @@
         "videos": "Videos",
         "quality": "Quality"
       },
+      "searchPlaceholder": "Search packs...",
+      "noSearchResults": "No packs found matching your search.",
+      "noPacks": "No packs found. Create one to get started.",
       "messages": {
         "fetchFailed": "Failed to fetch packs",
         "deleteConfirm": "Are you sure you want to delete this pack?",
@@ -468,14 +492,33 @@
       },
       "dialog": {
         "editPhoto": "Edit Photo",
-        "editDescription": "Update the details of the selected photo."
+        "editDescription": "Update the details of the selected photo.",
+        "editCommunityPhoto": "Edit Community Photo",
+        "editCommunityDescription": "Update photo details (price and photo cannot be edited for community submissions)",
+        "title": "Title",
+        "titlePlaceholder": "Enter photo title",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter photo description",
+        "governorate": "Governorate",
+        "governoratePlaceholder": "Enter governorate",
+        "landscapeType": "Landscape Type",
+        "saveChanges": "Save Changes"
+      },
+      "landscape": {
+        "sea": "Sea",
+        "desert": "Desert",
+        "mountain": "Mountain",
+        "oasis": "Oasis",
+        "village": "Village"
       },
       "messages": {
         "fetchFailed": "Failed to load photos",
         "deleteSuccess": "Photo deleted successfully",
         "deleteFailed": "Failed to delete photo",
         "approveSuccess": "Photo {status} successfully",
-        "approveFailed": "Failed to {status} photo"
+        "approveFailed": "Failed to {status} photo",
+        "updateSuccess": "Photo updated successfully",
+        "updateFailed": "Failed to update photo"
       }
     },
     "content": {
@@ -501,14 +544,37 @@
         "noContent": "No content found",
         "unknown": "Unknown"
       },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "dialog": {
+        "editContent": "Edit Content",
+        "editDescription": "Update content details for {title}",
+        "title": "Title",
+        "titlePlaceholder": "Enter content title",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter content description",
+        "type": "Type",
+        "saveChanges": "Save Changes",
+        "deleteContent": "Delete Content",
+        "deleteDescription": "Are you sure you want to delete {title}? This action cannot be undone.",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
       "messages": {
         "fetchFailed": "Failed to load content",
         "approveSuccess": "Content {status} successfully",
-        "approveFailed": "Failed to {status} content"
+        "approveFailed": "Failed to {status} content",
+        "updateSuccess": "Content updated successfully",
+        "updateFailed": "Failed to update content",
+        "deleteSuccess": "Content deleted successfully",
+        "deleteFailed": "Failed to delete content"
       }
     },
     "orders": {
       "title": "Orders Management",
+      "searchPlaceholder": "Search orders...",
       "table": {
         "orderId": "Order ID",
         "customer": "Customer",
@@ -527,6 +593,7 @@
       "createPlaylist": "Create Playlist",
       "editPlaylist": "Edit Playlist",
       "searchPlaceholder": "Search playlists...",
+      "noSearchResults": "No playlists found matching your search.",
       "messages": {
         "fetchFailed": "Failed to load playlists",
         "contentFailed": "Failed to load available content",
@@ -535,7 +602,8 @@
         "deleteConfirm": "Are you sure you want to delete this playlist?",
         "deleteSuccess": "Playlist deleted successfully",
         "deleteFailed": "Failed to delete playlist",
-        "noPlaylists": "No playlists found"
+        "noPlaylists": "No playlists found",
+        "noSearchResults": "No playlists found matching your search."
       },
       "form": {
         "title": "Playlist Title",
@@ -611,7 +679,18 @@
           "uploading": "Uploading...",
           "clickToReplace": "Click to replace {type}",
           "clickToUpload": "Click or drag {type} file",
-          "clickToUploadPreview": "Click or drag preview image"
+          "clickToUploadPreview": "Click or drag preview image",
+          "city": "City",
+          "cityPlaceholder": "e.g. Tunis, Sfax, Sousse...",
+          "selectGovernorate": "Select Governorate",
+          "contentType": "Content Type",
+          "contentTypes": {
+            "photo": "Photo / Image",
+            "video": "Video",
+            "reel": "Reel",
+            "podcast": "Podcast",
+            "documentary": "Documentary"
+          }
         },
         "video": {
           "title": "Title *",
@@ -624,6 +703,8 @@
           "themes": "Themes",
           "region": "Region (Governorate)",
           "selectRegion": "Select region",
+          "city": "City",
+          "cityPlaceholder": "e.g. Tunis, Sfax, Sousse...",
           "tags": "Tags (JSON array)",
           "language": "Language",
           "rights": "Usage Rights",
@@ -634,13 +715,19 @@
           "public": "Public",
           "private": "Private",
           "instagram": "Instagram Username (for Reels)",
+          "requiredForReels": "Required for Reels",
+          "instagramInfo": "This will allow viewers to follow the creator directly on Instagram.",
           "file": "Video/Audio File *",
           "thumbnail": "Thumbnail Image",
           "submit": "Upload Content",
           "uploading": "Uploading...",
           "selectFile": "Please select a video file",
           "success": "Video uploaded successfully!",
-          "failed": "Failed to upload video"
+          "failed": "Failed to upload video",
+          "youth": "Youth",
+          "womenArtisans": "Women Artisans",
+          "environment": "Environment",
+          "selectTheme": "Select Theme"
         }
       }
     },

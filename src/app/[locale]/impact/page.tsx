@@ -327,7 +327,6 @@ export default function ImpactPage() {
       className="min-h-screen"
       style={{ backgroundColor: "#fff9e6", color: "#1f3a5f" }}
     >
-      {/* ─── Hero Section ─── */}
       <HeroSection />
 
       {/* ─── Main Content Layout ─── */}
@@ -465,6 +464,18 @@ export default function ImpactPage() {
               <div className="hidden lg:block w-px h-8 bg-[#1f3a5f]/10 mx-2" />
 
               <div className="flex flex-wrap sm:flex-nowrap gap-2 items-center w-full lg:w-auto px-2 pb-2 lg:p-0">
+                <Select value={filterGov} onValueChange={setFilterGov}>
+                  <SelectTrigger className="h-12 border-none bg-transparent hover:bg-white/60 rounded-full px-5 text-[#1f3a5f] focus:ring-0 shadow-none transition-colors data-[state=open]:bg-white font-medium">
+                    <SelectValue placeholder={t("governorate", { defaultValue: "Governorate" })} />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-none shadow-xl min-w-[180px] bg-white/95 backdrop-blur-lg">
+                    <SelectItem value="all" className="rounded-xl my-1">{t("allGovernorates", { defaultValue: "All Governorates" })}</SelectItem>
+                    {["Ariana","Beja","Ben Arous","Bizerte","Gabes","Gafsa","Jendouba","Kairouan","Kasserine","Kebili","Kef","Mahdia","Manouba","Medenine","Monastir","Nabeul","Sfax","Sidi Bouzid","Siliana","Sousse","Tataouine","Tozeur","Tunis","Zaghouan"].map(gov => (
+                      <SelectItem key={gov} value={gov} className="rounded-xl my-1">{gov}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 <Select value={filterTheme} onValueChange={setFilterTheme}>
                   <SelectTrigger className="h-12 border-none bg-transparent hover:bg-white/60 rounded-full px-5 text-[#1f3a5f] focus:ring-0 shadow-none transition-colors data-[state=open]:bg-white font-medium">
                     <SelectValue placeholder={t("theme")} />

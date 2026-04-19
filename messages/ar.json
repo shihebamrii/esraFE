@@ -70,7 +70,9 @@
     "theme": "الموضوع",
     "allThemes": "جميع المواضيع",
     "type": "النوع",
-    "allTypes": "جميع الأنواع"
+    "allTypes": "جميع الأنواع",
+    "governorate": "الولاية",
+    "allGovernorates": "جميع الولايات"
   },
   "ImpactHero": {
     "badge": "محتوى وسائط متعددة جذابة",
@@ -356,6 +358,8 @@
     },
     "home": {
       "title": "لوحة التحكم",
+      "downloads": "التنزيلات",
+      "totalDownloads": "إجمالي تنزيلات المحتوى",
       "totalRevenue": "إجمالي الإيرادات",
       "paidOrders": "جميع الطلبات المدفوعة",
       "activeUsers": "المستخدمون النشطون",
@@ -389,6 +393,10 @@
         "videos": "فيديوهات",
         "docs": "وثائق"
       },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف"
+      },
       "dialog": {
         "editQuotas": "تعديل الحصص",
         "editDescription": "ضبط الحصص المتبقية يدوياً لـ {name} ({pack}).",
@@ -396,14 +404,27 @@
         "reelsRemaining": "الريلز المتبقية",
         "videosRemaining": "الفيديوهات المتبقية",
         "docsRemaining": "الوثائق المتبقية",
-        "saveChanges": "حفظ التغييرات"
+        "saveChanges": "حفظ التغييرات",
+        "editUser": "تعديل المستخدم",
+        "editUserDescription": "تحديث تفاصيل {name}",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "role": "الدور",
+        "deleteUser": "حذف المستخدم",
+        "deleteUserDescription": "هل أنت متأكد من حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "إلغاء",
+        "delete": "حذف"
       },
       "messages": {
         "fetchFailed": "فشل جلب المستخدمين",
         "updateStatusSuccess": "تم {status} المستخدم بنجاح",
         "updateStatusFailed": "فشل تحديث حالة المستخدم",
         "updateQuotasSuccess": "تم تحديث الحصص بنجاح",
-        "updateQuotasFailed": "فشل تحديث الحصص"
+        "updateQuotasFailed": "فشل تحديث الحصص",
+        "updateSuccess": "تم تحديث المستخدم بنجاح",
+        "updateFailed": "فشل تحديث المستخدم",
+        "deleteSuccess": "تم حذف المستخدم بنجاح",
+        "deleteFailed": "فشل حذف المستخدم"
       }
     },
     "packs": {
@@ -454,6 +475,9 @@
         "videos": "فيديوهات",
         "quality": "الجودة"
       },
+      "searchPlaceholder": "البحث في الباقات...",
+      "noSearchResults": "لم يتم العثور على باقات مطابقة للبحث.",
+      "noPacks": "لم يتم العثور على باقات. أنشئ واحدة للبدء.",
       "messages": {
         "fetchFailed": "فشل جلب الباقات",
         "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه الباقة؟",
@@ -493,14 +517,33 @@
       },
       "dialog": {
         "editPhoto": "تعديل الصورة",
-        "editDescription": "تحديث تفاصيل الصورة المختارة."
+        "editDescription": "تحديث تفاصيل الصورة المختارة.",
+        "editCommunityPhoto": "تعديل صورة المجتمع",
+        "editCommunityDescription": "تحديث تفاصيل الصورة (لا يمكن تعديل السعر والصورة لمشاركات المجتمع)",
+        "title": "العنوان",
+        "titlePlaceholder": "أدخل عنوان الصورة",
+        "description": "الوصف",
+        "descriptionPlaceholder": "أدخل وصف الصورة",
+        "governorate": "الولاية",
+        "governoratePlaceholder": "أدخل الولاية",
+        "landscapeType": "نوع المناظر الطبيعية",
+        "saveChanges": "حفظ التغييرات"
+      },
+      "landscape": {
+        "sea": "البحر",
+        "desert": "الصحراء",
+        "mountain": "الجبل",
+        "oasis": "الواحة",
+        "village": "القرية"
       },
       "messages": {
         "fetchFailed": "فشل تحميل الصور",
         "deleteSuccess": "تم حذف الصورة بنجاح",
         "deleteFailed": "فشل حذف الصورة",
         "approveSuccess": "تم {status} الصورة بنجاح",
-        "approveFailed": "فشل {status} الصورة"
+        "approveFailed": "فشل {status} الصورة",
+        "updateSuccess": "تم تحديث الصورة بنجاح",
+        "updateFailed": "فشل تحديث الصورة"
       }
     },
     "content": {
@@ -526,14 +569,37 @@
         "noContent": "لم يتم العثور على محتوى",
         "unknown": "غير معروف"
       },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف"
+      },
+      "dialog": {
+        "editContent": "تعديل المحتوى",
+        "editDescription": "تحديث تفاصيل {title}",
+        "title": "العنوان",
+        "titlePlaceholder": "أدخل عنوان المحتوى",
+        "description": "الوصف",
+        "descriptionPlaceholder": "أدخل وصف المحتوى",
+        "type": "النوع",
+        "saveChanges": "حفظ التغييرات",
+        "deleteContent": "حذف المحتوى",
+        "deleteDescription": "هل أنت متأكد من حذف {title}؟ لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "إلغاء",
+        "delete": "حذف"
+      },
       "messages": {
         "fetchFailed": "فشل تحميل المحتوى",
         "approveSuccess": "تم {status} المحتوى بنجاح",
-        "approveFailed": "فشل {status} المحتوى"
+        "approveFailed": "فشل {status} المحتوى",
+        "updateSuccess": "تم تحديث المحتوى بنجاح",
+        "updateFailed": "فشل تحديث المحتوى",
+        "deleteSuccess": "تم حذف المحتوى بنجاح",
+        "deleteFailed": "فشل حذف المحتوى"
       }
     },
     "orders": {
       "title": "إدارة الطلبات",
+      "searchPlaceholder": "البحث في الطلبات...",
       "table": {
         "orderId": "رقم الطلب",
         "customer": "العميل",
@@ -552,6 +618,7 @@
       "createPlaylist": "إنشاء قائمة تشغيل",
       "editPlaylist": "تعديل قائمة التشغيل",
       "searchPlaceholder": "البحث في قوائم التشغيل...",
+      "noSearchResults": "لم يتم العثور على قوائم تشغيل مطابقة للبحث.",
       "messages": {
         "fetchFailed": "فشل تحميل قوائم التشغيل",
         "contentFailed": "فشل تحميل المحتوى المتاح",
@@ -560,7 +627,8 @@
         "deleteConfirm": "هل أنت متأكد أنك تريد حذف قائمة التشغيل هذه؟",
         "deleteSuccess": "تم حذف قائمة التشغيل بنجاح",
         "deleteFailed": "فشل حذف قائمة التشغيل",
-        "noPlaylists": "لم يتم العثور على قوائم تشغيل"
+        "noPlaylists": "لم يتم العثور على قوائم تشغيل",
+        "noSearchResults": "لم يتم العثور على قوائم تشغيل مطابقة للبحث."
       },
       "form": {
         "title": "عنوان قائمة التشغيل",
@@ -636,7 +704,18 @@
           "uploading": "جاري التحميل...",
           "clickToReplace": "انقر لاستبدال {type}",
           "clickToUpload": "انقر أو اسحب ملف {type} للتحميل",
-          "clickToUploadPreview": "انقر أو اسحب صورة المعاينة"
+          "clickToUploadPreview": "انقر أو اسحب صورة المعاينة",
+          "city": "المدينة",
+          "cityPlaceholder": "مثال: تونس، صفاقس، سوسة...",
+          "selectGovernorate": "اختر الولاية",
+          "contentType": "نوع المحتوى",
+          "contentTypes": {
+            "photo": "صورة / رسم",
+            "video": "فيديو",
+            "reel": "ريلز",
+            "podcast": "بودكاست",
+            "documentary": "وثائقي"
+          }
         },
         "video": {
           "title": "العنوان *",
@@ -649,6 +728,8 @@
           "themes": "المواضيع",
           "region": "المنطقة (الولاية)",
           "selectRegion": "اختر المنطقة",
+          "city": "المدينة",
+          "cityPlaceholder": "مثال: تونس، صفاقس، سوسة...",
           "tags": "الوسوم (مصفوفة JSON)",
           "language": "اللغة",
           "rights": "حقوق الاستخدام",
@@ -659,13 +740,19 @@
           "public": "عام",
           "private": "خاص",
           "instagram": "اسم مستخدم إنستغرام (للريلز)",
+          "requiredForReels": "مطلوب للريلز",
+          "instagramInfo": "سيسمح هذا للمشاهدين بمتابعة المبدع مباشرة على إنستغرام.",
           "file": "ملف الفيديو/الصوت *",
           "thumbnail": "صورة مصغرة",
           "submit": "تحميل المحتوى",
           "uploading": "جاري التحميل...",
           "selectFile": "يرجى اختيار ملف فيديو",
           "success": "تم تحميل الفيديو بنجاح!",
-          "failed": "فشل تحميل الفيديو"
+          "failed": "فشل تحميل الفيديو",
+          "youth": "الشباب",
+          "womenArtisans": "النساء الحرفيات",
+          "environment": "البيئة",
+          "selectTheme": "اختر الموضوع"
         }
       }
     },

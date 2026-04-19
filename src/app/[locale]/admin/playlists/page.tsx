@@ -94,7 +94,7 @@ export default function AdminPlaylistsPage() {
   const fetchPlaylists = async () => {
     try {
       setLoading(true);
-      const res = await AdminService.getPlaylists({ search });
+      const res = await AdminService.getPlaylists();
       setPlaylists(res.data?.playlists || []);
     } catch (e) {
       toast.error(t("messages.fetchFailed"));
@@ -116,6 +116,17 @@ export default function AdminPlaylistsPage() {
     fetchPlaylists();
     fetchAvailableContent();
   }, []);
+
+  // Client-side filtering for playlists
+  const filteredPlaylists = playlists.filter((pl) => {
+    const searchTerm = search.toLowerCase().trim();
+    if (!searchTerm) return true;
+    return (
+      pl.title.toLowerCase().includes(searchTerm) ||
+      pl.description.toLowerCase().includes(searchTerm) ||
+      pl.type.toLowerCase().includes(searchTerm)
+    );
+  });
 
   const handleEdit = (playlist: Playlist) => {
     setEditingPlaylist(playlist);
@@ -225,6 +236,16 @@ export default function AdminPlaylistsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
+        <div className="flex items-center gap-4">
+          <div className="relative w-full md:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder", { defaultValue: "Search playlists..." })}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
@@ -351,6 +372,7 @@ export default function AdminPlaylistsPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="rounded-md border bg-card overflow-hidden">
@@ -369,12 +391,14 @@ export default function AdminPlaylistsPage() {
               <TableRow>
                 <TableCell colSpan={5} className="h-24 text-center"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></TableCell>
               </TableRow>
-            ) : playlists.length === 0 ? (
+            ) : filteredPlaylists.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">{t("messages.noPlaylists", { defaultValue: "No playlists found" })}</TableCell>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  {search ? t("messages.noSearchResults", { defaultValue: "No playlists found matching your search." }) : t("messages.noPlaylists", { defaultValue: "No playlists found" })}
+                </TableCell>
               </TableRow>
             ) : (
-              playlists.map((pl) => (
+              filteredPlaylists.map((pl) => (
                 <TableRow key={pl._id}>
                   <TableCell className="pl-6 font-medium">{pl.title}</TableCell>
                   <TableCell className="capitalize">{pl.type.replace('_', ' ')}</TableCell>
@@ -385,7 +409,7 @@ export default function AdminPlaylistsPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={pl.isActive ? "success" : "secondary"}>
+                    <Badge variant="outline" className={pl.isActive ? "text-green-600 border-green-200 bg-green-50" : "text-muted-foreground"}>
                       {pl.isActive ? t("table.active") : t("table.inactive")}
                     </Badge>
                   </TableCell>

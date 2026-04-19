@@ -264,6 +264,12 @@ export default function UserDownloadsPage() {
                         className={
                           !item.downloadToken ? "pointer-events-none" : ""
                         }
+                        onClick={() => {
+                          if (item.downloadToken && item.itemId) {
+                            const type = item.type === "Photo" ? "photo" : item.type === "Pack" ? "pack" : "content";
+                            UserService.trackDownload(item.itemId, type as any);
+                          }
+                        }}
                       >
                         <Button
                           className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white border-0 rounded-xl shadow-md shadow-violet-500/20 hover:shadow-violet-500/40 transition-all duration-300 hover:-translate-y-0.5 w-full sm:w-auto"

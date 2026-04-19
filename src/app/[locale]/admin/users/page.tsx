@@ -18,7 +18,9 @@ import {
   Ban, 
   CheckCircle2,
   Package,
-  Pencil
+  Pencil,
+  Trash2,
+  MoreHorizontal
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AdminService } from "@/features/admin/api";
@@ -70,12 +72,19 @@ export default function AdminUsersPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editingPack, setEditingPack] = useState<UserPack | null>(null);
   const [isQuotaDialogOpen, setIsQuotaDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [quotas, setQuotas] = useState({
     photosRemaining: 0,
     reelsRemaining: 0,
     videosRemaining: 0,
     documentariesRemaining: 0,
+  });
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    email: "",
+    role: "user",
   });
 
   const fetchUsers = async () => {
@@ -134,6 +143,50 @@ export default function AdminUsersPage() {
       fetchUsers();
     } catch (error) {
       toast.error(t("messages.updateQuotasFailed"));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setEditFormData({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    setSubmitting(true);
+    try {
+      await AdminService.updateUser(editingUser._id, editFormData);
+      toast.success(t("messages.updateSuccess", { defaultValue: "User updated successfully" }));
+      setIsEditDialogOpen(false);
+      fetchUsers();
+    } catch (error) {
+      toast.error(t("messages.updateFailed", { defaultValue: "Failed to update user" }));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!editingUser) return;
+
+    setSubmitting(true);
+    try {
+      await AdminService.deleteUser(editingUser._id);
+      toast.success(t("messages.deleteSuccess", { defaultValue: "User deleted successfully" }));
+      setIsDeleteDialogOpen(false);
+      setEditingUser(null);
+      fetchUsers();
+    } catch (error) {
+      toast.error(t("messages.deleteFailed", { defaultValue: "Failed to delete user" }));
     } finally {
       setSubmitting(false);
     }
@@ -251,18 +304,41 @@ export default function AdminUsersPage() {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={user.isActive ? "text-red-600" : "text-green-600"}
-                      onClick={() => toggleUserStatus(user)}
-                    >
-                      {user.isActive ? (
-                        <><Ban className="h-4 w-4 me-2" /> {t("status.deactivate")}</>
-                      ) : (
-                        <><CheckCircle2 className="h-4 w-4 me-2" /> {t("status.activate")}</>
-                      )}
-                    </Button>
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-blue-600"
+                        onClick={() => handleEditUser(user)}
+                        title={t("actions.edit", { defaultValue: "Edit" })}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-red-600"
+                        onClick={() => {
+                          setEditingUser(user);
+                          setIsDeleteDialogOpen(true);
+                        }}
+                        title={t("actions.delete", { defaultValue: "Delete" })}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={user.isActive ? "text-red-600" : "text-green-600"}
+                        onClick={() => toggleUserStatus(user)}
+                      >
+                        {user.isActive ? (
+                          <><Ban className="h-4 w-4 me-2" /> {t("status.deactivate")}</>
+                        ) : (
+                          <><CheckCircle2 className="h-4 w-4 me-2" /> {t("status.activate")}</>
+                        )}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -372,6 +448,112 @@ export default function AdminUsersPage() {
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : null}
               {t("dialog.saveChanges")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil className="h-5 w-5 text-blue-600" />
+              {t("dialog.editUser", { defaultValue: "Edit User" })}
+            </DialogTitle>
+            <DialogDescription>
+              {t("dialog.editUserDescription", { defaultValue: "Update user details", name: editingUser?.name })}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleUpdateUser} className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                {t("dialog.name", { defaultValue: "Name" })}
+              </Label>
+              <Input
+                id="name"
+                value={editFormData.name}
+                onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right">
+                {t("dialog.email", { defaultValue: "Email" })}
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={editFormData.email}
+                onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="role" className="text-right">
+                {t("dialog.role", { defaultValue: "Role" })}
+              </Label>
+              <select
+                id="role"
+                value={editFormData.role}
+                onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
+                className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <DialogFooter>
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                {t("dialog.saveChanges", { defaultValue: "Save Changes" })}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete User Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Trash2 className="h-5 w-5" />
+              {t("dialog.deleteUser", { defaultValue: "Delete User" })}
+            </DialogTitle>
+            <DialogDescription>
+              {t("dialog.deleteUserDescription", { 
+                defaultValue: "Are you sure you want to delete this user? This action cannot be undone.", 
+                name: editingUser?.name 
+              })}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              {t("dialog.cancel", { defaultValue: "Cancel" })}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleDeleteUser}
+              disabled={submitting}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
+              {t("dialog.delete", { defaultValue: "Delete" })}
             </Button>
           </DialogFooter>
         </DialogContent>

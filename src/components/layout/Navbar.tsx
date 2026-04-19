@@ -76,7 +76,14 @@ export function Navbar() {
     pathname?.includes("/user/") ||
     pathname?.includes("/admin/");
 
+  const isAdminPage = pathname?.includes("/admin/");
+
   const textColorClass = isHeroPage && !isScrolled ? "text-white" : "text-foreground";
+
+  // Don't render navbar on admin pages
+  if (isAdminPage) {
+    return null;
+  }
 
   const getDashboardLink = () => {
     if (!user) return "/";

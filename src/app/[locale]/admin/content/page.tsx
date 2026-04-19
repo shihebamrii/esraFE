@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, CheckCircle, XCircle, Clock, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { AdminService } from "@/features/admin/api";
@@ -21,12 +21,32 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { ShieldAlert, User } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function AdminContentPage() {
   const t = useTranslations("AdminDashboard.content");
   const [contents, setContents] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("official");
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingContent, setEditingContent] = useState<any>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingContent, setDeletingContent] = useState<any>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    title: "",
+    description: "",
+    type: "video",
+  });
 
   const fetchContents = async () => {
     try {
@@ -53,6 +73,57 @@ export default function AdminContentPage() {
     } catch (e) {
       console.error(e);
       toast.error(t("messages.approveFailed", { status: t(`table.${status}`) }));
+    }
+  };
+
+  const handleEdit = (item: any, isCommunity: boolean = false) => {
+    setEditingContent(item);
+    setEditFormData({
+      title: item.title || "",
+      description: item.description || "",
+      type: item.type || "video",
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingContent) return;
+
+    setSubmitting(true);
+    try {
+      await AdminService.updateContent(editingContent._id, editFormData);
+      toast.success(t("messages.updateSuccess", { defaultValue: "Content updated successfully" }));
+      setIsEditDialogOpen(false);
+      fetchContents();
+    } catch (e) {
+      console.error(e);
+      toast.error(t("messages.updateFailed", { defaultValue: "Failed to update content" }));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = (item: any) => {
+    setDeletingContent(item);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingContent) return;
+
+    setSubmitting(true);
+    try {
+      await AdminService.deleteContent(deletingContent._id);
+      toast.success(t("messages.deleteSuccess", { defaultValue: "Content deleted successfully" }));
+      setIsDeleteDialogOpen(false);
+      fetchContents();
+    } catch (e) {
+      console.error(e);
+      toast.error(t("messages.deleteFailed", { defaultValue: "Failed to delete content" }));
+    } finally {
+      setSubmitting(false);
+      setDeletingContent(null);
     }
   };
 
@@ -117,10 +188,21 @@ export default function AdminContentPage() {
                       </>
                     ) : (
                       <>
-                        <Button variant="ghost" size="icon">
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => handleEdit(item, !showApprovalActions)}
+                          title={t("actions.edit", { defaultValue: "Edit" })}
+                        >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="text-destructive">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-destructive"
+                          onClick={() => handleDelete(item)}
+                          title={t("actions.delete", { defaultValue: "Delete" })}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </>
@@ -141,14 +223,20 @@ export default function AdminContentPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-          <Plus className="mr-2 h-4 w-4" />
-          {t("addContent", { defaultValue: "Add Content" })}
-        </Button>
+        {activeTab !== "community" && (
+          <Link href="/admin/upload">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Plus className="mr-2 h-4 w-4" />
+              {t("addContent", { defaultValue: "Add Content" })}
+            </Button>
+          </Link>
+        )}
       </div>
 
       <Tabs
         defaultValue="official"
+        value={activeTab}
+        onValueChange={setActiveTab}
         className="space-y-4"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -228,6 +316,107 @@ export default function AdminContentPage() {
             </div>
           </TabsContent>
       </Tabs>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil className="h-5 w-5 text-blue-600" />
+              {t("dialog.editContent", { defaultValue: "Edit Content" })}
+            </DialogTitle>
+            <DialogDescription>
+              {t("dialog.editDescription", { defaultValue: "Update content details", title: editingContent?.title })}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleUpdate} className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">{t("dialog.title", { defaultValue: "Title" })}</Label>
+              <Input
+                id="title"
+                value={editFormData.title}
+                onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                placeholder={t("dialog.titlePlaceholder", { defaultValue: "Enter content title" })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">{t("dialog.description", { defaultValue: "Description" })}</Label>
+              <Textarea
+                id="description"
+                value={editFormData.description}
+                onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                placeholder={t("dialog.descriptionPlaceholder", { defaultValue: "Enter content description" })}
+                rows={4}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="type">{t("dialog.type", { defaultValue: "Type" })}</Label>
+              <select
+                id="type"
+                value={editFormData.type}
+                onChange={(e) => setEditFormData({ ...editFormData, type: e.target.value })}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+              >
+                <option value="video">Video</option>
+                <option value="reel">Reel</option>
+                <option value="documentary">Documentary</option>
+                <option value="podcast">Podcast</option>
+              </select>
+            </div>
+            <DialogFooter>
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                {t("dialog.saveChanges", { defaultValue: "Save Changes" })}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Trash2 className="h-5 w-5" />
+              {t("dialog.deleteContent", { defaultValue: "Delete Content" })}
+            </DialogTitle>
+            <DialogDescription>
+              {t("dialog.deleteDescription", { 
+                defaultValue: "Are you sure you want to delete this content? This action cannot be undone.", 
+                title: deletingContent?.title 
+              })}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              {t("dialog.cancel", { defaultValue: "Cancel" })}
+            </Button>
+            <Button
+              type="button"
+              onClick={confirmDelete}
+              disabled={submitting}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
+              {t("dialog.delete", { defaultValue: "Delete" })}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
