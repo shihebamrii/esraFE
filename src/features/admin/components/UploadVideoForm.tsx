@@ -228,7 +228,7 @@ export function UploadVideoForm() {
           <div className="border-2 border-dashed border-border/50 rounded-xl p-6 text-center hover:bg-muted/30 transition-colors cursor-pointer relative">
             <input type="file" accept="video/*,audio/*" required onChange={(e) => handleFileChange(e, 'file')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
-            <p className="text-sm font-medium">{files.file ? files.file.name : tDashboard("upload.clickToUpload", { type: "file" })}</p>
+            <p className="text-sm font-medium">{files.file ? files.file.name : tDashboard("upload.form.photo.clickToUpload", { type: "file" })}</p>
             <p className="text-xs text-muted-foreground mt-1">MP4, WEBM, MP3 up to 500MB</p>
           </div>
         </div>
@@ -238,7 +238,7 @@ export function UploadVideoForm() {
           <div className="border-2 border-dashed border-border/50 rounded-xl p-6 text-center hover:bg-muted/30 transition-colors cursor-pointer relative">
             <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'thumbnail')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
-            <p className="text-sm font-medium">{files.thumbnail ? files.thumbnail.name : tDashboard("upload.clickToUpload", { type: "image" })}</p>
+            <p className="text-sm font-medium">{files.thumbnail ? files.thumbnail.name : tDashboard("upload.form.photo.clickToUpload", { type: "image" })}</p>
             <p className="text-xs text-muted-foreground mt-1">JPG, PNG up to 5MB</p>
           </div>
         </div>
