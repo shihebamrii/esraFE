@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "@/i18n/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   User,
   Mail,
@@ -21,10 +21,19 @@ import {
   CheckCircle2,
   XCircle,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  Calendar,
+  Heart,
+  ShoppingBag,
+  Download,
+  ImageIcon,
+  Upload,
+  FileImage,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { resolveMediaUrl } from "@/lib/media";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function ProfilePage() {
   const { user, isAuthenticated, logout, updateUser } = useAuthStore();
@@ -32,6 +41,14 @@ export default function ProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+  const [stats, setStats] = useState({
+    favorites: 0,
+    orders: 0,
+    downloads: 0,
+    uploads: 0,
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -54,8 +71,27 @@ export default function ProfilePage() {
         password: "",
         newPassword: ""
       });
+      fetchStats();
     }
   }, [isAuthenticated, user, router, isEditing]);
+
+  const fetchStats = async () => {
+    try {
+      const [favRes, ordersRes, downloadsRes] = await Promise.all([
+        api.get('/favorites'),
+        api.get('/orders/my-orders'),
+        api.get('/downloads/my-downloads'),
+      ]);
+      setStats({
+        favorites: favRes.data?.data?.favorites?.length || 0,
+        orders: ordersRes.data?.data?.orders?.length || 0,
+        downloads: downloadsRes.data?.data?.downloads?.length || 0,
+        uploads: 0, // TODO: fetch user uploads when endpoint available
+      });
+    } catch (e) {
+      // Silently fail, stats are not critical
+    }
+  };
 
   if (!user) return null;
 
@@ -65,6 +101,61 @@ export default function ProfilePage() {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setIsUploadingPicture(true);
+    try {
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+
+      const response = await api.post('/auth/me/picture', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (response.data.status === 'success') {
+        toast.success('Profile picture updated!');
+        // Update user in store with new picture
+        updateUser({
+          ...user,
+          profilePictureFileId: response.data.data.profilePictureFileId,
+        });
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to upload profile picture');
+    } finally {
+      setIsUploadingPicture(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const getProfilePictureUrl = () => {
+    if (user?.profilePictureFileId) {
+      return `/api/media/${user.profilePictureFileId}`;
+    }
+    return null;
+  };
 
   const handleLogout = () => {
     logout();
@@ -154,32 +245,74 @@ export default function ProfilePage() {
         {/* Avatar Card */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative group">
-            <div className="h-28 w-28 rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-2xl shadow-violet-500/30 ring-4 ring-background">
-              {userInitials}
+            {/* Hidden file input for profile picture */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleProfilePictureChange}
+              accept="image/*"
+              className="hidden"
+            />
+
+            {/* Profile Picture */}
+            <div
+              className="h-32 w-32 rounded-3xl overflow-hidden bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-2xl shadow-violet-500/30 ring-4 ring-background cursor-pointer transition-transform group-hover:scale-105"
+              onClick={handleProfilePictureClick}
+            >
+              {getProfilePictureUrl() ? (
+                <img
+                  src={getProfilePictureUrl()!}
+                  alt={user.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span>{userInitials}</span>
+              )}
+
+              {/* Upload overlay on hover */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                {isUploadingPicture ? (
+                  <Loader2 className="h-6 w-6 text-white animate-spin" />
+                ) : (
+                  <Camera className="h-6 w-6 text-white" />
+                )}
+              </div>
             </div>
-            <button className="absolute -bottom-1 -right-1 h-9 w-9 rounded-xl bg-background border border-border/50 shadow-lg flex items-center justify-center hover:bg-accent transition-colors group-hover:scale-110">
-              <Camera className="h-4 w-4 text-muted-foreground" />
+
+            {/* Upload button */}
+            <button
+              className="absolute -bottom-2 -right-2 h-10 w-10 rounded-xl bg-violet-600 text-white shadow-lg flex items-center justify-center hover:bg-violet-700 transition-colors border-2 border-white"
+              onClick={handleProfilePictureClick}
+              disabled={isUploadingPicture}
+            >
+              {isUploadingPicture ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Camera className="h-4 w-4" />
+              )}
             </button>
           </div>
+
           <h1
-            className="text-2xl font-bold mt-4"
+            className="text-2xl font-bold mt-5"
             style={{
               animation: "slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
             }}
           >
             {user.name}
           </h1>
+          <p className="text-muted-foreground text-sm mt-1">{user.email}</p>
           <div
-            className="flex items-center gap-1.5 mt-1.5"
+            className="flex items-center gap-1.5 mt-2"
             style={{
               animation: "slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
               animationDelay: "100ms",
               opacity: 0,
             }}
           >
-            <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-400 ring-1 ring-violet-500/20">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-400 ring-1 ring-violet-500/20">
               <Sparkles className="h-3 w-3" />
-              {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Member
             </span>
           </div>
         </div>

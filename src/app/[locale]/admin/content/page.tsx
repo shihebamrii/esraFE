@@ -224,7 +224,7 @@ export default function AdminContentPage() {
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
         {activeTab !== "community" && (
-          <Link href="/admin/upload">
+          <Link href="/admin/upload?section=impact">
             <Button className="bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="mr-2 h-4 w-4" />
               {t("addContent", { defaultValue: "Add Content" })}
@@ -352,17 +352,12 @@ export default function AdminContentPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="type">{t("dialog.type", { defaultValue: "Type" })}</Label>
-              <select
+              <Input
                 id="type"
                 value={editFormData.type}
                 onChange={(e) => setEditFormData({ ...editFormData, type: e.target.value })}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-              >
-                <option value="video">Video</option>
-                <option value="reel">Reel</option>
-                <option value="documentary">Documentary</option>
-                <option value="podcast">Podcast</option>
-              </select>
+                placeholder={t("dialog.typePlaceholder", { defaultValue: "e.g. video, reel, documentary, podcast..." })}
+              />
             </div>
             <DialogFooter>
               <Button

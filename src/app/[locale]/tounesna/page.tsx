@@ -10,10 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, Play, ChevronRight, ImageIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { PhotoService, Photo } from "@/features/photos/api";
 import { resolveMediaUrl } from "@/lib/media";
+import { api } from "@/lib/api";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 import { TounesnaHero } from "./components/TounesnaHero";
 import { InteractiveMap } from "./components/InteractiveMap";
@@ -30,9 +33,10 @@ export default function TounesnaPage() {
   const [filterType, setFilterType] = useState("all");
   const [filterTheme, setFilterTheme] = useState("all");
   const [filterAccess, setFilterAccess] = useState("all");
-  const [governorates, setGovernorates] = useState<any[]>([]);
+  const [filterSource, setFilterSource] = useState("all"); // 'all', 'official', 'community'
+  const [governorates, setGovernorates] = useState<{ _id: string, count: number }[]>([]);
   const [visitedGovs, setVisitedGovs] = useState<Set<string>>(new Set());
-
+  const [playlists, setPlaylists] = useState<any[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,15 +53,30 @@ export default function TounesnaPage() {
   }, []);
 
   useEffect(() => {
-    const fetchInitialData = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const govData = await PhotoService.getGovernorates();
-        setGovernorates(govData.data.governorates);
-      } catch (error) {
-        console.error("Failed to fetch governorates", error);
+        const [photoRes, govRes, playlistRes] = await Promise.all([
+          PhotoService.getPhotos({ limit: 100 }),
+          PhotoService.getGovernorates(),
+          api.get("/playlists?section=tounesna")
+        ]);
+        if (photoRes.data?.status === "success") {
+          setPhotos(photoRes.data.data.photos);
+        }
+        if (govRes.data?.status === "success") {
+          setGovernorates(govRes.data.data.governorates);
+        }
+        if (playlistRes.data?.status === "success") {
+          setPlaylists(playlistRes.data.data.playlists);
+        }
+      } catch (e) {
+        console.error("Error fetching data:", e);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchInitialData();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -71,15 +90,16 @@ export default function TounesnaPage() {
         if (filterType !== "all") params.landscapeType = filterType;
         if (filterTheme !== "all") params.theme = filterTheme;
         if (filterAccess !== "all") params.access = filterAccess;
-        
+        if (filterSource !== "all") params.source = filterSource;
+
         const data = await PhotoService.getPhotos(params);
         let results = data.data.photos;
 
         // Manual search filtering if backend doesn't support text search in this endpoint yet
         if (search) {
           const q = search.toLowerCase();
-          results = results.filter((p: Photo) => 
-            p.title.toLowerCase().includes(q) || 
+          results = results.filter((p: Photo) =>
+            p.title.toLowerCase().includes(q) ||
             p.governorate.toLowerCase().includes(q) ||
             (p.tags && p.tags.some(tag => tag.toLowerCase().includes(q)))
           );
@@ -95,7 +115,7 @@ export default function TounesnaPage() {
 
     const timeoutId = setTimeout(fetchPhotos, 300);
     return () => clearTimeout(timeoutId);
-  }, [search, filterGov, filterType, filterTheme, filterAccess]);
+  }, [search, filterGov, filterType, filterTheme, filterAccess, filterSource]);
 
   // Adapt backend photo to MasonryGrid/PhotoCard format if needed
   const adaptedPhotos = photos.map(p => ({
@@ -108,7 +128,9 @@ export default function TounesnaPage() {
     height: 800 + (Math.random() * 400), // Randomized height for masonry effect
     gov: p.governorate,
     mediaType: p.mediaType,
-    type: p.landscapeType
+    type: p.landscapeType,
+    source: p.source || 'community', // 'official' or 'community'
+    creatorName: p.creatorName,
   }));
 
   const govNameToId: Record<string, string> = {
@@ -169,6 +191,52 @@ export default function TounesnaPage() {
 
       {/* ═══════════════ HERO ═══════════════ */}
       <TounesnaHero />
+
+      {/* ═══════════════ PLAYLISTS ═══════════════ */}
+      {playlists.length > 0 && (
+        <section className="relative z-10 w-full px-6 py-12 lg:py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-10 w-10 rounded-xl bg-[#ffcc1a] flex items-center justify-center">
+                <ImageIcon className="h-5 w-5 text-[#6a0d2e]" />
+              </div>
+              <h2 className="text-2xl lg:text-3xl font-serif font-bold text-[#6a0d2e]">Photo Collections</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {playlists.map((pl) => (
+                <Link key={pl._id} href={`/tounesna/playlist/${pl._id}`}>
+                  <div className="group relative h-56 lg:h-64 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 bg-[#6a0d2e]">
+                    {pl.photoItems?.[0]?.photoId?.lowResFileId || pl.thumbnailFileId ? (
+                      <img 
+                        src={resolveMediaUrl(pl.photoItems?.[0]?.photoId?.previewUrl || `/api/photos/${pl.photoItems?.[0]?.photoId?._id}/preview`)} 
+                        alt={pl.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#6a0d2e] to-[#8b1c4a] flex items-center justify-center">
+                        <ImageIcon className="h-16 w-16 text-[#ffcc1a]/50" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#6a0d2e] via-[#6a0d2e]/40 to-transparent" />
+                    <div className="absolute bottom-5 left-5 right-5">
+                      <Badge className="bg-[#ffcc1a] text-[#6a0d2e] mb-2 border-none text-[10px] font-bold uppercase">
+                        {pl.type.replace('_', ' ')} • {(pl.photoItems?.length || 0)} items
+                      </Badge>
+                      <h3 className="text-xl font-serif font-bold text-white mb-1 group-hover:text-[#ffcc1a] transition-colors">{pl.title}</h3>
+                      <p className="text-sm text-white/70 line-clamp-1">{pl.description}</p>
+                    </div>
+                    <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <ChevronRight className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ═══════════════ MAP & GALLERY ═══════════════ */}
       {/* ─── Refined Tile Band Divider ─── */}
       <div className="relative z-20 w-full h-[80px] bg-[#fff9e6] flex items-center justify-center border-y border-[#6a0d2e]/10 shadow-sm mt-[-1px] overflow-hidden">
@@ -336,6 +404,27 @@ export default function TounesnaPage() {
                     <SelectItem value="all">{t("allAccess", { defaultValue: "All Access" })}</SelectItem>
                     <SelectItem value="free" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("free", { defaultValue: "Free" })}</SelectItem>
                     <SelectItem value="premium" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">{t("premium", { defaultValue: "Premium" })}</SelectItem>
+                  </SelectContent>
+                </Select>
+                {/* Source - Official vs Community */}
+                <Select value={filterSource} onValueChange={setFilterSource}>
+                  <SelectTrigger className="flex-1 xl:w-[160px] h-12 bg-white/50 border-white/80 text-[#6a0d2e] rounded-2xl text-base focus:bg-white focus:border-[#6a0d2e]/30 transition-all hover:bg-white shadow-sm">
+                    <SelectValue placeholder={t("source", { defaultValue: "Source" })} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#fff9e6] border-[#6a0d2e]/10 text-[#6a0d2e] rounded-xl shadow-2xl backdrop-blur-xl">
+                    <SelectItem value="all">{t("allSources", { defaultValue: "All Sources" })}</SelectItem>
+                    <SelectItem value="official" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        {t("official", { defaultValue: "Official" })}
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="community" className="cursor-pointer hover:bg-[#6a0d2e]/10 focus:bg-[#6a0d2e]/10">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                        {t("community", { defaultValue: "Community" })}
+                      </span>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>

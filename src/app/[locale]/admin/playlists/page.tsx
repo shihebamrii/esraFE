@@ -56,12 +56,21 @@ interface PlaylistItem {
   type?: string;
 }
 
+interface PhotoPlaylistItem {
+  photoId: string;
+  order: number;
+  title?: string;
+  mediaType?: string;
+}
+
 interface Playlist {
   _id: string;
   title: string;
   description: string;
+  section: "impact" | "tounesna";
   type: "series" | "collection" | "podcast_series";
   items: PlaylistItem[];
+  photoItems: PhotoPlaylistItem[];
   isActive: boolean;
   themes: string[];
   region: string;
@@ -73,6 +82,7 @@ export default function AdminPlaylistsPage() {
   const t = useTranslations("AdminDashboard.playlists");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [availableContent, setAvailableContent] = useState<any[]>([]);
+  const [availablePhotos, setAvailablePhotos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -83,8 +93,10 @@ export default function AdminPlaylistsPage() {
   const [formData, setFormData] = useState<Partial<Playlist>>({
     title: "",
     description: "",
+    section: "impact",
     type: "series",
     items: [],
+    photoItems: [],
     isActive: true,
     themes: [],
     region: "",
@@ -112,9 +124,19 @@ export default function AdminPlaylistsPage() {
     }
   };
 
+  const fetchAvailablePhotos = async () => {
+    try {
+      const res = await AdminService.getPhotos({ limit: 100, approvalStatus: 'approved' });
+      setAvailablePhotos(res.data?.photos || []);
+    } catch (e) {
+      toast.error(t("messages.photosFailed", { defaultValue: "Failed to load photos" }));
+    }
+  };
+
   useEffect(() => {
     fetchPlaylists();
     fetchAvailableContent();
+    fetchAvailablePhotos();
   }, []);
 
   // Client-side filtering for playlists
@@ -132,7 +154,8 @@ export default function AdminPlaylistsPage() {
     setEditingPlaylist(playlist);
     setFormData({
       ...playlist,
-      items: [...playlist.items].sort((a, b) => a.order - b.order),
+      items: [...(playlist.items || [])].sort((a, b) => a.order - b.order),
+      photoItems: [...(playlist.photoItems || [])].sort((a, b) => a.order - b.order),
     });
     setIsDialogOpen(true);
   };
@@ -155,7 +178,8 @@ export default function AdminPlaylistsPage() {
       const data = {
         ...formData,
         // Ensure order is correct
-        items: formData.items?.map((item, idx) => ({ ...item, order: idx }))
+        items: formData.items?.map((item, idx) => ({ ...item, order: idx })),
+        photoItems: formData.photoItems?.map((item, idx) => ({ ...item, order: idx })),
       };
 
       if (editingPlaylist) {
@@ -180,8 +204,10 @@ export default function AdminPlaylistsPage() {
     setFormData({
       title: "",
       description: "",
+      section: "impact",
       type: "series",
       items: [],
+      photoItems: [],
       isActive: true,
       themes: [],
       region: "",
@@ -212,10 +238,40 @@ export default function AdminPlaylistsPage() {
     });
   };
 
+  const addPhotoItem = (photoId: string) => {
+    const photo = availablePhotos.find(p => p._id === photoId);
+    if (!photo) return;
+    
+    if (formData.photoItems?.some(i => i.photoId === photoId)) {
+      toast.error("Photo already in playlist");
+      return;
+    }
+
+    setFormData({
+      ...formData,
+      photoItems: [
+        ...(formData.photoItems || []),
+        { 
+          photoId, 
+          order: (formData.photoItems?.length || 0),
+          title: photo.title,
+          mediaType: photo.mediaType
+        }
+      ]
+    });
+  };
+
   const removeItem = (contentId: string) => {
     setFormData({
       ...formData,
       items: formData.items?.filter(i => i.contentId !== contentId)
+    });
+  };
+
+  const removePhotoItem = (photoId: string) => {
+    setFormData({
+      ...formData,
+      photoItems: formData.photoItems?.filter(i => i.photoId !== photoId)
     });
   };
 
@@ -228,6 +284,17 @@ export default function AdminPlaylistsPage() {
     
     [newItems[index], newItems[targetIndex]] = [newItems[targetIndex], newItems[index]];
     setFormData({ ...formData, items: newItems });
+  };
+
+  const movePhotoItem = (index: number, direction: 'up' | 'down') => {
+    if (!formData.photoItems) return;
+    const newItems = [...formData.photoItems];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (targetIndex < 0 || targetIndex >= newItems.length) return;
+    
+    [newItems[index], newItems[targetIndex]] = [newItems[targetIndex], newItems[index]];
+    setFormData({ ...formData, photoItems: newItems });
   };
 
   return (
@@ -266,7 +333,7 @@ export default function AdminPlaylistsPage() {
               <DialogDescription>{t("form.descriptionPlaceholder")}</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-6 py-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label>{t("form.title")}</Label>
                   <Input 
@@ -275,6 +342,21 @@ export default function AdminPlaylistsPage() {
                     placeholder={t("form.titlePlaceholder")}
                     required
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("form.section", { defaultValue: "Section" })}</Label>
+                  <Select 
+                    value={formData.section || "impact"} 
+                    onValueChange={(v: any) => setFormData({...formData, section: v})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="impact">Impact</SelectItem>
+                      <SelectItem value="tounesna">Tounesna</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("form.type")}</Label>
@@ -305,7 +387,7 @@ export default function AdminPlaylistsPage() {
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-bold">{t("form.content")}</Label>
+                  <Label className="text-base font-bold">{t("form.content", { defaultValue: "Content Items" })}</Label>
                   <div className="flex gap-2 w-1/2">
                     <Select onValueChange={addItem}>
                       <SelectTrigger>
@@ -349,11 +431,66 @@ export default function AdminPlaylistsPage() {
                     })
                   ) : (
                     <div className="p-8 text-center text-muted-foreground text-sm italic">
-                      {t("form.noItems", { defaultValue: "No items in this playlist yet. Select content above to add." })}
+                      {t("form.noItems", { defaultValue: "No content items yet. Select content above to add." })}
                     </div>
                   )}
                 </div>
               </div>
+
+              {/* Photo Items (for Tounesna playlists) */}
+              {formData.section === "tounesna" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-base font-bold">{t("form.photoItems", { defaultValue: "Photo Items" })}</Label>
+                  <div className="flex gap-2 w-1/2">
+                    <Select onValueChange={addPhotoItem}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("form.selectPhoto", { defaultValue: "Select photo..." })} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availablePhotos.map(p => (
+                          <SelectItem key={p._id} value={p._id}>
+                            [{p.mediaType || 'photo'}] {p.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="border rounded-lg divide-y bg-muted/20">
+                  {formData.photoItems && formData.photoItems.length > 0 ? (
+                    formData.photoItems.map((item, idx) => {
+                      const photo = availablePhotos.find(p => p._id === item.photoId) || item;
+                      return (
+                        <div key={item.photoId} className="flex items-center gap-4 p-3 group">
+                          <GripVertical className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{photo.title}</p>
+                            <Badge variant="secondary" className="text-[10px] h-4">{photo.mediaType || 'photo'}</Badge>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => movePhotoItem(idx, 'up')} disabled={idx === 0}>
+                              <ChevronUp className="h-4 w-4" />
+                            </Button>
+                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => movePhotoItem(idx, 'down')} disabled={idx === (formData.photoItems?.length || 0) - 1}>
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => removePhotoItem(item.photoId)}>
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="p-8 text-center text-muted-foreground text-sm italic">
+                      {t("form.noPhotoItems", { defaultValue: "No photo items yet. Select photos above to add." })}
+                    </div>
+                  )}
+                </div>
+              </div>
+              )}
 
               <div className="flex items-center space-x-2">
                 <Switch 
@@ -380,6 +517,7 @@ export default function AdminPlaylistsPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="pl-6">{t("table.name")}</TableHead>
+              <TableHead>{t("table.section", { defaultValue: "Section" })}</TableHead>
               <TableHead>{t("table.type")}</TableHead>
               <TableHead>{t("table.items")}</TableHead>
               <TableHead>{t("table.status")}</TableHead>
@@ -389,11 +527,11 @@ export default function AdminPlaylistsPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></TableCell>
+                <TableCell colSpan={6} className="h-24 text-center"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></TableCell>
               </TableRow>
             ) : filteredPlaylists.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell colSpan={6} className="h-24 text-center">
                   {search ? t("messages.noSearchResults", { defaultValue: "No playlists found matching your search." }) : t("messages.noPlaylists", { defaultValue: "No playlists found" })}
                 </TableCell>
               </TableRow>
@@ -401,11 +539,16 @@ export default function AdminPlaylistsPage() {
               filteredPlaylists.map((pl) => (
                 <TableRow key={pl._id}>
                   <TableCell className="pl-6 font-medium">{pl.title}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={pl.section === 'impact' ? "text-blue-600 border-blue-200 bg-blue-50" : "text-fuchsia-600 border-fuchsia-200 bg-fuchsia-50"}>
+                      {pl.section || 'impact'}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="capitalize">{pl.type.replace('_', ' ')}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5 text-xs">
                       <Layers className="h-3.5 w-3.5 text-muted-foreground" />
-                      {pl.items?.length || 0} {t("table.items")}
+                      {(pl.items?.length || 0) + (pl.photoItems?.length || 0)} items
                     </div>
                   </TableCell>
                   <TableCell>

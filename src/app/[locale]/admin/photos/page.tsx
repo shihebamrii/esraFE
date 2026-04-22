@@ -265,7 +265,7 @@ export default function AdminPhotosPage() {
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         </div>
         {activeTab !== "community" && (
-          <Link href="/admin/upload">
+          <Link href="/admin/upload?section=tounesna">
             <Button className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white">
               <Plus className="mr-2 h-4 w-4" />
               {t("addPhoto")}

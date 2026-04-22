@@ -8,6 +8,7 @@ interface User {
   phone?: string;
   locale?: string;
   role: 'user' | 'admin';
+  profilePictureFileId?: string;
 }
 
 interface AuthState {

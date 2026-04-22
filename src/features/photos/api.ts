@@ -13,6 +13,8 @@ export interface Photo {
   videoUrl?: string;
   tags: string[];
   createdAt: string;
+  source?: 'official' | 'community';
+  creatorName?: string;
 }
 
 export const PhotoService = {

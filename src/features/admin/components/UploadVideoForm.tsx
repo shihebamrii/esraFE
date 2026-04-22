@@ -19,7 +19,7 @@ export function UploadVideoForm() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    type: "video",
+    type: "",
     themes: "[]",
     region: "",
     city: "",
@@ -137,19 +137,14 @@ export function UploadVideoForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="video-type">{t("type")} *</Label>
-          <select 
+          <Input 
             id="video-type" 
             name="type" 
             required
             value={formData.type} 
             onChange={handleChange}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-          >
-            <option value="video">{t("video")}</option>
-            <option value="audio">{t("podcast")}</option>
-            <option value="reel">{t("reel")}</option>
-            <option value="documentary">{t("documentary")}</option>
-          </select>
+            placeholder={t("typePlaceholder", { defaultValue: "e.g. video, reel, podcast, documentary..." })}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="video-theme">{t("themes")} *</Label>

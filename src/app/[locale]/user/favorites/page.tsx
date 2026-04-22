@@ -38,6 +38,7 @@ export default function UserFavoritesPage() {
       label: string;
       emoji: string;
       link: string;
+      displayName: string;
     }
   > = {
     Photo: {
@@ -47,6 +48,7 @@ export default function UserFavoritesPage() {
       label: tStats("photos"),
       emoji: "🖼️",
       link: "/tounesna",
+      displayName: "Photo",
     },
     Content: {
       icon: Video,
@@ -55,6 +57,16 @@ export default function UserFavoritesPage() {
       label: tStats("videos"),
       emoji: "🎬",
       link: "/impact",
+      displayName: "Video",
+    },
+    Pack: {
+      icon: ImageIcon,
+      gradient: "from-violet-500 to-purple-500",
+      bg: "from-violet-500/10 to-purple-500/5",
+      label: "Packs",
+      emoji: "📦",
+      link: "/tounesna",
+      displayName: "Pack",
     },
   };
 
@@ -103,6 +115,7 @@ export default function UserFavoritesPage() {
       title: item.title,
       price: item.priceTND || item.price || 0,
       thumbnail: item.thumbnailUrl || item.watermarkedUrl,
+      licenseType: "personal",
     });
     toast.success(t("addedToCart", { title: item.title }));
   };
@@ -119,16 +132,18 @@ export default function UserFavoritesPage() {
     return matchesSearch && matchesType;
   });
 
-  // Type counts
-  const typeCounts = {
+  // Type counts - dynamically calculated based on available types
+  const typeCounts: Record<string, number> = {
     all: favorites.length,
-    Photo: favorites.filter((f) => f.itemType === "Photo").length,
-    Content: favorites.filter((f) => f.itemType === "Content").length,
   };
+  Object.keys(typeConfig).forEach(type => {
+    typeCounts[type] = favorites.filter((f) => f.itemType === type).length;
+  });
 
   const getItemLink = (fav: FavoriteItem) => {
     if (fav.itemType === "Photo") return `/tounesna/${fav.itemId._id}`;
     if (fav.itemType === "Content") return `/impact/${fav.itemId._id}`;
+    if (fav.itemType === "Pack") return `/tounesna`;
     return "/";
   };
 
@@ -331,7 +346,7 @@ export default function UserFavoritesPage() {
                       className={`absolute top-3 left-3 rounded-lg border-0 text-[11px] font-semibold shadow-sm bg-gradient-to-r ${config.gradient} text-white`}
                     >
                       <Icon className="h-3 w-3 me-1" />
-                      {fav.itemType === "Content" ? "Video" : fav.itemType}
+                      {config.displayName}
                     </Badge>
 
                     {/* View + Cart action buttons on hover */}

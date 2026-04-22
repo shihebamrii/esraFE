@@ -14,6 +14,7 @@ import {
   X,
   Sparkles,
   Camera,
+  ImageIcon,
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,12 @@ export function UserSidebar() {
       href: "/user/upload",
       icon: Camera,
       gradient: "from-fuchsia-500 to-pink-600",
+    },
+    {
+      title: t("myUploads", { defaultValue: "My Uploads" }),
+      href: "/user/uploads",
+      icon: ImageIcon,
+      gradient: "from-amber-500 to-orange-500",
     },
   ];
 

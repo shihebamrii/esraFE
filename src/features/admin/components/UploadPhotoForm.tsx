@@ -31,7 +31,7 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
     governorate: initialData?.governorate || "",
     city: initialData?.city || "",
     landscapeType: initialData?.landscapeType || "sea",
-    contentType: initialData?.contentType || "video",
+    contentType: initialData?.contentType || "",
     pricePersonalTND: initialData?.pricePersonalTND?.toString() || initialData?.priceTND?.toString() || "0",
     priceCommercialTND: initialData?.priceCommercialTND?.toString() || "0",
     watermark: initialData?.watermark !== undefined ? initialData.watermark.toString() : "true",
@@ -190,18 +190,13 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
         {mediaType === 'video' && (
           <div className="space-y-2">
             <Label htmlFor="photo-content-type">{t("contentType")}</Label>
-            <select
+            <Input
               id="photo-content-type"
               name="contentType"
               value={formData.contentType}
               onChange={handleChange}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-            >
-              <option value="video">{t("contentTypes.video")}</option>
-              <option value="reel">{t("contentTypes.reel")}</option>
-              <option value="podcast">{t("contentTypes.podcast")}</option>
-              <option value="documentary">{t("contentTypes.documentary")}</option>
-            </select>
+              placeholder={t("contentTypePlaceholder", { defaultValue: "e.g. video, reel, podcast, documentary..." })}
+            />
           </div>
         )}
       </div>
