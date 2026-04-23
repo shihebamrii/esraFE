@@ -72,7 +72,7 @@ export default function AdminLayout({
   const pageTitle = matchKey ? PAGE_TITLES[matchKey] : "Admin";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-background pt-14">
       <AdminSidebar />
 
       {/* Main area */}

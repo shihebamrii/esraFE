@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, ShoppingCart, PlayCircle } from "lucide-react";
+import { MapPin, ShoppingCart, PlayCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
@@ -19,9 +19,10 @@ interface PhotoCardProps {
   width: number;
   height: number;
   mediaType?: 'photo' | 'video';
+  source?: 'official' | 'community';
 }
 
-export function PhotoCard({ id, title, url, location, price, width, height, mediaType }: PhotoCardProps) {
+export function PhotoCard({ id, title, url, location, price, width, height, mediaType, source }: PhotoCardProps) {
   const addItem = useCartStore(state => state.addItem);
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -32,7 +33,8 @@ export function PhotoCard({ id, title, url, location, price, width, height, medi
       type: 'photo',
       title,
       price,
-      thumbnail: url
+      thumbnail: url,
+      licenseType: 'personal'
     });
     toast.success("Added to cart");
   };
@@ -63,12 +65,28 @@ export function PhotoCard({ id, title, url, location, price, width, height, medi
             />
           )}
           
-          {/* Video Indicator */}
-          {mediaType === 'video' && (
-            <div className="absolute top-2 left-2 z-10 bg-black/50 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1.5 text-white shadow-sm">
-              <PlayCircle className="h-3.5 w-3.5 fill-white" />
-              <span className="text-[10px] font-bold tracking-wider">VIDEO</span>
+
+
+          {/* Official/Community Indicator */}
+          {source === 'official' && (
+            <div className="absolute top-2 left-2 z-10 bg-[#ffcc1a] text-[#6a0d2e] rounded-full px-2 py-1 flex items-center gap-1 shadow-sm border border-[#6a0d2e]/10">
+              <Sparkles className="h-3 w-3 fill-[#6a0d2e]" />
+              <span className="text-[9px] font-bold tracking-tight">OFFICIAL</span>
             </div>
+          )}
+          
+          {mediaType === 'video' && source === 'official' && (
+             <div className="absolute top-9 left-2 z-10 bg-black/50 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1.5 text-white shadow-sm">
+                <PlayCircle className="h-3.5 w-3.5 fill-white" />
+                <span className="text-[10px] font-bold tracking-wider">VIDEO</span>
+             </div>
+          )}
+          {/* Adjust video badge position if official badge is present */}
+          {mediaType === 'video' && source !== 'official' && (
+             <div className="absolute top-2 left-2 z-10 bg-black/50 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-1.5 text-white shadow-sm">
+                <PlayCircle className="h-3.5 w-3.5 fill-white" />
+                <span className="text-[10px] font-bold tracking-wider">VIDEO</span>
+             </div>
           )}
           
           {/* Favorite Button — Top Right */}

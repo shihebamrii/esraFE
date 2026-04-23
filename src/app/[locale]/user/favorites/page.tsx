@@ -15,6 +15,7 @@ import {
   Image as ImageIcon,
   Video,
   Eye,
+  Package,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -60,7 +61,7 @@ export default function UserFavoritesPage() {
       displayName: "Video",
     },
     Pack: {
-      icon: ImageIcon,
+      icon: Package,
       gradient: "from-violet-500 to-purple-500",
       bg: "from-violet-500/10 to-purple-500/5",
       label: "Packs",
@@ -127,18 +128,28 @@ export default function UserFavoritesPage() {
     const matchesSearch = item.title
       ?.toLowerCase()
       .includes(search.toLowerCase());
-    const matchesType =
-      filterType === "all" || fav.itemType === filterType;
+    
+    let matchesType = filterType === "all";
+    if (!matchesType) {
+      if (filterType === "Photo") {
+        matchesType = fav.itemType === "Photo" && item.mediaType !== "video";
+      } else if (filterType === "Content") {
+        matchesType = fav.itemType === "Content" || (fav.itemType === "Photo" && item.mediaType === "video");
+      } else {
+        matchesType = fav.itemType === filterType;
+      }
+    }
+    
     return matchesSearch && matchesType;
   });
 
   // Type counts - dynamically calculated based on available types
   const typeCounts: Record<string, number> = {
     all: favorites.length,
+    Photo: favorites.filter((f) => f.itemType === "Photo" && f.itemId?.mediaType !== "video").length,
+    Content: favorites.filter((f) => f.itemType === "Content" || (f.itemType === "Photo" && f.itemId?.mediaType === "video")).length,
+    Pack: favorites.filter((f) => f.itemType === "Pack").length,
   };
-  Object.keys(typeConfig).forEach(type => {
-    typeCounts[type] = favorites.filter((f) => f.itemType === type).length;
-  });
 
   const getItemLink = (fav: FavoriteItem) => {
     if (fav.itemType === "Photo") return `/tounesna/${fav.itemId._id}`;
@@ -297,7 +308,17 @@ export default function UserFavoritesPage() {
           {filteredFavorites.map((fav) => {
             const item = fav.itemId;
             if (!item) return null;
-            const config = typeConfig[fav.itemType] || typeConfig.Photo;
+            let config = typeConfig[fav.itemType] || typeConfig.Photo;
+            
+            // Distinguish between Photo and Video if itemType is Photo
+            if (fav.itemType === "Photo" && item.mediaType === "video") {
+              config = {
+                ...typeConfig.Content,
+                link: `/tounesna/${item._id}`,
+                displayName: "Video",
+              };
+            }
+            
             const Icon = config.icon;
             const price = item.priceTND || item.price || 0;
 

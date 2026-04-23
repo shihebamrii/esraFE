@@ -127,15 +127,12 @@ export default function ProfilePage() {
       const formData = new FormData();
       formData.append('profilePicture', file);
 
-      const response = await api.post('/auth/me/picture', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await api.post('/auth/me/picture', formData);
 
       if (response.data.status === 'success') {
         toast.success('Profile picture updated!');
         // Update user in store with new picture
         updateUser({
-          ...user,
           profilePictureFileId: response.data.data.profilePictureFileId,
         });
       }

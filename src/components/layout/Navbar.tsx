@@ -80,11 +80,6 @@ export function Navbar() {
 
   const textColorClass = isHeroPage && !isScrolled ? "text-white" : "text-foreground";
 
-  // Don't render navbar on admin pages
-  if (isAdminPage) {
-    return null;
-  }
-
   const getDashboardLink = () => {
     if (!user) return "/";
     switch (user.role) {
@@ -112,11 +107,16 @@ export function Navbar() {
         .slice(0, 2)
     : "U";
 
+  // Resolve profile picture URL
+  const profilePictureUrl = user?.profilePictureFileId 
+    ? `/api/media/${user.profilePictureFileId}` 
+    : undefined;
+
   return (
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out font-sans",
-        isScrolled
+        isScrolled || isAdminPage
           ? "bg-background/70 backdrop-blur-3xl border-b border-border/40 py-2 shadow-[0_4px_30px_rgba(0,0,0,0.03)]"
           : "bg-transparent border-b border-transparent py-4"
       )}
@@ -145,7 +145,7 @@ export function Navbar() {
             style={{ width: 'auto', height: 'auto' }}
             className={cn(
               "h-8 transition-all duration-500",
-              isHeroPage && !isScrolled ? "brightness-0 invert" : "" // Make logo white if on hero and not scrolled
+              (isHeroPage && !isScrolled) ? "brightness-0 invert" : "" // Make logo white if on hero and not scrolled
             )} 
           />
         </Link>
@@ -173,7 +173,7 @@ export function Navbar() {
                     layoutId="nav-highlight"
                     className={cn(
                       "absolute inset-0 rounded-lg -z-10",
-                      isHeroPage && !isScrolled ? "bg-white/10" : "bg-violet-500/10"
+                      (isHeroPage && !isScrolled) ? "bg-white/10" : "bg-violet-500/10"
                     )}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -195,29 +195,31 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Search Bar */}
-        <div className="hidden lg:flex relative w-64">
-          <div className="relative w-full group">
-            <Search
-              className={cn(
-                "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300",
-                isScrolled || isDashboard
-                  ? "text-muted-foreground group-focus-within:text-violet-500 group-focus-within:scale-110"
-                  : "text-white/60 group-focus-within:text-white group-focus-within:scale-110"
-              )}
-            />
-            <input
-              type="text"
-              placeholder={t("search")}
-              className={cn(
-                "w-full rounded-xl py-2 pl-10 pr-4 text-sm transition-all duration-500 outline-none border",
-                isScrolled || isDashboard
-                  ? "bg-muted/30 border-border/50 text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
-                  : "bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/30 backdrop-blur-sm focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
-              )}
-            />
+        {/* Search Bar - Hidden on Admin Pages */}
+        {!isAdminPage && (
+          <div className="hidden lg:flex relative w-64">
+            <div className="relative w-full group">
+              <Search
+                className={cn(
+                  "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300",
+                  isScrolled || isDashboard
+                    ? "text-muted-foreground group-focus-within:text-violet-500 group-focus-within:scale-110"
+                    : "text-white/60 group-focus-within:text-white group-focus-within:scale-110"
+                )}
+              />
+              <input
+                type="text"
+                placeholder={t("search")}
+                className={cn(
+                  "w-full rounded-xl py-2 pl-10 pr-4 text-sm transition-all duration-500 outline-none border",
+                  isScrolled || isDashboard
+                    ? "bg-muted/30 border-border/50 text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
+                    : "bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/30 backdrop-blur-sm focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
+                )}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Right Actions */}
         <div className="flex items-center gap-1.5">
@@ -259,7 +261,7 @@ export function Navbar() {
                   className="relative h-9 w-9 rounded-xl p-0 ml-1 ring-2 ring-transparent hover:ring-violet-500/20 transition-all duration-300"
                 >
                   <Avatar className="h-9 w-9 rounded-xl">
-                    <AvatarImage src={user.avatarUrl} alt={user.name} />
+                    <AvatarImage src={profilePictureUrl} alt={user.name} />
                     <AvatarFallback className="rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white font-semibold text-xs">
                       {userInitials}
                     </AvatarFallback>

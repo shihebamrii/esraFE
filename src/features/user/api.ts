@@ -37,6 +37,7 @@ export interface FavoriteItem {
     watermarkedUrl?: string;
     previewUrl?: string;
     imageUrl?: string;
+    mediaType?: 'photo' | 'video';
   };
   itemType: string;
   createdAt: string;
