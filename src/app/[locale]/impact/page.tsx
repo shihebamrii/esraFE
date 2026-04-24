@@ -280,6 +280,8 @@ export default function ImpactPage() {
             contentUrl: resolveMediaUrl(c.contentUrl),
             theme: c.themes?.[0] || "Impact",
             region: c.region,
+            instagramUsername: c.metadata?.instagramUsername,
+            author: c.createdBy?.name || c.authors?.[0],
             metadata: c.metadata
           })));
         }
@@ -321,6 +323,8 @@ export default function ImpactPage() {
       (filterAccess === "premium" && item.isPremium);
     return matchesSearch && matchesType && matchesAccess && matchesTheme && matchesGov;
   });
+
+  const allReels = filteredContent.filter(item => item.type === "reel");
 
   return (
     <div
@@ -565,10 +569,8 @@ export default function ImpactPage() {
       <InstagramReelsViewer
         isOpen={reelsModalOpen}
         onClose={() => setReelsModalOpen(false)}
-        videoSrc={activeReel?.contentUrl}
-        thumbnail={activeReel?.thumbnail}
-        title={activeReel?.title}
-        instagramUsername={activeReel?.metadata?.instagramUsername}
+        reels={allReels}
+        initialId={activeReel?.id}
       />
       <PacksSection type="impact" />
     </div>
