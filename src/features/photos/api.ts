@@ -15,6 +15,7 @@ export interface Photo {
   createdAt: string;
   source?: 'official' | 'community';
   creatorName?: string;
+  createdBy?: string;
 }
 
 export const PhotoService = {

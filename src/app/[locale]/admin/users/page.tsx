@@ -246,7 +246,7 @@ export default function AdminUsersPage() {
                       ) : (
                         <UserIcon className="h-3 w-3 text-blue-600" />
                       )}
-                      <span className="capitalize text-sm">{user.role}</span>
+                      <span className="capitalize text-sm">{t(`roles.${user.role}`)}</span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -345,7 +345,7 @@ export default function AdminUsersPage() {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
-                  No users found.
+                  {t("noUsersFound")}
                 </TableCell>
               </TableRow>
             )}
@@ -362,8 +362,8 @@ export default function AdminUsersPage() {
             </DialogTitle>
             <DialogDescription>
               {t("dialog.editDescription", {
-                name: editingUser?.name,
-                pack: editingPack?.packId?.title,
+                name: editingUser?.name || "",
+                pack: editingPack?.packId?.title || "",
               })}
             </DialogDescription>
           </DialogHeader>
@@ -462,7 +462,7 @@ export default function AdminUsersPage() {
               {t("dialog.editUser", { defaultValue: "Edit User" })}
             </DialogTitle>
             <DialogDescription>
-              {t("dialog.editUserDescription", { defaultValue: "Update user details", name: editingUser?.name })}
+              {t("dialog.editUserDescription", { defaultValue: "Update user details", name: editingUser?.name || "" })}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateUser} className="grid gap-4 py-4">
@@ -501,8 +501,8 @@ export default function AdminUsersPage() {
                 onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
                 className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
               >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
+                <option value="user">{t("roles.user")}</option>
+                <option value="admin">{t("roles.admin")}</option>
               </select>
             </div>
             <DialogFooter>
@@ -532,7 +532,7 @@ export default function AdminUsersPage() {
             <DialogDescription>
               {t("dialog.deleteUserDescription", { 
                 defaultValue: "Are you sure you want to delete this user? This action cannot be undone.", 
-                name: editingUser?.name 
+                name: editingUser?.name || ""
               })}
             </DialogDescription>
           </DialogHeader>

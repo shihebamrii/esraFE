@@ -129,7 +129,7 @@ export default function AdminPlaylistsPage() {
       const res = await AdminService.getPhotos({ limit: 100, approvalStatus: 'approved' });
       setAvailablePhotos(res.data?.photos || []);
     } catch (e) {
-      toast.error(t("messages.photosFailed", { defaultValue: "Failed to load photos" }));
+      toast.error(t("messages.photosFailed"));
     }
   };
 
@@ -220,7 +220,7 @@ export default function AdminPlaylistsPage() {
     if (!content) return;
     
     if (formData.items?.some(i => i.contentId === contentId)) {
-      toast.error("Item already in playlist");
+      toast.error(t("messages.itemAlreadyAdded"));
       return;
     }
 
@@ -243,7 +243,7 @@ export default function AdminPlaylistsPage() {
     if (!photo) return;
     
     if (formData.photoItems?.some(i => i.photoId === photoId)) {
-      toast.error("Photo already in playlist");
+      toast.error(t("messages.photoAlreadyAdded"));
       return;
     }
 
@@ -353,8 +353,8 @@ export default function AdminPlaylistsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="impact">Impact</SelectItem>
-                      <SelectItem value="tounesna">Tounesna</SelectItem>
+                      <SelectItem value="impact">{t("sections.impact")}</SelectItem>
+                      <SelectItem value="tounesna">{t("sections.tounesna")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -387,7 +387,7 @@ export default function AdminPlaylistsPage() {
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-bold">{t("form.content", { defaultValue: "Content Items" })}</Label>
+                  <Label className="text-base font-bold">{t("form.content")}</Label>
                   <div className="flex gap-2 w-1/2">
                     <Select onValueChange={addItem}>
                       <SelectTrigger>
@@ -431,7 +431,7 @@ export default function AdminPlaylistsPage() {
                     })
                   ) : (
                     <div className="p-8 text-center text-muted-foreground text-sm italic">
-                      {t("form.noItems", { defaultValue: "No content items yet. Select content above to add." })}
+                      {t("form.noItems")}
                     </div>
                   )}
                 </div>
@@ -441,11 +441,11 @@ export default function AdminPlaylistsPage() {
               {formData.section === "tounesna" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-bold">{t("form.photoItems", { defaultValue: "Photo Items" })}</Label>
+                  <Label className="text-base font-bold">{t("form.photoItems")}</Label>
                   <div className="flex gap-2 w-1/2">
                     <Select onValueChange={addPhotoItem}>
                       <SelectTrigger>
-                        <SelectValue placeholder={t("form.selectPhoto", { defaultValue: "Select photo..." })} />
+                        <SelectValue placeholder={t("form.selectPhoto")} />
                       </SelectTrigger>
                       <SelectContent>
                         {availablePhotos.map(p => (
@@ -485,7 +485,7 @@ export default function AdminPlaylistsPage() {
                     })
                   ) : (
                     <div className="p-8 text-center text-muted-foreground text-sm italic">
-                      {t("form.noPhotoItems", { defaultValue: "No photo items yet. Select photos above to add." })}
+                      {t("form.noPhotoItems")}
                     </div>
                   )}
                 </div>
@@ -517,7 +517,7 @@ export default function AdminPlaylistsPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="pl-6">{t("table.name")}</TableHead>
-              <TableHead>{t("table.section", { defaultValue: "Section" })}</TableHead>
+              <TableHead>{t("table.section")}</TableHead>
               <TableHead>{t("table.type")}</TableHead>
               <TableHead>{t("table.items")}</TableHead>
               <TableHead>{t("table.status")}</TableHead>
@@ -532,7 +532,7 @@ export default function AdminPlaylistsPage() {
             ) : filteredPlaylists.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-24 text-center">
-                  {search ? t("messages.noSearchResults", { defaultValue: "No playlists found matching your search." }) : t("messages.noPlaylists", { defaultValue: "No playlists found" })}
+                  {search ? t("messages.noSearchResults") : t("messages.noPlaylists")}
                 </TableCell>
               </TableRow>
             ) : (
@@ -541,14 +541,14 @@ export default function AdminPlaylistsPage() {
                   <TableCell className="pl-6 font-medium">{pl.title}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className={pl.section === 'impact' ? "text-blue-600 border-blue-200 bg-blue-50" : "text-fuchsia-600 border-fuchsia-200 bg-fuchsia-50"}>
-                      {pl.section || 'impact'}
+                      {t(`sections.${pl.section || 'impact'}`)}
                     </Badge>
                   </TableCell>
                   <TableCell className="capitalize">{pl.type.replace('_', ' ')}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5 text-xs">
                       <Layers className="h-3.5 w-3.5 text-muted-foreground" />
-                      {(pl.items?.length || 0) + (pl.photoItems?.length || 0)} items
+                      {(pl.items?.length || 0) + (pl.photoItems?.length || 0)} {(pl.items?.length || 0) + (pl.photoItems?.length || 0) > 1 ? t("table.itemsPlural") : t("table.item")}
                     </div>
                   </TableCell>
                   <TableCell>

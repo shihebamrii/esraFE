@@ -13,6 +13,8 @@ interface Photo {
   gov: string;
   mediaType?: 'photo' | 'video';
   source?: 'official' | 'community';
+  creatorName?: string;
+  creatorId?: string;
 }
 
 interface MasonryGridProps {

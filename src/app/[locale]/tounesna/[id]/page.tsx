@@ -243,11 +243,22 @@ export default function PhotoDetailsPage() {
               )}
               <h1 className="text-3xl font-bold">{photo.title}</h1>
             </div>
-            <div className="flex items-center text-muted-foreground">
-              <MapPin className="h-4 w-4 me-1" />
-              <Link href={`/tounesna?gov=${photo.governorate}`} className="hover:text-primary hover:underline transition-colors">
-                {photo.governorate}
-              </Link>
+            <div className="flex items-center gap-4 text-muted-foreground flex-wrap">
+              <div className="flex items-center">
+                <MapPin className="h-4 w-4 me-1" />
+                <Link href={`/tounesna?gov=${photo.governorate}`} className="hover:text-primary hover:underline transition-colors">
+                  {photo.governorate}
+                </Link>
+              </div>
+              
+              {photo.createdBy?._id && photo.createdBy?.name && (
+                <div className="flex items-center">
+                  <User className="h-4 w-4 me-1" />
+                  <Link href={`/u/${photo.createdBy._id}`} className="hover:text-primary hover:underline transition-colors font-medium">
+                    {photo.createdBy.name}
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 

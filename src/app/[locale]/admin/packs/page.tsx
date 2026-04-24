@@ -113,13 +113,13 @@ export default function AdminPacksPage() {
       const photos = (photosRes.data?.data?.photos || []).map((p: any) => ({ 
         ...p, 
         type: 'photo',
-        title: p.title || 'Untitled Photo'
+        title: p.title || t("untitledPhoto")
       }));
       const contents = (contentRes.data?.data?.contents || []).map((c: any) => ({ 
         ...c, 
         type: 'video', 
         previewUrl: c.thumbnailUrl,
-        title: c.title || 'Untitled Video'
+        title: c.title || t("untitledVideo")
       }));
       
       setAllMedia([...photos, ...contents]);
@@ -363,9 +363,9 @@ export default function AdminPacksPage() {
                 <div className="space-y-4 border p-4 rounded-lg bg-muted/30">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <h3 className="font-semibold text-sm">Media Collection</h3>
+                      <h3 className="font-semibold text-sm">{t("mediaCollection")}</h3>
                       <p className="text-xs text-muted-foreground">
-                        {(formData.photoIds?.length || 0) + (formData.contentIds?.length || 0)} items selected
+                        {t("itemsSelected", { count: (formData.photoIds?.length || 0) + (formData.contentIds?.length || 0) })}
                       </p>
                     </div>
                     <Dialog 
@@ -377,21 +377,21 @@ export default function AdminPacksPage() {
                     >
                       <DialogTrigger asChild>
                         <Button variant="outline" size="sm" className="bg-white">
-                          Select Photos & Videos
+                          {t("selectMedia")}
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
                         <DialogHeader>
-                          <DialogTitle>Select Content for Pack</DialogTitle>
+                          <DialogTitle>{t("mediaPickerTitle")}</DialogTitle>
                           <DialogDescription>
-                            Choose the photos and videos you want to include in this static collection.
+                            {t("mediaPickerDescription")}
                           </DialogDescription>
                         </DialogHeader>
                         
                         <div className="relative my-4">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                           <Input
-                            placeholder="Search by title..."
+                            placeholder={t("searchMediaPlaceholder")}
                             value={mediaSearch}
                             onChange={(e) => setMediaSearch(e.target.value)}
                             className="pl-10"
@@ -424,7 +424,7 @@ export default function AdminPacksPage() {
                                     <Badge className={`text-[9px] px-1.5 py-0 border-none ${
                                       media.type === 'video' ? 'bg-fuchsia-600' : 'bg-amber-500'
                                     }`}>
-                                      {media.type?.toUpperCase()}
+                                      {t(`types.${media.type}`)}
                                     </Badge>
                                   </div>
 
@@ -451,14 +451,14 @@ export default function AdminPacksPage() {
                           
                           {filteredMedia.length === 0 && (
                             <div className="text-center py-20 text-muted-foreground">
-                              No media found matching your search.
+                              {t("noMediaFound")}
                             </div>
                           )}
                         </div>
 
                         <DialogFooter className="mt-4 pt-4 border-t">
                           <Button onClick={() => setIsMediaPickerOpen(false)}>
-                            Done ({(formData.photoIds?.length || 0) + (formData.contentIds?.length || 0)} selected)
+                            {t("done", { count: (formData.photoIds?.length || 0) + (formData.contentIds?.length || 0) })}
                           </Button>
                         </DialogFooter>
                       </DialogContent>
@@ -638,14 +638,14 @@ export default function AdminPacksPage() {
                     {pack.title}
                     {pack.popular && (
                       <Badge className="ms-2 bg-amber-500 text-white hover:bg-amber-600">
-                        Popular
+                        {t("table.popular")}
                       </Badge>
                     )}
                   </TableCell>
                   <TableCell className="capitalize">
                     {pack.type === "membership" ? t("form.membership") : t("form.collection")}
                   </TableCell>
-                  <TableCell>{pack.priceTND} TND</TableCell>
+                  <TableCell>{pack.priceTND} {t("currency.tnd")}</TableCell>
                   <TableCell>
                     {pack.type === "membership" ? (
                       <div className="text-[10px] space-y-0.5 opacity-70">
@@ -699,7 +699,7 @@ export default function AdminPacksPage() {
             ) : (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
-                  {packSearch ? t("noSearchResults", { defaultValue: "No packs found matching your search." }) : t("noPacks", { defaultValue: "No packs found. Create one to get started." })}
+                  {packSearch ? t("noSearchResults") : t("noPacks")}
                 </TableCell>
               </TableRow>
             )}

@@ -92,7 +92,7 @@ export default function AdminOrdersPage() {
             ) : filteredOrders.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
-                  No orders found
+                  {t("messages.noOrders")}
                 </TableCell>
               </TableRow>
             ) : (
@@ -111,14 +111,14 @@ export default function AdminOrdersPage() {
                     {new Date(order.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="font-bold text-sm">
-                    {order.total} {order.currency === 'TND' ? 'DT' : order.currency}
+                    {order.total} {order.currency === 'TND' ? t("currency.tnd") : order.currency}
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline" className={`rounded-full px-3 capitalize ${
                       order.paymentStatus === 'paid' ? 'text-green-600 border-green-200 bg-green-50' :
                       'text-amber-600 border-amber-200 bg-amber-50'
                     }`}>
-                      {order.paymentStatus}
+                      {t(`status.${order.paymentStatus}`)}
                     </Badge>
                   </TableCell>
                 </TableRow>

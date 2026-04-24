@@ -72,7 +72,11 @@
     "type": "Type",
     "allTypes": "Tous les Types",
     "governorate": "Gouvernorat",
-    "allGovernorates": "Tous les Gouvernorats"
+    "allGovernorates": "Tous les Gouvernorats",
+    "currentFocus": "Focus Actuel",
+    "resetFilter": "Réinitialiser ✕",
+    "storySeriesCollections": "Séries & Collections",
+    "episodes": "Épisodes"
   },
   "ImpactHero": {
     "badge": "Contenus Multimédias Engageants",
@@ -111,7 +115,29 @@
     "access": "Accès",
     "allAccess": "Tous les Accès",
     "free": "Gratuit",
-    "premium": "Premium"
+    "premium": "Premium",
+    "source": "Source",
+    "allSources": "Toutes les sources",
+    "official": "Officiel",
+    "community": "Communauté",
+    "exploreRegions": "Explorer les Régions",
+    "the24Regions": "Les 24 Régions",
+    "mapHint": "Survolez pour découvrir. Cliquez sur une province pour filtrer la galerie.",
+    "filteringByProvince": "Filtrage par Province",
+    "clearFilter": "Effacer ✕",
+    "collectionLabel": "Collection",
+    "visionsOf": "Visions de {gov}",
+    "allOfTunisia": "Toute la Tunisie",
+    "regions": "Régions",
+    "unveilingCollection": "Dévoilement de la collection…",
+    "dunesAreEmpty": "Les dunes sont vides",
+    "adjustFilters": "Essayez d'ajuster vos filtres ou de vider la recherche pour trouver ce que vous cherchez.",
+    "photoCollections": "Collections Photos",
+    "items": "éléments",
+    "episodes": "Épisodes",
+    "currentFocus": "Focus Actuel",
+    "resetFilter": "Réinitialiser ✕",
+    "storySeriesCollections": "Séries & Collections"
   },
   "UserDashboard": {
     "greeting": {
@@ -283,6 +309,47 @@
     "layout": {
       "redirecting": "Redirection..."
     },
+    "uploads": {
+      "title": "Mes Téléversements",
+      "subtitle": "Surveillez et gérez vos photos et vidéos téléversées",
+      "uploadNew": "Nouveau Téléversement",
+      "searchPlaceholder": "Rechercher vos téléversements...",
+      "filterByStatus": "Filtrer par statut",
+      "allStatus": "Tous les Statuts",
+      "pending": "En attente",
+      "approved": "Approuvé",
+      "rejected": "Rejeté",
+      "yourUploads": "Vos Téléversements",
+      "noUploadsTitle": "Pas encore de téléversements",
+      "noUploadsSubtitle": "Commencez à partager vos photos et vidéos avec la communauté",
+      "uploadFirst": "Téléverser Votre Première Photo",
+      "preview": "Aperçu",
+      "tableTitle": "Titre",
+      "status": "Statut",
+      "type": "Type",
+      "price": "Prix",
+      "date": "Date",
+      "actions": "Actions",
+      "personalPrice": "Personnel",
+      "commercialPrice": "Commercial",
+      "editUpload": "Modifier le Téléversement",
+      "editDescription": "Mettez à jour les détails de votre téléversement. Vous ne pouvez pas modifier le fichier photo/vidéo.",
+      "titleLabel": "Titre",
+      "descriptionLabel": "Description",
+      "governorateLabel": "Gouvernorat",
+      "personalPriceTND": "Prix Personnel (TND)",
+      "commercialPriceTND": "Prix Commercial (TND)",
+      "saveChanges": "Enregistrer les modifications",
+      "deleteUpload": "Supprimer le Téléversement",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{title}\" ? Cette action ne peut pas être annulée.",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "updateSuccess": "Téléversement mis à jour avec succès !",
+      "updateFailed": "Échec de la mise à jour du téléversement",
+      "deleteSuccess": "Téléversement supprimé avec succès !",
+      "deleteFailed": "Échec de la suppression du téléversement",
+      "loadFailed": "Échec du chargement de vos téléversements"
+    },
     "quota": {
       "title": "Vos Quotas Actifs",
       "activePack": "{count} {count, plural, =1 {Pack Actif} other {Packs Actifs}}",
@@ -338,7 +405,34 @@
       "photosTounesna": "Tounesna",
       "orders": "Commandes",
       "inquiries": "Messages",
-      "overview": "Aperçu"
+      "overview": "Aperçu",
+      "logout": "Déconnexion"
+    },
+    "governorates": {
+      "ariana": "Ariana",
+      "beja": "Béja",
+      "benArous": "Ben Arous",
+      "bizerte": "Bizerte",
+      "gabes": "Gabès",
+      "gafsa": "Gafsa",
+      "jendouba": "Jendouba",
+      "kairouan": "Kairouan",
+      "kasserine": "Kasserine",
+      "kebili": "Kébili",
+      "kef": "Le Kef",
+      "mahdia": "Mahdia",
+      "manouba": "La Manouba",
+      "medenine": "Médenine",
+      "monastir": "Monastir",
+      "nabeul": "Nabeul",
+      "sfax": "Sfax",
+      "sidiBouzid": "Sidi Bouzid",
+      "siliana": "Siliana",
+      "sousse": "Sousse",
+      "tataouine": "Tataouine",
+      "tozeur": "Tozeur",
+      "tunis": "Tunis",
+      "zaghouan": "Zaghouan"
     },
     "home": {
       "title": "Tableau de bord",
@@ -352,7 +446,33 @@
       "videoPlatform": "Dans la plateforme vidéo",
       "tounesnaPhotos": "Photos Tounesna",
       "photoGallery": "Dans la galerie photos",
-      "videos": "Vidéos"
+      "videos": "Vidéos",
+      "overviewDescription": "Aperçu complet de la plateforme",
+      "monthlyRevenue": "Revenus Mensuels",
+      "sixMonthsTND": "6 derniers mois (TND)",
+      "revenueLabel": "Revenu (TND)",
+      "monthlyDownloads": "Téléchargements Mensuels",
+      "sixMonths": "6 derniers mois",
+      "downloadsLabel": "Téléchargements",
+      "newUsers": "Nouveaux Utilisateurs",
+      "registrationsPerMonth": "Inscriptions par mois",
+      "newUsersLabel": "Nouveaux utilisateurs",
+      "contentDistribution": "Répartition Contenus",
+      "byMediaType": "Par type de média",
+      "noData": "Aucune donnée",
+      "recentOrders": "Commandes Récentes",
+      "fiveRecentPaid": "5 dernières commandes payées",
+      "noOrders": "Aucune commande",
+      "article": "article",
+      "articles": "articles",
+      "paid": "payé",
+      "topContent": "Top Contenus",
+      "mostDownloaded": "Les plus téléchargés",
+      "noContent": "Aucun contenu",
+      "downloadsShort": "téléch.",
+      "currency": {
+        "tnd": "DT"
+      }
     },
     "users": {
       "title": "Gestion des Utilisateurs",
@@ -363,6 +483,11 @@
         "status": "Statut",
         "quotas": "Packs Actifs & Quotas",
         "actions": "Actions"
+      },
+      "noUsersFound": "Aucun utilisateur trouvé.",
+      "roles": {
+        "user": "Utilisateur",
+        "admin": "Admin"
       },
       "status": {
         "active": "Actif",
@@ -469,6 +594,23 @@
         "deleteFailed": "Échec de la suppression du pack",
         "saveSuccess": "Pack enregistré avec succès",
         "saveFailed": "Échec de l'enregistrement du pack"
+      },
+      "untitledPhoto": "Photo sans titre",
+      "untitledVideo": "Vidéo sans titre",
+      "mediaCollection": "Collection de médias",
+      "itemsSelected": "{count} éléments sélectionnés",
+      "selectMedia": "Sélectionner Photos & Vidéos",
+      "mediaPickerTitle": "Sélectionner le contenu du pack",
+      "mediaPickerDescription": "Choisissez les photos et vidéos que vous souhaitez inclure dans cette collection statique.",
+      "searchMediaPlaceholder": "Rechercher par titre...",
+      "noMediaFound": "Aucun média trouvé correspondant à votre recherche.",
+      "done": "Terminé ({count} sélectionnés)",
+      "types": {
+        "photo": "Photo",
+        "video": "Vidéo"
+      },
+      "currency": {
+        "tnd": "DT"
       }
     },
     "photos": {
@@ -528,12 +670,15 @@
         "fetchFailed": "Échec du chargement des photos",
         "deleteSuccess": "Photo supprimée avec succès",
         "deleteFailed": "Échec de la suppression de la photo",
-        "approveSuccess": "Photo {status} avec succès",
-        "approveFailed": "Échec de l'action {status} sur la photo",
         "updateSuccess": "Photo mise à jour avec succès",
         "updateFailed": "Échec de la mise à jour de la photo",
+        "approveSuccess": "Photo {status} avec succès",
+        "approveFailed": "Échec de l'action {status} sur la photo",
         "saveSuccess": "Photo enregistrée avec succès",
         "saveFailed": "Échec de l'enregistrement de la photo"
+      },
+      "currency": {
+        "tnd": "DT"
       }
     },
     "content": {
@@ -549,16 +694,7 @@
         "approved": "Approuvées",
         "rejected": "Rejetées"
       },
-      "table": {
-        "title": "Titre",
-        "user": "Utilisateur",
-        "type": "Type",
-        "status": "Statut",
-        "date": "Date",
-        "actions": "Actions",
-        "noContent": "Aucun contenu trouvé",
-        "unknown": "Inconnu"
-      },
+
       "actions": {
         "edit": "Modifier",
         "delete": "Supprimer"
@@ -571,11 +707,27 @@
         "description": "Description",
         "descriptionPlaceholder": "Entrez la description du contenu",
         "type": "Type",
+        "typePlaceholder": "ex: vidéo, reel, documentaire, podcast...",
         "saveChanges": "Enregistrer les modifications",
         "deleteContent": "Supprimer le Contenu",
         "deleteDescription": "Êtes-vous sûr de vouloir supprimer {title} ? Cette action ne peut pas être annulée.",
         "cancel": "Annuler",
         "delete": "Supprimer"
+      },
+      "table": {
+        "title": "Titre",
+        "user": "Utilisateur",
+        "type": "Type",
+        "status": "Statut",
+        "date": "Date",
+        "actions": "Actions",
+        "noContent": "Aucun contenu trouvé",
+        "unknown": "Inconnu",
+        "approve": "Approuver",
+        "reject": "Rejeter",
+        "approved": "Approuvé",
+        "pending": "En attente",
+        "rejected": "Rejeté"
       },
       "messages": {
         "fetchFailed": "Échec du chargement du contenu",
@@ -600,7 +752,16 @@
         "unknown": "Inconnu"
       },
       "messages": {
-        "fetchFailed": "Échec de la récupération des commandes"
+        "fetchFailed": "Échec de la récupération des commandes",
+        "noOrders": "Aucune commande trouvée"
+      },
+      "status": {
+        "paid": "Payé",
+        "pending": "En attente",
+        "failed": "Échoué"
+      },
+      "currency": {
+        "tnd": "DT"
       }
     },
     "playlists": {
@@ -612,13 +773,16 @@
       "messages": {
         "fetchFailed": "Échec du chargement des listes de lecture",
         "contentFailed": "Échec du chargement du contenu disponible",
+        "photosFailed": "Échec du chargement des photos disponibles",
         "saveSuccess": "Liste de lecture enregistrée avec succès",
         "saveFailed": "Échec de l'enregistrement de la liste de lecture",
         "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette liste de lecture ?",
         "deleteSuccess": "Liste de lecture supprimée avec succès",
         "deleteFailed": "Échec de la suppression de la liste de lecture",
         "noPlaylists": "Aucune liste de lecture trouvée",
-        "noSearchResults": "Aucune liste de lecture trouvée correspondant à votre recherche."
+        "noSearchResults": "Aucune liste de lecture trouvée correspondant à votre recherche.",
+        "itemAlreadyAdded": "Élément déjà dans la liste de lecture",
+        "photoAlreadyAdded": "Photo déjà dans la liste de lecture"
       },
       "form": {
         "title": "Titre de la Liste de Lecture",
@@ -633,19 +797,67 @@
         "themes": "Thèmes (séparés par des virgules)",
         "tags": "Tags (séparés par des virgules)",
         "active": "Actif",
+        "section": "Section",
         "content": "Contenu de la Liste",
         "addContent": "Ajouter du Contenu",
         "selectContent": "Sélectionner le contenu à ajouter",
-        "noItems": "Aucun élément dans cette liste de lecture pour le moment. Sélectionnez du contenu ci-dessus pour en ajouter."
+        "noItems": "Aucun élément dans cette liste de lecture pour le moment. Sélectionnez du contenu ci-dessus pour en ajouter.",
+        "photoItems": "Éléments Photos",
+        "selectPhoto": "Sélectionner une photo...",
+        "noPhotoItems": "Aucune photo dans cette liste pour le moment. Sélectionnez des photos ci-dessus pour en ajouter."
+      },
+      "sections": {
+        "impact": "Impact",
+        "tounesna": "Tounesna"
       },
       "table": {
         "name": "Nom de la Liste",
+        "section": "Section",
         "type": "Type",
-        "items": "Articles",
+        "items": "Éléments",
         "status": "Statut",
         "actions": "Actions",
         "active": "Actif",
-        "inactive": "Inactif"
+        "inactive": "Inactif",
+        "item": "élément",
+        "itemsPlural": "éléments"
+      }
+    },
+    "inquiries": {
+      "title": "Messages",
+      "description": "Gérer les messages envoyés depuis le formulaire de contact.",
+      "searchPlaceholder": "Rechercher des messages...",
+      "table": {
+        "sender": "Expéditeur",
+        "subject": "Sujet",
+        "date": "Date",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "status": {
+        "pending": "En attente",
+        "read": "Lu",
+        "replied": "Répondu",
+        "archived": "Archivé"
+      },
+      "dialog": {
+        "from": "De :",
+        "adminNotes": "Notes Administrateur",
+        "adminNotesPlaceholder": "Ajouter des notes internes sur cette demande...",
+        "markAsReplied": "Marquer comme répondu",
+        "archive": "Archiver",
+        "saveNotes": "Enregistrer les notes"
+      },
+      "messages": {
+        "loading": "Chargement des messages...",
+        "noSearchResults": "Aucun message trouvé correspondant à votre recherche.",
+        "noInquiries": "Aucun message trouvé.",
+        "fetchFailed": "Échec du chargement des demandes",
+        "updateSuccess": "Demande mise à jour",
+        "updateFailed": "Échec de la mise à jour de la demande",
+        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette demande ?",
+        "deleteSuccess": "Demande supprimée",
+        "deleteFailed": "Échec de la suppression de la demande"
       }
     },
     "upload": {
@@ -705,6 +917,26 @@
             "reel": "Reel",
             "podcast": "Podcast",
             "documentary": "Documentaire"
+          },
+          "pricingTitle": "Tarification de la Licence",
+          "personalLicense": "Licence Personnelle (TND)",
+          "personalDescription": "Pour projets personnels, blogs, usage non-commercial",
+          "commercialLicense": "Licence Commerciale (TND)",
+          "commercialDescription": "Pour entreprises, publicité, projets commerciaux",
+          "pricingNote": "Mettre les deux à 0 pour un contenu gratuit. Laisser Commercial à 0 pour n'offrir que la licence Personnelle.",
+          "attributionDefault": "Contenu Officiel Tounesna",
+          "messages": {
+            "selectFile": "Veuillez sélectionner un fichier {type}",
+            "selectThumbnail": "Veuillez sélectionner une image miniature pour la vidéo",
+            "preparing": "Préparation du téléversement...",
+            "uploading": "Téléversement vers le serveur...",
+            "updating": "Mise à jour de la photo...",
+            "saving": "Enregistrement des modifications...",
+            "waitMessage": "Veuillez ne pas fermer cette page"
+          },
+          "overlay": {
+            "updating": "Mise à jour de la photo...",
+            "uploading": "Téléversement de la photo..."
           }
         },
         "video": {
@@ -726,19 +958,28 @@
           "free": "Gratuit",
           "premium": "Premium",
           "price": "Prix (TND)",
+          "pricingTitle": "Tarification de la Licence",
+          "personalLicense": "Licence Personnelle (TND)",
+          "personalDescription": "Pour projets personnels, blogs, usage non-commercial",
+          "commercialLicense": "Licence Commerciale (TND)",
+          "commercialDescription": "Pour entreprises, publicité, projets commerciaux",
+          "pricingNote": "Mettre les deux à 0 pour un contenu gratuit. Laisser Commercial à 0 pour n'offrir que la licence Personnelle.",
           "visibility": "Visibilité",
           "public": "Public",
           "private": "Privé",
-          "instagram": "Nom d'utilisateur Instagram (pour Reels)",
+          "instagram": "Nom d'utilisateur Instagram",
           "requiredForReels": "Requis pour les Reels",
           "instagramInfo": "Cela permettra aux spectateurs de suivre directement le créateur sur Instagram.",
-          "file": "Fichier Vidéo/Audio *",
+          "typePlaceholder": "ex: vidéo, reel, documentaire, podcast...",
+          "file": "Fichier Média",
           "thumbnail": "Image de Vignette",
+          "fileInfo": "MP4, WEBM, MP3 jusqu'à 500Mo",
+          "thumbnailInfo": "JPG, PNG jusqu'à 5Mo",
           "submit": "Téléverser le Contenu",
           "uploading": "Téléversement...",
-          "selectFile": "Veuillez sélectionner un fichier vidéo",
-          "success": "Vidéo téléversée avec succès !",
-          "failed": "Échec du téléversement de la vidéo",
+          "selectFile": "Veuillez sélectionner un fichier",
+          "success": "Contenu téléversé avec succès",
+          "failed": "Échec du téléversement du contenu",
           "youth": "Jeunesse",
           "womenArtisans": "Femmes Artisanes",
           "environment": "Environnement",
@@ -822,17 +1063,56 @@
   "Cart": {
     "title": "Panier",
     "empty": "Votre panier est vide",
+    "emptyTitle": "Votre Panier est Vide",
+    "emptyDescription": "Il semble que vous n'avez pas encore ajouté d'articles.",
     "total": "Total",
     "checkout": "Passer à la Caisse",
+    "proceedToCheckout": "Passer à la Caisse",
     "remove": "Supprimer",
-    "continueShopping": "Continuer les Achats"
+    "continueShopping": "Continuer les Achats",
+    "shoppingCart": "Panier d'Achat",
+    "orderSummary": "Récapitulatif de Commande",
+    "subtotal": "Sous-total",
+    "taxEstimated": "Taxes (Estimées)",
+    "commercial": "Commercial",
+    "personal": "Personnel",
+    "noImg": "Pas d'image"
   },
   "Checkout": {
-    "title": "Paiement",
+    "title": "Paiement Sécurisé",
     "orderSummary": "Récapitulatif de Commande",
     "paymentMethod": "Méthode de Paiement",
     "placeOrder": "Passer la Commande",
-    "processing": "Traitement en cours..."
+    "processing": "Traitement en cours...",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "free": "Gratuit",
+    "total": "Total",
+    "secureCheckout": "Paiement Sécurisé",
+    "secureDescription": "Complétez votre commande en toute sécurité. Nous protégeons vos données avec un cryptage de pointe.",
+    "paymentDetails": "Détails du Paiement",
+    "secureTransaction": "Transaction sécurisée et cryptée 256 bits",
+    "personalInformation": "Informations Personnelles",
+    "fullName": "Nom Complet",
+    "emailAddress": "Adresse Email",
+    "cardDetails": "Détails de la Carte",
+    "cardNumber": "Numéro de Carte",
+    "expiryDate": "Date d'Expiration",
+    "cvc": "CVC",
+    "payWithAmount": "Payer {amount} TND",
+    "safeSecurePayment": "Paiement Sûr et Sécurisé",
+    "safeSecureDescription": "Vos transactions sont cryptées et protégées par une détection avancée de la fraude.",
+    "orderSummarySubtitle": "Comprend toutes les taxes et frais applicables",
+    "emptyTitle": "Votre panier est vide",
+    "emptyDescription": "Ajoutez des articles avant de passer à la caisse.",
+    "returnHome": "Retour à l'accueil",
+    "successMessage": "Commande passée avec succès !",
+    "failedMessage": "Échec du paiement. Veuillez réessayer.",
+    "invalidEmail": "Adresse email invalide",
+    "nameTooShort": "Le nom est trop court",
+    "cardNumberRequired": "Le numéro de carte est requis",
+    "expiryRequired": "La date d'expiration est requise",
+    "cvcRequired": "Le code CVC est requis"
   },
   "Orders": {
     "title": "Mes Commandes",
@@ -908,7 +1188,10 @@
     "sideTitle1": "Vidéos, Réels et Podcasts",
     "reelsBadge": "Histoire du Projet",
     "sideTitle2": "Femmes artisanes, jeunesse, environnement",
-    "podcastBadge": "Histoire à Impact"
+    "podcastBadge": "Histoire à Impact",
+    "cnbeesLabel": "Soutenir sur CnBees",
+    "cnbeesBannerText": "Soutenez ce projet et ses créateurs directement via le financement participatif sur CnBees.",
+    "cnbeesCta": "Soutenir maintenant"
   },
   "License": {
     "personal": "Personnel",
@@ -939,5 +1222,18 @@
     "orBuySeparately": "Ou acheter séparément",
     "alreadyOwned": "Déjà Possédé",
     "alreadyOwnedDesc": "Vous avez déjà acheté ou échangé cet article."
+  },
+  "UserProfile": {
+    "notFound": "Utilisateur non trouvé",
+    "goBack": "Retour",
+    "back": "Retour",
+    "officialContributor": "Contributeur Officiel",
+    "officialCreator": "Créateur Officiel",
+    "communityCreator": "Créateur Communautaire",
+    "joined": "Rejoint le {date}",
+    "uploads": "Téléversements",
+    "gallery": "Galerie",
+    "noUploadsTitle": "Pas encore de téléversements",
+    "noUploadsDesc": "Ce créateur n'a pas encore partagé de photos."
   }
 }

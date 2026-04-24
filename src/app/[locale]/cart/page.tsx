@@ -8,16 +8,19 @@ import { Trash2, ArrowRight, User, Briefcase } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 
+import { useTranslations } from "next-intl";
+
 export default function CartPage() {
+  const t = useTranslations("Cart");
   const { items, removeItem, total } = useCartStore();
 
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
-        <p className="text-muted-foreground mb-8">Looks like you haven&apos;t added any items yet.</p>
+        <h1 className="text-3xl font-bold mb-4">{t("emptyTitle")}</h1>
+        <p className="text-muted-foreground mb-8">{t("emptyDescription")}</p>
         <Link href="/">
-          <Button size="lg">Continue Shopping</Button>
+          <Button size="lg">{t("continueShopping")}</Button>
         </Link>
       </div>
     );
@@ -25,7 +28,7 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+      <h1 className="text-3xl font-bold mb-8">{t("shoppingCart")}</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
@@ -36,7 +39,7 @@ export default function CartPage() {
                {item.thumbnail ? (
                     <img src={item.thumbnail} alt={item.title} className="object-cover w-full h-full" loading="lazy" />
                   ) : (
-                    <div className="w-full h-full bg-secondary flex items-center justify-center text-xs">No Img</div>
+                    <div className="w-full h-full bg-secondary flex items-center justify-center text-xs">{t("noImg")}</div>
                   )}
                </div>
                
@@ -54,9 +57,9 @@ export default function CartPage() {
                        }`}
                      >
                        {item.licenseType === 'commercial' ? (
-                         <><Briefcase className="h-3 w-3 me-0.5" /> Commercial</>
+                         <><Briefcase className="h-3 w-3 me-0.5" /> {t("commercial")}</>
                        ) : (
-                         <><User className="h-3 w-3 me-0.5" /> Personal</>
+                         <><User className="h-3 w-3 me-0.5" /> {t("personal")}</>
                        )}
                      </Badge>
                    )}
@@ -78,23 +81,23 @@ export default function CartPage() {
 
         <div className="lg:col-span-1">
           <Card className="p-6 sticky top-24">
-             <h3 className="font-semibold text-xl mb-4">Order Summary</h3>
+             <h3 className="font-semibold text-xl mb-4">{t("orderSummary")}</h3>
              <div className="flex justify-between mb-2">
-               <span className="text-muted-foreground">Subtotal</span>
+               <span className="text-muted-foreground">{t("subtotal")}</span>
                <span>{total()} TND</span>
              </div>
              <div className="flex justify-between mb-4 pb-4 border-b">
-               <span className="text-muted-foreground">Tax (Estimated)</span>
+               <span className="text-muted-foreground">{t("taxEstimated")}</span>
                <span>0.00 TND</span>
              </div>
              <div className="flex justify-between text-xl font-bold mb-6">
-               <span>Total</span>
+               <span>{t("total")}</span>
                <span>{total()} TND</span>
              </div>
              
              <Link href="/checkout">
               <Button className="w-full h-12 text-lg" size="lg">
-                Proceed to Checkout <ArrowRight className="ms-2 h-5 w-5" />
+                {t("proceedToCheckout")} <ArrowRight className="ms-2 h-5 w-5" />
               </Button>
              </Link>
           </Card>

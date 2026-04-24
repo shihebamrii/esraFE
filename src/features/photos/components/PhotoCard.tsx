@@ -2,9 +2,9 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, ShoppingCart, PlayCircle, Sparkles } from "lucide-react";
+import { MapPin, ShoppingCart, PlayCircle, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
@@ -20,10 +20,13 @@ interface PhotoCardProps {
   height: number;
   mediaType?: 'photo' | 'video';
   source?: 'official' | 'community';
+  creatorName?: string;
+  creatorId?: string;
 }
 
-export function PhotoCard({ id, title, url, location, price, width, height, mediaType, source }: PhotoCardProps) {
+export function PhotoCard({ id, title, url, location, price, width, height, mediaType, source, creatorName, creatorId }: PhotoCardProps) {
   const addItem = useCartStore(state => state.addItem);
+  const router = useRouter();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -109,13 +112,31 @@ export function PhotoCard({ id, title, url, location, price, width, height, medi
         </div>
 
         {/* Clean Caption */}
-        <div>
+        <div className="pt-1">
            <div className="flex justify-between items-start">
               <h3 className="text-sm font-semibold text-foreground leading-tight">{title}</h3>
            </div>
-           <div className="flex items-center text-muted-foreground text-xs mt-1">
-              <MapPin className="h-3 w-3 mr-1" />
-              <span>{location}</span>
+           <div className="flex items-center justify-between mt-1.5">
+               <div className="flex items-center text-muted-foreground text-xs">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>{location}</span>
+               </div>
+               
+               {creatorName && creatorId && (
+                 <div 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      router.push(`/u/${creatorId}`);
+                    }}
+                    className="flex items-center gap-1.5 text-xs font-medium text-foreground hover:text-[#ffcc1a] transition-colors bg-white/50 dark:bg-black/20 px-2 py-1 rounded-full shadow-sm border border-black/5 dark:border-white/5 cursor-pointer"
+                 >
+                    <div className="h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+                      <User className="h-2.5 w-2.5 text-primary" />
+                    </div>
+                    <span className="truncate max-w-[90px]">{creatorName}</span>
+                 </div>
+                 )}
            </div>
         </div>
       </motion.div>

@@ -33,10 +33,30 @@ export function UploadVideoForm() {
   });
 
   const governorates = [
-    "Ariana", "Beja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", 
-    "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", 
-    "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", 
-    "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"
+    { key: "ariana", label: tDashboard("governorates.ariana") },
+    { key: "beja", label: tDashboard("governorates.beja") },
+    { key: "benArous", label: tDashboard("governorates.benArous") },
+    { key: "bizerte", label: tDashboard("governorates.bizerte") },
+    { key: "gabes", label: tDashboard("governorates.gabes") },
+    { key: "gafsa", label: tDashboard("governorates.gafsa") },
+    { key: "jendouba", label: tDashboard("governorates.jendouba") },
+    { key: "kairouan", label: tDashboard("governorates.kairouan") },
+    { key: "kasserine", label: tDashboard("governorates.kasserine") },
+    { key: "kebili", label: tDashboard("governorates.kebili") },
+    { key: "kef", label: tDashboard("governorates.kef") },
+    { key: "mahdia", label: tDashboard("governorates.mahdia") },
+    { key: "manouba", label: tDashboard("governorates.manouba") },
+    { key: "medenine", label: tDashboard("governorates.medenine") },
+    { key: "monastir", label: tDashboard("governorates.monastir") },
+    { key: "nabeul", label: tDashboard("governorates.nabeul") },
+    { key: "sfax", label: tDashboard("governorates.sfax") },
+    { key: "sidiBouzid", label: tDashboard("governorates.sidiBouzid") },
+    { key: "siliana", label: tDashboard("governorates.siliana") },
+    { key: "sousse", label: tDashboard("governorates.sousse") },
+    { key: "tataouine", label: tDashboard("governorates.tataouine") },
+    { key: "tozeur", label: tDashboard("governorates.tozeur") },
+    { key: "tunis", label: tDashboard("governorates.tunis") },
+    { key: "zaghouan", label: tDashboard("governorates.zaghouan") }
   ];
   const themesList = [
     { label: t("youth", { defaultValue: "Youth" }), value: "youth" },
@@ -116,7 +136,7 @@ export function UploadVideoForm() {
           >
             <option value="">{t("selectRegion")}</option>
             {governorates.map((gov) => (
-              <option key={gov} value={gov}>{gov}</option>
+              <option key={gov.key} value={gov.label}>{gov.label}</option>
             ))}
           </select>
         </div>
@@ -171,26 +191,26 @@ export function UploadVideoForm() {
       </div>
 
       <div className="space-y-3 p-4 border border-violet-200/50 bg-violet-50/30 rounded-xl dark:bg-violet-900/10 dark:border-violet-800/50">
-        <Label className="text-base font-semibold flex items-center gap-2">💰 License Pricing</Label>
+        <Label className="text-base font-semibold flex items-center gap-2">💰 {t("pricingTitle")}</Label>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="video-price-personal" className="text-sm flex items-center gap-1.5">
               <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
-              Personal License (TND)
+              {t("personalLicense")}
             </Label>
             <Input id="video-price-personal" name="pricePersonal" type="number" min="0" step="0.1" value={formData.pricePersonal} onChange={handleChange} placeholder="0" />
-            <p className="text-xs text-muted-foreground">For personal projects, blogs, non-commercial use</p>
+            <p className="text-xs text-muted-foreground">{t("personalDescription")}</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="video-price-commercial" className="text-sm flex items-center gap-1.5">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
-              Commercial License (TND)
+              {t("commercialLicense")}
             </Label>
             <Input id="video-price-commercial" name="priceCommercial" type="number" min="0" step="0.1" value={formData.priceCommercial} onChange={handleChange} placeholder="0" />
-            <p className="text-xs text-muted-foreground">For business, advertising, commercial projects</p>
+            <p className="text-xs text-muted-foreground">{t("commercialDescription")}</p>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground italic">Set both to 0 for free content. Leave Commercial at 0 to offer only Personal license.</p>
+        <p className="text-xs text-muted-foreground italic">{t("pricingNote")}</p>
       </div>
 
       {formData.type === "reel" && (
@@ -224,7 +244,7 @@ export function UploadVideoForm() {
             <input type="file" accept="video/*,audio/*" required onChange={(e) => handleFileChange(e, 'file')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
             <p className="text-sm font-medium">{files.file ? files.file.name : tDashboard("upload.form.photo.clickToUpload", { type: "file" })}</p>
-            <p className="text-xs text-muted-foreground mt-1">MP4, WEBM, MP3 up to 500MB</p>
+            <p className="text-xs text-muted-foreground mt-1">{t("fileInfo")}</p>
           </div>
         </div>
 
@@ -234,7 +254,7 @@ export function UploadVideoForm() {
             <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'thumbnail')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <UploadCloud className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
             <p className="text-sm font-medium">{files.thumbnail ? files.thumbnail.name : tDashboard("upload.form.photo.clickToUpload", { type: "image" })}</p>
-            <p className="text-xs text-muted-foreground mt-1">JPG, PNG up to 5MB</p>
+            <p className="text-xs text-muted-foreground mt-1">{t("thumbnailInfo")}</p>
           </div>
         </div>
       </div>

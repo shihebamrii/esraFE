@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { AdminService } from "@/features/admin/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   AreaChart,
   Area,
@@ -111,6 +111,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export default function AdminDashboardPage() {
   const t = useTranslations("AdminDashboard.home");
+  const locale = useLocale();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -124,7 +125,7 @@ export default function AdminDashboardPage() {
   const statCards = [
     {
       title: t("totalRevenue", { defaultValue: "Total Revenue" }),
-      value: stats?.totalRevenue || "0 TND",
+      value: stats?.totalRevenue ? `${stats.totalRevenue} ${t("currency.tnd")}` : `0 ${t("currency.tnd")}`,
       icon: DollarSign,
       description: t("paidOrders", { defaultValue: "All paid orders" }),
       accent: "from-violet-500 to-purple-600",
@@ -164,7 +165,7 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Aperçu complet de la plateforme</p>
+        <p className="text-muted-foreground mt-1 text-sm">{t("overviewDescription")}</p>
       </div>
 
       {/* Stat Cards */}
@@ -181,8 +182,8 @@ export default function AdminDashboardPage() {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold">Revenus Mensuels</CardTitle>
-                <CardDescription>6 derniers mois (TND)</CardDescription>
+                <CardTitle className="text-base font-semibold">{t("monthlyRevenue")}</CardTitle>
+                <CardDescription>{t("sixMonthsTND")}</CardDescription>
               </div>
               <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
                 <TrendingUp className="h-4 w-4 text-violet-500" />
@@ -208,7 +209,7 @@ export default function AdminDashboardPage() {
                   <Area
                     type="monotone"
                     dataKey="revenue"
-                    name="Revenu (TND)"
+                    name={t("revenueLabel")}
                     stroke="#8b5cf6"
                     strokeWidth={2}
                     fill="url(#revenueGrad)"
@@ -226,8 +227,8 @@ export default function AdminDashboardPage() {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold">Téléchargements Mensuels</CardTitle>
-                <CardDescription>6 derniers mois</CardDescription>
+                <CardTitle className="text-base font-semibold">{t("monthlyDownloads")}</CardTitle>
+                <CardDescription>{t("sixMonths")}</CardDescription>
               </div>
               <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
                 <Download className="h-4 w-4 text-cyan-500" />
@@ -246,7 +247,7 @@ export default function AdminDashboardPage() {
                   <Tooltip content={<CustomTooltip />} />
                   <Bar
                     dataKey="downloads"
-                    name="Téléchargements"
+                    name={t("downloadsLabel")}
                     fill="#06b6d4"
                     radius={[6, 6, 0, 0]}
                   />
@@ -264,8 +265,8 @@ export default function AdminDashboardPage() {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold">Nouveaux Utilisateurs</CardTitle>
-                <CardDescription>Inscriptions par mois</CardDescription>
+                <CardTitle className="text-base font-semibold">{t("newUsers")}</CardTitle>
+                <CardDescription>{t("registrationsPerMonth")}</CardDescription>
               </div>
               <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                 <Users className="h-4 w-4 text-emerald-500" />
@@ -291,7 +292,7 @@ export default function AdminDashboardPage() {
                   <Line
                     type="monotone"
                     dataKey="users"
-                    name="Nouveaux utilisateurs"
+                    name={t("newUsersLabel")}
                     stroke="#10b981"
                     strokeWidth={2.5}
                     dot={{ fill: "#10b981", r: 4 }}
@@ -306,15 +307,15 @@ export default function AdminDashboardPage() {
         {/* Content Type Pie */}
         <Card className="border border-border/50">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Répartition Contenus</CardTitle>
-            <CardDescription>Par type de média</CardDescription>
+            <CardTitle className="text-base font-semibold">{t("contentDistribution")}</CardTitle>
+            <CardDescription>{t("byMediaType")}</CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
               <Skeleton className="h-52 w-full rounded-xl" />
             ) : !stats?.contentTypes?.length ? (
               <div className="h-52 flex items-center justify-center text-muted-foreground text-sm">
-                Aucune donnée
+                {t("noData")}
               </div>
             ) : (
               <div className="flex flex-col items-center gap-4">
@@ -360,8 +361,8 @@ export default function AdminDashboardPage() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold">Commandes Récentes</CardTitle>
-                <CardDescription>5 dernières commandes payées</CardDescription>
+                <CardTitle className="text-base font-semibold">{t("recentOrders")}</CardTitle>
+                <CardDescription>{t("fiveRecentPaid")}</CardDescription>
               </div>
               <ShoppingCart className="h-4 w-4 text-muted-foreground" />
             </div>
@@ -374,7 +375,7 @@ export default function AdminDashboardPage() {
                 ))}
               </div>
             ) : !stats?.recentOrders?.length ? (
-              <p className="text-sm text-muted-foreground py-8 text-center">Aucune commande</p>
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("noOrders")}</p>
             ) : (
               <div className="space-y-2">
                 {stats.recentOrders.map((order: any) => (
@@ -389,8 +390,8 @@ export default function AdminDashboardPage() {
                       <div className="min-w-0">
                         <p className="text-sm font-medium truncate">{order.customer}</p>
                         <p className="text-[11px] text-muted-foreground">
-                          {order.items} article{order.items > 1 ? "s" : ""} ·{" "}
-                          {new Date(order.date).toLocaleDateString("fr-FR", {
+                          {order.items} {order.items > 1 ? t("articles") : t("article")} ·{" "}
+                          {new Date(order.date).toLocaleDateString(locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US', {
                             day: "2-digit",
                             month: "short",
                           })}
@@ -398,9 +399,9 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-sm font-bold text-emerald-500">{order.total} TND</p>
+                      <p className="text-sm font-bold text-emerald-500">{order.total} {t("currency.tnd")}</p>
                       <span className="text-[10px] bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full font-medium">
-                        payé
+                        {t("paid")}
                       </span>
                     </div>
                   </div>
@@ -415,8 +416,8 @@ export default function AdminDashboardPage() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold">Top Contenus</CardTitle>
-                <CardDescription>Les plus téléchargés</CardDescription>
+                <CardTitle className="text-base font-semibold">{t("topContent")}</CardTitle>
+                <CardDescription>{t("mostDownloaded")}</CardDescription>
               </div>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </div>
@@ -429,7 +430,7 @@ export default function AdminDashboardPage() {
                 ))}
               </div>
             ) : !stats?.topContent?.length && !stats?.topPhotos?.length ? (
-              <p className="text-sm text-muted-foreground py-8 text-center">Aucun contenu</p>
+              <p className="text-sm text-muted-foreground py-8 text-center">{t("noContent")}</p>
             ) : (
               <div className="space-y-2">
                 {[
@@ -457,7 +458,7 @@ export default function AdminDashboardPage() {
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-sm font-bold">{item.downloads || 0}</p>
-                          <p className="text-[10px] text-muted-foreground">téléch.</p>
+                          <p className="text-[10px] text-muted-foreground">{t("downloadsShort")}</p>
                         </div>
                       </div>
                     );

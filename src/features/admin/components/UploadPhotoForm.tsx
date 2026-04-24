@@ -35,7 +35,7 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
     pricePersonalTND: initialData?.pricePersonalTND?.toString() || initialData?.priceTND?.toString() || "0",
     priceCommercialTND: initialData?.priceCommercialTND?.toString() || "0",
     watermark: initialData?.watermark !== undefined ? initialData.watermark.toString() : "true",
-    attributionText: initialData?.attributionText || "Tounesna Official Content",
+    attributionText: initialData?.attributionText || t("attributionDefault"),
     tags: initialData?.tags ? JSON.stringify(initialData.tags) : "[]",
   });
 
@@ -68,18 +68,18 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
     const isEditing = !!photoId;
     
     if (!isEditing && !files.highRes) {
-      toast.error(`Please select a ${mediaType} file`);
+      toast.error(t("messages.selectFile", { type: t(mediaType) }));
       return;
     }
     
     if (!isEditing && mediaType === 'video' && !files.lowRes) {
-      toast.error("Please select a thumbnail image for the video");
+      toast.error(t("messages.selectThumbnail"));
       return;
     }
 
     try {
       setLoading(true);
-      setUploadStep(isEditing ? "Updating photo..." : "Preparing upload...");
+      setUploadStep(isEditing ? t("messages.updating") : t("messages.preparing"));
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         data.append(key, value);
@@ -92,7 +92,7 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
         data.append("lowRes", files.lowRes);
       }
 
-      setUploadStep(isEditing ? "Saving changes..." : "Uploading to server...");
+      setUploadStep(isEditing ? t("messages.saving") : t("messages.uploading"));
       if (isEditing) {
         await AdminService.updatePhoto(photoId, data);
         toast.success(tDashboard("photos.messages.saveSuccess"));
@@ -131,8 +131,8 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
                      <Upload className="h-7 w-7 text-amber-500" />
                    </div>
                  </div>
-                 <h3 className="text-xl font-bold text-foreground mb-2">{photoId ? 'Updating Photo...' : 'Uploading Photo...'}</h3>
-                 <p className="text-sm text-muted-foreground mb-4">Please don't close this page</p>
+                 <h3 className="text-xl font-bold text-foreground mb-2">{photoId ? t("overlay.updating") : t("overlay.uploading")}</h3>
+                 <p className="text-sm text-muted-foreground mb-4">{t("messages.waitMessage")}</p>
                  <div className="flex items-center justify-center gap-2 text-amber-500 text-sm font-medium">
                    <Loader2 className="h-4 w-4 animate-spin" />
                    <span>{uploadStep}</span>
@@ -174,9 +174,16 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
             onChange={handleChange}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
           >
-            <option value="">{t("selectGovernorate", { defaultValue: "Select Governorate" })}</option>
-            {["Ariana", "Beja", "Ben Arous", "Bizerte", "Gabes", "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kebili", "Kef", "Mahdia", "Manouba", "Medenine", "Monastir", "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse", "Tataouine", "Tozeur", "Tunis", "Zaghouan"].map(gov => (
-              <option key={gov} value={gov}>{gov}</option>
+            <option value="">{t("selectGovernorate")}</option>
+            {[
+              "ariana", "beja", "benArous", "bizerte", "gabes", "gafsa", 
+              "jendouba", "kairouan", "kasserine", "kebili", "kef", "mahdia", 
+              "manouba", "medenine", "monastir", "nabeul", "sfax", "sidiBouzid", 
+              "siliana", "sousse", "tataouine", "tozeur", "tunis", "zaghouan"
+            ].map(govKey => (
+              <option key={govKey} value={tDashboard(`governorates.${govKey}`)}>
+                {tDashboard(`governorates.${govKey}`)}
+              </option>
             ))}
           </select>
         </div>
@@ -195,7 +202,7 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
               name="contentType"
               value={formData.contentType}
               onChange={handleChange}
-              placeholder={t("contentTypePlaceholder", { defaultValue: "e.g. video, reel, podcast, documentary..." })}
+              placeholder={t("contentTypePlaceholder")}
             />
           </div>
         )}
@@ -248,26 +255,26 @@ export function UploadPhotoForm({ initialData, photoId, onSuccess }: UploadPhoto
       </div>
 
       <div className="space-y-3 p-4 border border-amber-200/50 bg-amber-50/30 rounded-xl dark:bg-amber-900/10 dark:border-amber-800/50">
-        <Label className="text-base font-semibold flex items-center gap-2">💰 {t("price")} — License Pricing</Label>
+        <Label className="text-base font-semibold flex items-center gap-2">💰 {t("pricingTitle")}</Label>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="photo-price-personal" className="text-sm flex items-center gap-1.5">
               <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
-              Personal License (TND)
+              {t("personalLicense")}
             </Label>
             <Input id="photo-price-personal" name="pricePersonalTND" type="number" min="0" step="0.1" value={formData.pricePersonalTND} onChange={handleChange} placeholder="0" />
-            <p className="text-xs text-muted-foreground">For personal projects, blogs, non-commercial use</p>
+            <p className="text-xs text-muted-foreground">{t("personalDescription")}</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="photo-price-commercial" className="text-sm flex items-center gap-1.5">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
-              Commercial License (TND)
+              {t("commercialLicense")}
             </Label>
             <Input id="photo-price-commercial" name="priceCommercialTND" type="number" min="0" step="0.1" value={formData.priceCommercialTND} onChange={handleChange} placeholder="0" />
-            <p className="text-xs text-muted-foreground">For business, advertising, commercial projects</p>
+            <p className="text-xs text-muted-foreground">{t("commercialDescription")}</p>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground italic">Set both to 0 for free content. Leave Commercial at 0 to offer only Personal license.</p>
+        <p className="text-xs text-muted-foreground italic">{t("pricingNote")}</p>
       </div>
 
 

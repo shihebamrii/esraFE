@@ -170,8 +170,8 @@ export default function AdminContentPage() {
                     (item.approvalStatus || 'approved') === 'approved' ? 'text-green-600 border-green-200 bg-green-50' : 
                     item.approvalStatus === 'rejected' ? 'text-red-600 border-red-200 bg-red-50' : 
                     'text-amber-600 border-amber-200 bg-amber-50'
-                  }`}>
-                    {item.approvalStatus || 'approved'}
+                   }`}>
+                    {t(`table.${item.approvalStatus || 'approved'}`)}
                   </Badge>
                 </TableCell>
                 <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
@@ -356,7 +356,7 @@ export default function AdminContentPage() {
                 id="type"
                 value={editFormData.type}
                 onChange={(e) => setEditFormData({ ...editFormData, type: e.target.value })}
-                placeholder={t("dialog.typePlaceholder", { defaultValue: "e.g. video, reel, documentary, podcast..." })}
+                placeholder={t("dialog.typePlaceholder")}
               />
             </div>
             <DialogFooter>

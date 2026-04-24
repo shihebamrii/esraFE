@@ -12,20 +12,23 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader2, CreditCard, Mail, User, Lock, Calendar, ShieldCheck } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 // No complex algorithm for the card number or expiry format
-const checkoutSchema = z.object({
-  fullName: z.string().min(2, "Name is too short"),
-  email: z.string().email("Invalid email address"),
-  cardNumber: z.string().min(1, "Card number is required"),
-  expiry: z.string().min(1, "Expiry date is required"),
-  cvc: z.string().min(1, "CVC is required"),
-});
-
 export default function CheckoutPage() {
+  const t = useTranslations("Checkout");
   const { items, total, clearCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  // Define schema inside component or use t() for messages
+  const checkoutSchema = z.object({
+    fullName: z.string().min(2, t("nameTooShort")),
+    email: z.string().email(t("invalidEmail")),
+    cardNumber: z.string().min(1, t("cardNumberRequired")),
+    expiry: z.string().min(1, t("expiryRequired")),
+    cvc: z.string().min(1, t("cvcRequired")),
+  });
 
   const {
     register,
@@ -61,12 +64,12 @@ export default function CheckoutPage() {
         return;
       }
 
-      toast.success("Order placed successfully!");
+      toast.success(t("successMessage"));
       clearCart();
       router.push("/orders");
     } catch (error: any) {
-      const message = error?.response?.data?.message || "Payment failed. Please try again.";
-      toast.error(message);
+      const message = error?.response?.data?.message;
+      toast.error(message || t("failedMessage"));
     } finally {
       setIsLoading(false);
     }
@@ -79,10 +82,10 @@ export default function CheckoutPage() {
              <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
                <CreditCard className="w-10 h-10 text-primary" />
              </div>
-             <h2 className="text-3xl font-extrabold text-foreground tracking-tight">Your cart is empty</h2>
-             <p className="text-muted-foreground text-lg">Add some items before checking out.</p>
+             <h2 className="text-3xl font-extrabold text-foreground tracking-tight">{t("emptyTitle")}</h2>
+             <p className="text-muted-foreground text-lg">{t("emptyDescription")}</p>
              <Button onClick={() => router.push("/")} variant="outline" size="lg" className="mt-6 font-medium rounded-full hover-lift">
-               Return Home
+               {t("returnHome")}
              </Button>
           </div>
         </div>
@@ -97,9 +100,9 @@ export default function CheckoutPage() {
       
       <div className="container mx-auto px-4 py-16 max-w-6xl animate-fade-in">
         <div className="mb-12 text-center">
-          <h1 className="text-5xl font-extrabold tracking-tight text-primary mb-3">Secure Checkout</h1>
+          <h1 className="text-5xl font-extrabold tracking-tight text-primary mb-3">{t("secureCheckout")}</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Complete your order securely. We protect your data with state-of-the-art encryption.
+            {t("secureDescription")}
           </p>
         </div>
         
@@ -110,10 +113,10 @@ export default function CheckoutPage() {
             <FloatingCard className="border-0 shadow-floating glass-subtle overflow-hidden">
               <div className="bg-primary p-8 text-primary-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-2xl font-bold">Payment Details</CardTitle>
+                  <CardTitle className="text-2xl font-bold">{t("paymentDetails")}</CardTitle>
                   <CardDescription className="mt-2 flex items-center gap-2 text-primary-foreground/80 font-medium text-sm">
                     <ShieldCheck className="w-5 h-5 text-green-400" />
-                    256-bit secure encrypted transaction
+                    {t("secureTransaction")}
                   </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -132,7 +135,7 @@ export default function CheckoutPage() {
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2 group">
-                           <label className="text-sm font-semibold text-foreground">Full Name</label>
+                           <label className="text-sm font-semibold text-foreground">{t("fullName")}</label>
                            <div className="relative hover-lift">
                              <Input className="pl-12 h-14 bg-background border-border/60 hover:border-primary/50 focus:border-primary transition-all rounded-xl shadow-sm text-base" placeholder="John Doe" {...register("fullName")} />
                              <User className="absolute left-4 top-4 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -140,7 +143,7 @@ export default function CheckoutPage() {
                            {errors.fullName && <p className="text-destructive text-sm font-medium animate-in slide-in-from-top-1">{errors.fullName.message}</p>}
                         </div>
                         <div className="space-y-2 group">
-                           <label className="text-sm font-semibold text-foreground">Email Address</label>
+                           <label className="text-sm font-semibold text-foreground">{t("emailAddress")}</label>
                            <div className="relative hover-lift">
                              <Input className="pl-12 h-14 bg-background border-border/60 hover:border-primary/50 focus:border-primary transition-all rounded-xl shadow-sm text-base" placeholder="john@example.com" {...register("email")} />
                              <Mail className="absolute left-4 top-4 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -155,7 +158,7 @@ export default function CheckoutPage() {
                          Card Details
                       </h3>
                       <div className="space-y-2 group">
-                         <label className="text-sm font-semibold text-foreground">Card Number</label>
+                         <label className="text-sm font-semibold text-foreground">{t("cardNumber")}</label>
                          <div className="relative hover-lift">
                            <Input className="pl-12 h-14 bg-background border-border/60 hover:border-primary/50 focus:border-primary transition-all rounded-xl shadow-sm text-lg font-mono tracking-wider" placeholder="0000 0000 0000 0000" {...register("cardNumber")} />
                            <CreditCard className="absolute left-4 top-4 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -165,7 +168,7 @@ export default function CheckoutPage() {
                       
                       <div className="grid grid-cols-2 gap-6">
                           <div className="space-y-2 group">
-                            <label className="text-sm font-semibold text-foreground">Expiry Date</label>
+                            <label className="text-sm font-semibold text-foreground">{t("expiryDate")}</label>
                             <div className="relative hover-lift">
                               <Input className="pl-12 h-14 bg-background border-border/60 hover:border-primary/50 focus:border-primary transition-all rounded-xl shadow-sm text-lg font-mono tracking-widest" placeholder="MM/YY" {...register("expiry")} />
                               <Calendar className="absolute left-4 top-4 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -173,7 +176,7 @@ export default function CheckoutPage() {
                             {errors.expiry && <p className="text-destructive text-sm font-medium animate-in slide-in-from-top-1">{errors.expiry.message}</p>}
                           </div>
                           <div className="space-y-2 group">
-                            <label className="text-sm font-semibold text-foreground">CVC</label>
+                            <label className="text-sm font-semibold text-foreground">{t("cvc")}</label>
                             <div className="relative hover-lift">
                               <Input type="password" maxLength={4} className="pl-12 h-14 bg-background border-border/60 hover:border-primary/50 focus:border-primary transition-all rounded-xl shadow-sm text-lg font-mono tracking-widest" placeholder="***" {...register("cvc")} />
                               <Lock className="absolute left-4 top-4 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -193,10 +196,10 @@ export default function CheckoutPage() {
             <FloatingCard className="border-0 shadow-medium glass-subtle sticky top-8 rounded-2xl overflow-hidden">
               <div className="bg-secondary/50 p-8 border-b border-border/50">
                 <CardTitle className="text-2xl font-bold flex flex-col">
-                   <span>Order Summary</span>
+                   <span>{t("orderSummary")}</span>
                    <span className="text-4xl font-black text-primary mt-4">{total()} TND</span>
                 </CardTitle>
-                <p className="text-muted-foreground text-sm mt-2 font-medium">Includes all applicable taxes and fees</p>
+                <p className="text-muted-foreground text-sm mt-2 font-medium">{t("orderSummarySubtitle")}</p>
               </div>
               <CardContent className="p-8">
                  <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
@@ -210,12 +213,12 @@ export default function CheckoutPage() {
                  
                  <div className="mt-8 pt-6 border-t border-border/50 space-y-3">
                     <div className="flex justify-between items-center text-sm font-medium text-muted-foreground">
-                      <span>Subtotal</span>
+                      <span>{t("subtotal")}</span>
                       <span className="text-foreground">{total()} TND</span>
                     </div>
                     <div className="flex justify-between items-center text-sm font-medium text-green-600">
-                      <span>Shipping</span>
-                      <span>Free</span>
+                      <span>{t("shipping")}</span>
+                      <span>{t("free")}</span>
                     </div>
                  </div>
 
@@ -230,15 +233,15 @@ export default function CheckoutPage() {
                     ) : (
                       <Lock className="me-3 h-6 w-6" />
                     )}
-                    Pay {total()} TND
+                    {t("payWithAmount", { amount: total() })}
                  </Button>
                  
                  <div className="mt-6 flex flex-col items-center justify-center gap-2 text-xs text-muted-foreground font-medium bg-secondary/30 p-4 rounded-xl">
                     <div className="flex items-center gap-2 text-primary">
                        <ShieldCheck className="w-5 h-5" />
-                       <span className="font-semibold text-sm">Safe & Secure Payment</span>
+                       <span className="font-semibold text-sm">{t("safeSecurePayment")}</span>
                     </div>
-                    <span className="text-center">Your transactions are encrypted and protected by advanced fraud detection.</span>
+                    <span className="text-center">{t("safeSecureDescription")}</span>
                  </div>
               </CardContent>
             </FloatingCard>

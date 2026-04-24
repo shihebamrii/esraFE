@@ -152,7 +152,7 @@ export function AdminSidebar() {
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-muted/60 group-hover:bg-destructive/10 transition-colors">
             <LogOut className="h-3.5 w-3.5 group-hover:text-destructive transition-colors" />
           </span>
-          Déconnexion
+          {t("logout")}
         </button>
       </div>
     </nav>

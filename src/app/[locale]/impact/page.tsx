@@ -362,14 +362,14 @@ export default function ImpactPage() {
                   className="mt-8 bg-[#1f3a5f] text-white p-6 rounded-3xl shadow-xl flex items-center justify-between w-full"
                 >
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest opacity-60 mb-1">Current Focus</p>
+                    <p className="text-[10px] uppercase tracking-widest opacity-60 mb-1">{t("currentFocus", { defaultValue: "Current Focus" })}</p>
                     <p className="text-2xl font-serif font-bold text-[#ffcc1a]">{filterGov}</p>
                   </div>
                   <button 
                     onClick={() => setFilterGov("all")}
                     className="px-4 py-2 border border-white/20 rounded-full text-xs hover:bg-white/10 transition-colors"
                   >
-                    Reset Filter ✕
+                    {t("resetFilter", { defaultValue: "Reset Filter ✕" })}
                   </button>
                 </motion.div>
               )}
@@ -410,7 +410,7 @@ export default function ImpactPage() {
                     <div className="h-10 w-10 rounded-xl bg-[#ffcc1a] flex items-center justify-center">
                       <Play className="h-5 w-5 text-[#1f3a5f] fill-current" />
                     </div>
-                    <h3 className="text-2xl font-serif font-bold">Story Series & Collections</h3>
+                    <h3 className="text-2xl font-serif font-bold">{t("storySeriesCollections", { defaultValue: "Story Series & Collections" })}</h3>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -425,7 +425,7 @@ export default function ImpactPage() {
                           <div className="absolute inset-0 bg-gradient-to-t from-[#1f3a5f] via-[#1f3a5f]/40 to-transparent" />
                           <div className="absolute bottom-6 left-8 right-6">
                             <Badge className="bg-[#ffcc1a] text-[#1f3a5f] mb-3 border-none uppercase tracking-tighter text-[10px]">
-                              {pl.type.replace('_', ' ')} • {pl.items.length} Episodes
+                              {pl.type.replace('_', ' ')} • {pl.items.length} {t("episodes", { defaultValue: "Episodes" })}
                             </Badge>
                             <h4 className="text-2xl font-serif font-bold text-white mb-2 group-hover:text-[#ffcc1a] transition-colors">{pl.title}</h4>
                             <p className="text-sm text-white/70 line-clamp-1">{pl.description}</p>

@@ -72,7 +72,11 @@
     "type": "النوع",
     "allTypes": "جميع الأنواع",
     "governorate": "الولاية",
-    "allGovernorates": "جميع الولايات"
+    "allGovernorates": "جميع الولايات",
+    "currentFocus": "التركيز الحالي",
+    "resetFilter": "إعادة تعيين ✕",
+    "storySeriesCollections": "سلسلات ومجموعات القصص",
+    "episodes": "حلقات"
   },
   "ImpactHero": {
     "badge": "محتوى وسائط متعددة جذابة",
@@ -136,7 +140,29 @@
     "access": "الوصول",
     "allAccess": "جميع أنواع الوصول",
     "free": "مجاني",
-    "premium": "مميز"
+    "premium": "مميز",
+    "source": "المصدر",
+    "allSources": "جميع المصادر",
+    "official": "رسمي",
+    "community": "مجتمعي",
+    "exploreRegions": "اكتشف الولايات",
+    "the24Regions": "الولايات الـ 24",
+    "mapHint": "مرر مؤشر الماوس للاكتشاف. انقر على أي ولاية لتصفية المعرض.",
+    "filteringByProvince": "تصفية حسب الولاية",
+    "clearFilter": "مسح ✕",
+    "collectionLabel": "المجموعة",
+    "visionsOf": "رؤى {gov}",
+    "allOfTunisia": "كل تونس",
+    "regions": "المناطق",
+    "unveilingCollection": "جاري الكشف عن المجموعة…",
+    "dunesAreEmpty": "الكثبان فارغة",
+    "adjustFilters": "حاول تعديل الفلاتر أو مسح البحث للعثور على ما تبحث عنه.",
+    "photoCollections": "مجموعات الصور",
+    "items": "عناصر",
+    "episodes": "حلقات",
+    "currentFocus": "التركيز الحالي",
+    "resetFilter": "إعادة تعيين ✕",
+    "storySeriesCollections": "سلسلات ومجموعات القصص"
   },
   "UserDashboard": {
     "greeting": {
@@ -308,6 +334,47 @@
     "layout": {
       "redirecting": "جاري إعادة التوجيه..."
     },
+    "uploads": {
+      "title": "تحميلاتي",
+      "subtitle": "راقب وأدر صورك وفيديوهاتك المحملة",
+      "uploadNew": "تحميل جديد",
+      "searchPlaceholder": "البحث في تحميلاتك...",
+      "filterByStatus": "تصفية حسب الحالة",
+      "allStatus": "جميع الحالات",
+      "pending": "قيد الانتظار",
+      "approved": "تمت الموافقة",
+      "rejected": "مرفوض",
+      "yourUploads": "تحميلاتك",
+      "noUploadsTitle": "لا توجد تحميلات بعد",
+      "noUploadsSubtitle": "ابدأ بمشاركة صورك وفيديوهاتك مع المجتمع",
+      "uploadFirst": "حمّل أول صورة لك",
+      "preview": "معاينة",
+      "tableTitle": "العنوان",
+      "status": "الحالة",
+      "type": "النوع",
+      "price": "السعر",
+      "date": "التاريخ",
+      "actions": "الإجراءات",
+      "personalPrice": "شخصي",
+      "commercialPrice": "تجاري",
+      "editUpload": "تعديل التحميل",
+      "editDescription": "حدّث تفاصيل تحميلك. لا يمكنك تغيير ملف الصورة/الفيديو.",
+      "titleLabel": "العنوان",
+      "descriptionLabel": "الوصف",
+      "governorateLabel": "الولاية",
+      "personalPriceTND": "السعر الشخصي (د.ت)",
+      "commercialPriceTND": "السعر التجاري (د.ت)",
+      "saveChanges": "حفظ التغييرات",
+      "deleteUpload": "حذف التحميل",
+      "deleteConfirm": "هل أنت متأكد من حذف \"{title}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "updateSuccess": "تم تحديث التحميل بنجاح!",
+      "updateFailed": "فشل تحديث التحميل",
+      "deleteSuccess": "تم حذف التحميل بنجاح!",
+      "deleteFailed": "فشل حذف التحميل",
+      "loadFailed": "فشل تحميل ملفاتك"
+    },
     "quota": {
       "title": "حصصك النشطة",
       "activePack": "{count} {count, plural, =1 {باقة نشطة} other {باقات نشطة}}",
@@ -363,7 +430,34 @@
       "photosTounesna": "Tounesna",
       "orders": "الطلبات",
       "inquiries": "الاستفسارات",
-      "overview": "نظرة عامة"
+      "overview": "نظرة عامة",
+      "logout": "تسجيل الخروج"
+    },
+    "governorates": {
+      "ariana": "أريانة",
+      "beja": "باجة",
+      "benArous": "بن عروس",
+      "bizerte": "بنزرت",
+      "gabes": "قابس",
+      "gafsa": "قفصة",
+      "jendouba": "جندوبة",
+      "kairouan": "القيروان",
+      "kasserine": "القصرين",
+      "kebili": "قبلي",
+      "kef": "الكاف",
+      "mahdia": "المهدية",
+      "manouba": "منوبة",
+      "medenine": "مدنين",
+      "monastir": "المنستير",
+      "nabeul": "نابل",
+      "sfax": "صفاقس",
+      "sidiBouzid": "سيدي بوزيد",
+      "siliana": "سليانة",
+      "sousse": "سوسة",
+      "tataouine": "تطاوين",
+      "tozeur": "توزر",
+      "tunis": "تونس",
+      "zaghouan": "زغوان"
     },
     "home": {
       "title": "لوحة التحكم",
@@ -377,7 +471,33 @@
       "videoPlatform": "في منصة الفيديو",
       "tounesnaPhotos": "صور تونسنا",
       "photoGallery": "في معرض الصور",
-      "videos": "فيديوهات"
+      "videos": "فيديوهات",
+      "overviewDescription": "نظرة شاملة على المنصة",
+      "monthlyRevenue": "الإيرادات الشهرية",
+      "sixMonthsTND": "آخر 6 أشهر (د.ت)",
+      "revenueLabel": "الإيرادات (د.ت)",
+      "monthlyDownloads": "التنزيلات الشهرية",
+      "sixMonths": "آخر 6 أشهر",
+      "downloadsLabel": "التنزيلات",
+      "newUsers": "المستخدمون الجدد",
+      "registrationsPerMonth": "التسجيلات شهرياً",
+      "newUsersLabel": "المستخدمون الجدد",
+      "contentDistribution": "توزيع المحتوى",
+      "byMediaType": "حسب نوع الوسائط",
+      "noData": "لا توجد بيانات",
+      "recentOrders": "الطلبات الأخيرة",
+      "fiveRecentPaid": "آخر 5 طلبات مدفوعة",
+      "noOrders": "لا توجد طلبات بعد",
+      "article": "عنصر",
+      "articles": "عناصر",
+      "paid": "مدفوع",
+      "topContent": "أفضل المحتويات",
+      "mostDownloaded": "الأكثر تحميلاً",
+      "noContent": "لا يوجد محتوى",
+      "downloadsShort": "تحميل",
+      "currency": {
+        "tnd": "د.ت"
+      }
     },
     "users": {
       "title": "إدارة المستخدمين",
@@ -388,6 +508,11 @@
         "status": "الحالة",
         "quotas": "الباقات النشطة والحصص",
         "actions": "الإجراءات"
+      },
+      "noUsersFound": "لم يتم العثور على مستخدمين.",
+      "roles": {
+        "user": "مستخدم",
+        "admin": "مسؤول"
       },
       "status": {
         "active": "نشط",
@@ -494,6 +619,23 @@
         "deleteFailed": "فشل حذف الباقة",
         "saveSuccess": "تم حفظ الباقة بنجاح",
         "saveFailed": "فشل حفظ الباقة"
+      },
+      "untitledPhoto": "صورة بدون عنوان",
+      "untitledVideo": "فيديو بدون عنوان",
+      "mediaCollection": "مجموعة وسائط",
+      "itemsSelected": "تم اختيار {count} عنصر",
+      "selectMedia": "اختر الصور والفيديوهات",
+      "mediaPickerTitle": "اختر محتوى الباقة",
+      "mediaPickerDescription": "اختر الصور والفيديوهات التي تريد تضمينها في هذه المجموعة الثابتة.",
+      "searchMediaPlaceholder": "البحث بالعنوان...",
+      "noMediaFound": "لم يتم العثور على وسائط مطابقة للبحث.",
+      "done": "تم ({count} مختار)",
+      "types": {
+        "photo": "صورة",
+        "video": "فيديو"
+      },
+      "currency": {
+        "tnd": "د.ت"
       }
     },
     "photos": {
@@ -559,6 +701,9 @@
         "updateFailed": "فشل تحديث الصورة",
         "saveSuccess": "تم حفظ الصورة بنجاح",
         "saveFailed": "فشل حفظ الصورة"
+      },
+      "currency": {
+        "tnd": "د.ت"
       }
     },
     "content": {
@@ -582,7 +727,12 @@
         "date": "التاريخ",
         "actions": "الإجراءات",
         "noContent": "لم يتم العثور على محتوى",
-        "unknown": "غير معروف"
+        "unknown": "غير معروف",
+        "approve": "موافقة",
+        "reject": "رفض",
+        "approved": "مقبول",
+        "pending": "قيد الانتظار",
+        "rejected": "مرفوض"
       },
       "actions": {
         "edit": "تعديل",
@@ -596,6 +746,7 @@
         "description": "الوصف",
         "descriptionPlaceholder": "أدخل وصف المحتوى",
         "type": "النوع",
+        "typePlaceholder": "مثل: فيديو، ريل، فيلم وثائقي، بودكاست...",
         "saveChanges": "حفظ التغييرات",
         "deleteContent": "حذف المحتوى",
         "deleteDescription": "هل أنت متأكد من حذف {title}؟ لا يمكن التراجع عن هذا الإجراء.",
@@ -625,7 +776,16 @@
         "unknown": "غير معروف"
       },
       "messages": {
-        "fetchFailed": "فشل جلب الطلبات"
+        "fetchFailed": "فشل جلب الطلبات",
+        "noOrders": "لم يتم العثور على طلبات"
+      },
+      "status": {
+        "paid": "مدفوع",
+        "pending": "قيد الانتظار",
+        "failed": "فشل"
+      },
+      "currency": {
+        "tnd": "د.ت"
       }
     },
     "playlists": {
@@ -637,13 +797,16 @@
       "messages": {
         "fetchFailed": "فشل تحميل قوائم التشغيل",
         "contentFailed": "فشل تحميل المحتوى المتاح",
+        "photosFailed": "فشل تحميل الصور المتاحة",
         "saveSuccess": "تم حفظ قائمة التشغيل بنجاح",
         "saveFailed": "فشل حفظ قائمة التشغيل",
         "deleteConfirm": "هل أنت متأكد أنك تريد حذف قائمة التشغيل هذه؟",
         "deleteSuccess": "تم حذف قائمة التشغيل بنجاح",
         "deleteFailed": "فشل حذف قائمة التشغيل",
         "noPlaylists": "لم يتم العثور على قوائم تشغيل",
-        "noSearchResults": "لم يتم العثور على قوائم تشغيل مطابقة للبحث."
+        "noSearchResults": "لم يتم العثور على قوائم تشغيل مطابقة للبحث.",
+        "itemAlreadyAdded": "العنصر موجود بالفعل في قائمة التشغيل",
+        "photoAlreadyAdded": "الصورة موجودة بالفعل في قائمة التشغيل"
       },
       "form": {
         "title": "عنوان قائمة التشغيل",
@@ -658,19 +821,67 @@
         "themes": "المواضيع (مفصولة بفاصلة)",
         "tags": "الوسوم (مفصولة بفاصلة)",
         "active": "نشط",
+        "section": "القسم",
         "content": "محتوى قائمة التشغيل",
         "addContent": "إضافة محتوى",
         "selectContent": "اختر المحتوى للإضافة",
-        "noItems": "لا توجد عناصر في قائمة التشغيل هذه بعد. اختر المحتوى أعلاه للإضافة."
+        "noItems": "لا توجد عناصر في قائمة التشغيل هذه بعد. اختر المحتوى أعلاه للإضافة.",
+        "photoItems": "عناصر الصور",
+        "selectPhoto": "اختر صورة...",
+        "noPhotoItems": "لا توجد صور في هذه القائمة بعد. اختر الصور أعلاه للإضافة."
+      },
+      "sections": {
+        "impact": "Impact",
+        "tounesna": "Tounesna"
       },
       "table": {
-        "name": "اسم قائمة التشغيل",
+        "name": "اسم القائمة",
+        "section": "القسم",
         "type": "النوع",
         "items": "العناصر",
         "status": "الحالة",
         "actions": "الإجراءات",
         "active": "نشط",
-        "inactive": "غير نشط"
+        "inactive": "غير نشط",
+        "item": "عنصر",
+        "itemsPlural": "عناصر"
+      }
+    },
+    "inquiries": {
+      "title": "الرسائل",
+      "description": "إدارة الرسائل المرسلة من نموذج الاتصال.",
+      "searchPlaceholder": "البحث في الرسائل...",
+      "table": {
+        "sender": "المرسل",
+        "subject": "الموضوع",
+        "date": "التاريخ",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "status": {
+        "pending": "قيد الانتظار",
+        "read": "مقروء",
+        "replied": "تم الرد",
+        "archived": "مؤرشف"
+      },
+      "dialog": {
+        "from": "من:",
+        "adminNotes": "ملاحظات المسؤول",
+        "adminNotesPlaceholder": "أضف ملاحظات داخلية حول هذا الاستفسار...",
+        "markAsReplied": "تحديد كمردود عليه",
+        "archive": "أرشفة",
+        "saveNotes": "حفظ الملاحظات"
+      },
+      "messages": {
+        "loading": "جاري تحميل الرسائل...",
+        "noSearchResults": "لم يتم العثور على رسائل مطابقة لبحثك.",
+        "noInquiries": "لم يتم العثور على رسائل.",
+        "fetchFailed": "فشل تحميل الاستفسارات",
+        "updateSuccess": "تم تحديث الاستفسار",
+        "updateFailed": "فشل تحديث الاستفسار",
+        "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا الاستفسار؟",
+        "deleteSuccess": "تم حذف الاستفسار",
+        "deleteFailed": "فشل حذف الاستفسار"
       }
     },
     "upload": {
@@ -730,6 +941,26 @@
             "reel": "ريلز",
             "podcast": "بودكاست",
             "documentary": "وثائقي"
+          },
+          "pricingTitle": "تسعير الترخيص",
+          "personalLicense": "ترخيص شخصي (د.ت)",
+          "personalDescription": "للمشاريع الشخصية، المدونات، الاستخدام غير التجاري",
+          "commercialLicense": "ترخيص تجاري (د.ت)",
+          "commercialDescription": "للشركات، الإعلانات، المشاريع التجارية",
+          "pricingNote": "اضبط كليهما على 0 للمحتوى المجاني. اترك التجاري عند 0 لتقديم الترخيص الشخصي فقط.",
+          "attributionDefault": "محتوى رسمي تونسنا",
+          "messages": {
+            "selectFile": "يرجى اختيار ملف {type}",
+            "selectThumbnail": "يرجى اختيار صورة مصغرة للفيديو",
+            "preparing": "جاري تحضير التحميل...",
+            "uploading": "جاري التحميل إلى الخادم...",
+            "updating": "جاري تحديث الصورة...",
+            "saving": "جاري حفظ التغييرات...",
+            "waitMessage": "يرجى عدم إغلاق هذه الصفحة"
+          },
+          "overlay": {
+            "updating": "جاري تحديث الصورة...",
+            "uploading": "جاري تحميل الصورة..."
           }
         },
         "video": {
@@ -751,19 +982,28 @@
           "free": "مجاني",
           "premium": "مميز",
           "price": "السعر (د.ت)",
+          "pricingTitle": "تسعير الترخيص",
+          "personalLicense": "ترخيص شخصي (د.ت)",
+          "personalDescription": "للمشاريع الشخصية، المدونات، الاستخدام غير التجاري",
+          "commercialLicense": "ترخيص تجاري (د.ت)",
+          "commercialDescription": "للشركات، الإعلانات، المشاريع التجارية",
+          "pricingNote": "اضبط كليهما على 0 للمحتوى المجاني. اترك التجاري عند 0 لتقديم الترخيص الشخصي فقط.",
           "visibility": "الظهور",
           "public": "عام",
           "private": "خاص",
-          "instagram": "اسم مستخدم إنستغرام (للريلز)",
+          "instagram": "اسم مستخدم إنستغرام",
           "requiredForReels": "مطلوب للريلز",
           "instagramInfo": "سيسمح هذا للمشاهدين بمتابعة المبدع مباشرة على إنستغرام.",
-          "file": "ملف الفيديو/الصوت *",
+          "typePlaceholder": "مثل: فيديو، ريل، فيلم وثائقي، بودكاست...",
+          "file": "ملف الوسائط",
           "thumbnail": "صورة مصغرة",
+          "fileInfo": "MP4, WEBM, MP3 حتى 500 ميجابايت",
+          "thumbnailInfo": "JPG, PNG حتى 5 ميجابايت",
           "submit": "تحميل المحتوى",
           "uploading": "جاري التحميل...",
-          "selectFile": "يرجى اختيار ملف فيديو",
-          "success": "تم تحميل الفيديو بنجاح!",
-          "failed": "فشل تحميل الفيديو",
+          "selectFile": "يرجى اختيار ملف",
+          "success": "تم تحميل المحتوى بنجاح",
+          "failed": "فشل تحميل المحتوى",
           "youth": "الشباب",
           "womenArtisans": "النساء الحرفيات",
           "environment": "البيئة",
@@ -847,17 +1087,56 @@
   "Cart": {
     "title": "سلة التسوق",
     "empty": "سلتك فارغة",
+    "emptyTitle": "سلة التسوق فارغة",
+    "emptyDescription": "يبدو أنك لم تضف أي عناصر بعد.",
     "total": "المجموع",
     "checkout": "المتابعة للدفع",
+    "proceedToCheckout": "المتابعة للدفع",
     "remove": "إزالة",
-    "continueShopping": "متابعة التسوق"
+    "continueShopping": "متابعة التسوق",
+    "shoppingCart": "سلة التسوق",
+    "orderSummary": "ملخص الطلب",
+    "subtotal": "المجموع الفرعي",
+    "taxEstimated": "الضريبة (تقديرية)",
+    "commercial": "تجاري",
+    "personal": "شخصي",
+    "noImg": "لا صورة"
   },
   "Checkout": {
-    "title": "الدفع",
+    "title": "الدفع الآمن",
     "orderSummary": "ملخص الطلب",
     "paymentMethod": "طريقة الدفع",
     "placeOrder": "تأكيد الطلب",
-    "processing": "جاري المعالجة..."
+    "processing": "جاري المعالجة...",
+    "subtotal": "المجموع الفرعي",
+    "shipping": "الشحن",
+    "free": "مجاني",
+    "total": "المجموع",
+    "secureCheckout": "الدفع الآمن",
+    "secureDescription": "أكمل طلبك بأمان. نحن نحمي بياناتك بأحدث تقنيات التشفير.",
+    "paymentDetails": "تفاصيل الدفع",
+    "secureTransaction": "عملية آمنة ومشفرة 256 بت",
+    "personalInformation": "المعلومات الشخصية",
+    "fullName": "الاسم الكامل",
+    "emailAddress": "البريد الإلكتروني",
+    "cardDetails": "تفاصيل البطاقة",
+    "cardNumber": "رقم البطاقة",
+    "expiryDate": "تاريخ الانتهاء",
+    "cvc": "رمز الأمان (CVC)",
+    "payWithAmount": "دفع {amount} د.ت",
+    "safeSecurePayment": "دفع آمن ومضمون",
+    "safeSecureDescription": "معاملاتك مشفرة ومحمية بأنظمة متطورة للكشف عن الاحتيال.",
+    "orderSummarySubtitle": "يشمل جميع الضرائب والرسوم المعمول بها",
+    "emptyTitle": "سلة التسوق فارغة",
+    "emptyDescription": "أضف بعض العناصر قبل إتمام الدفع.",
+    "returnHome": "العودة للرئيسية",
+    "successMessage": "تم تقديم الطلب بنجاح!",
+    "failedMessage": "فشل الدفع. يرجى المحاولة مرة أخرى.",
+    "invalidEmail": "بريد إلكتروني غير صالح",
+    "nameTooShort": "الاسم قصير جداً",
+    "cardNumberRequired": "رقم البطاقة مطلوب",
+    "expiryRequired": "تاريخ الانتهاء مطلوب",
+    "cvcRequired": "رمز الأمان مطلوب"
   },
   "Orders": {
     "title": "طلباتي",
@@ -904,6 +1183,15 @@
     "button": "اشترك",
     "disclaimer": "نحن نهتم ببياناتك في سياسة الخصوصية الخاصة بنا."
   },
+  "MissionSection": {
+    "titleLine1": "الكشف عن",
+    "titleHighlight": "الجواهر الخفية",
+    "subtitle": "مهمتنا",
+    "paragraph1": "نحن مكتبة وسائط رقمية مخصصة لمشاركة محتوى التأثير الذي يصور القصص المذهلة والعمق الثقافي والمناظر الطبيعية الخلابة في تونس.",
+    "paragraph2": "انضم إلى مجتمع شغوف من المبدعين والمستكشفين المخصصين لعرض الجمال الأصيل وتراث تونس.",
+    "statRegions": "المناطق المغطاة",
+    "statStories": "القصص المشاركة"
+  },
   "License": {
     "personal": "شخصي",
     "commercial": "تجاري",
@@ -933,5 +1221,18 @@
     "orBuySeparately": "أو شراء بشكل فردي",
     "alreadyOwned": "مملوك بالفعل",
     "alreadyOwnedDesc": "لقد قمت بالفعل بشراء أو استرداد هذا العنصر."
+  },
+  "UserProfile": {
+    "notFound": "المستخدم غير موجود",
+    "goBack": "رجوع",
+    "back": "رجوع",
+    "officialContributor": "مساهم رسمي",
+    "officialCreator": "مبدع رسمي",
+    "communityCreator": "مبدع من المجتمع",
+    "joined": "انضم في {date}",
+    "uploads": "التحميلات",
+    "gallery": "المعرض",
+    "noUploadsTitle": "لا توجد تحميلات بعد",
+    "noUploadsDesc": "لم يقم هذا المبدع بمشاركة أي صور بعد."
   }
 }

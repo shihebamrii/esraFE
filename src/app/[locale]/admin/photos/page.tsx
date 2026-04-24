@@ -153,7 +153,7 @@ export default function AdminPhotosPage() {
           {data.length === 0 ? (
             <TableRow>
               <TableCell colSpan={isCommunity ? 6 : 8} className="h-24 text-center text-muted-foreground">
-                No photos found
+                {t("table.noPhotos")}
               </TableCell>
             </TableRow>
           ) : (
@@ -177,9 +177,9 @@ export default function AdminPhotosPage() {
                 {!isCommunity && (
                   <TableCell>
                     <div className="flex flex-col gap-0.5">
-                      <span className="font-mono text-sm text-blue-600 dark:text-blue-400">P: {item.pricePersonalTND ?? item.priceTND ?? 0} DT</span>
+                      <span className="font-mono text-sm text-blue-600 dark:text-blue-400">P: {item.pricePersonalTND ?? item.priceTND ?? 0} {t("currency.tnd")}</span>
                       {(item.priceCommercialTND > 0) && (
-                        <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400">C: {item.priceCommercialTND} DT</span>
+                        <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400">C: {item.priceCommercialTND} {t("currency.tnd")}</span>
                       )}
                     </div>
                   </TableCell>
@@ -426,11 +426,11 @@ export default function AdminPhotosPage() {
                 onChange={(e) => setEditFormData({ ...editFormData, landscapeType: e.target.value })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
               >
-                <option value="sea">{t("landscape.sea", { defaultValue: "Sea" })}</option>
-                <option value="desert">{t("landscape.desert", { defaultValue: "Desert" })}</option>
-                <option value="mountain">{t("landscape.mountain", { defaultValue: "Mountain" })}</option>
-                <option value="oasis">{t("landscape.oasis", { defaultValue: "Oasis" })}</option>
-                <option value="village">{t("landscape.village", { defaultValue: "Village" })}</option>
+                <option value="sea">{t("landscape.sea")}</option>
+                <option value="desert">{t("landscape.desert")}</option>
+                <option value="mountain">{t("landscape.mountain")}</option>
+                <option value="oasis">{t("landscape.oasis")}</option>
+                <option value="village">{t("landscape.village")}</option>
               </select>
             </div>
             <DialogFooter>

@@ -8,17 +8,7 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { Bell, Search } from "lucide-react";
 
-const PAGE_TITLES: Record<string, string> = {
-  "/admin/dashboard": "Tableau de bord",
-  "/admin/users": "Utilisateurs",
-  "/admin/packs": "Packs",
-  "/admin/playlists": "Listes de lecture",
-  "/admin/content": "Impact — Contenus",
-  "/admin/photos": "Tounesna — Photos",
-  "/admin/orders": "Commandes",
-  "/admin/inquiries": "Messages",
-  "/admin/upload": "Téléverser",
-};
+// Page titles are now handled inside the component using translations
 
 export default function AdminLayout({
   children,
@@ -26,9 +16,22 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const t = useTranslations("AdminDashboard.layout");
+  const tSidebar = useTranslations("AdminDashboard.sidebar");
   const { user, isAuthenticated, _hasHydrated } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
+
+  const PAGE_TITLES: Record<string, string> = {
+    "/admin/dashboard": tSidebar("dashboard"),
+    "/admin/users": tSidebar("users"),
+    "/admin/packs": tSidebar("packs"),
+    "/admin/playlists": tSidebar("playlists"),
+    "/admin/content": tSidebar("contentImpact"),
+    "/admin/photos": tSidebar("photosTounesna"),
+    "/admin/orders": tSidebar("orders"),
+    "/admin/inquiries": tSidebar("inquiries"),
+    "/admin/upload": tSidebar("upload"),
+  };
 
   useEffect(() => {
     if (!_hasHydrated) return;

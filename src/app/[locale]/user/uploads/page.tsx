@@ -99,7 +99,7 @@ export default function UserUploadsPage() {
       }
     } catch (error) {
       console.error("Failed to fetch uploads:", error);
-      toast.error("Failed to load your uploads");
+      toast.error(t("loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -141,12 +141,12 @@ export default function UserUploadsPage() {
 
       const response = await api.put(`/photos/my-uploads/${editingPhoto._id}`, data);
       if (response.data?.status === "success") {
-        toast.success("Upload updated successfully!");
+        toast.success(t("updateSuccess"));
         setIsEditDialogOpen(false);
         fetchPhotos();
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to update upload");
+      toast.error(error.response?.data?.message || t("updateFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -163,11 +163,11 @@ export default function UserUploadsPage() {
     setIsSubmitting(true);
     try {
       await api.delete(`/photos/my-uploads/${deletingPhoto._id}`);
-      toast.success("Upload deleted successfully!");
+      toast.success(t("deleteSuccess"));
       setIsDeleteDialogOpen(false);
       fetchPhotos();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to delete upload");
+      toast.error(error.response?.data?.message || t("deleteFailed"));
     } finally {
       setIsSubmitting(false);
       setDeletingPhoto(null);
@@ -180,21 +180,21 @@ export default function UserUploadsPage() {
         return (
           <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-200">
             <CheckCircle2 className="h-3 w-3 mr-1" />
-            Approved
+            {t("approved")}
           </Badge>
         );
       case "rejected":
         return (
           <Badge className="bg-red-500/10 text-red-600 border-red-200">
             <XCircle className="h-3 w-3 mr-1" />
-            Rejected
+            {t("rejected")}
           </Badge>
         );
       default:
         return (
           <Badge className="bg-amber-500/10 text-amber-600 border-amber-200">
             <Clock className="h-3 w-3 mr-1" />
-            Pending
+            {t("pending")}
           </Badge>
         );
     }
@@ -213,16 +213,16 @@ export default function UserUploadsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            My Uploads
+            {t("title")}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Monitor and manage your uploaded photos and videos
+            {t("subtitle")}
           </p>
         </div>
         <Button asChild className="bg-fuchsia-600 hover:bg-fuchsia-700">
           <Link href="/user/upload">
             <Upload className="h-4 w-4 mr-2" />
-            Upload New
+            {t("uploadNew")}
           </Link>
         </Button>
       </div>
@@ -232,7 +232,7 @@ export default function UserUploadsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search your uploads..."
+            placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -240,13 +240,13 @@ export default function UserUploadsPage() {
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
+            <SelectValue placeholder={t("filterByStatus")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
+            <SelectItem value="all">{t("allStatus")}</SelectItem>
+            <SelectItem value="pending">{t("pending")}</SelectItem>
+            <SelectItem value="approved">{t("approved")}</SelectItem>
+            <SelectItem value="rejected">{t("rejected")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -256,7 +256,7 @@ export default function UserUploadsPage() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <ImageIcon className="h-5 w-5 text-fuchsia-500" />
-            Your Uploads
+            {t("yourUploads")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -267,14 +267,14 @@ export default function UserUploadsPage() {
           ) : photos.length === 0 ? (
             <div className="text-center py-12">
               <ImageIcon className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
-              <h3 className="font-semibold text-lg mb-2">No uploads yet</h3>
+              <h3 className="font-semibold text-lg mb-2">{t("noUploadsTitle")}</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Start sharing your photos and videos with the community
+                {t("noUploadsSubtitle")}
               </p>
               <Button asChild className="bg-fuchsia-600 hover:bg-fuchsia-700">
                 <Link href="/user/upload">
                   <Upload className="h-4 w-4 mr-2" />
-                  Upload Your First Photo
+                  {t("uploadFirst")}
                 </Link>
               </Button>
             </div>
@@ -283,13 +283,13 @@ export default function UserUploadsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Preview</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t("preview")}</TableHead>
+                    <TableHead>{t("tableTitle")}</TableHead>
+                    <TableHead>{t("status")}</TableHead>
+                    <TableHead>{t("type")}</TableHead>
+                    <TableHead>{t("price")}</TableHead>
+                    <TableHead>{t("date")}</TableHead>
+                    <TableHead className="text-right">{t("actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -317,8 +317,8 @@ export default function UserUploadsPage() {
                       <TableCell className="capitalize">{photo.mediaType}</TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          <div className="text-muted-foreground">Personal: {photo.pricePersonalTND} TND</div>
-                          <div className="text-muted-foreground">Commercial: {photo.priceCommercialTND} TND</div>
+                          <div className="text-muted-foreground">{t("personalPrice")}: {photo.pricePersonalTND} TND</div>
+                          <div className="text-muted-foreground">{t("commercialPrice")}: {photo.priceCommercialTND} TND</div>
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
@@ -362,14 +362,14 @@ export default function UserUploadsPage() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Edit Upload</DialogTitle>
+            <DialogTitle>{t("editUpload")}</DialogTitle>
             <DialogDescription>
-              Update the details of your upload. You cannot change the photo/video file itself.
+              {t("editDescription")}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdate} className="space-y-4 py-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Title</label>
+              <label className="text-sm font-medium">{t("titleLabel")}</label>
               <Input
                 value={editFormData.title}
                 onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
@@ -377,14 +377,14 @@ export default function UserUploadsPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">{t("descriptionLabel")}</label>
               <Input
                 value={editFormData.description}
                 onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Governorate</label>
+              <label className="text-sm font-medium">{t("governorateLabel")}</label>
               <Select
                 value={editFormData.governorate}
                 onValueChange={(value) => setEditFormData({ ...editFormData, governorate: value })}
@@ -401,7 +401,7 @@ export default function UserUploadsPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Personal Price (TND)</label>
+                <label className="text-sm font-medium">{t("personalPriceTND")}</label>
                 <Input
                   type="number"
                   min="0"
@@ -411,7 +411,7 @@ export default function UserUploadsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Commercial Price (TND)</label>
+                <label className="text-sm font-medium">{t("commercialPriceTND")}</label>
                 <Input
                   type="number"
                   min="0"
@@ -424,7 +424,7 @@ export default function UserUploadsPage() {
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting} className="bg-fuchsia-600 hover:bg-fuchsia-700">
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                Save Changes
+                {t("saveChanges")}
               </Button>
             </DialogFooter>
           </form>
@@ -437,7 +437,7 @@ export default function UserUploadsPage() {
           <DialogHeader>
             <DialogTitle className="text-red-600 flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
-              Delete Upload
+              {t("deleteUpload")}
             </DialogTitle>
             <DialogDescription>
               Are you sure you want to delete &quot;{deletingPhoto?.title}&quot;? This action cannot be undone.
@@ -445,7 +445,7 @@ export default function UserUploadsPage() {
           </DialogHeader>
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -453,7 +453,7 @@ export default function UserUploadsPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Delete
+              {t("delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -72,7 +72,11 @@
     "type": "Type",
     "allTypes": "All Types",
     "governorate": "Governorate",
-    "allGovernorates": "All Governorates"
+    "allGovernorates": "All Governorates",
+    "currentFocus": "Current Focus",
+    "resetFilter": "Reset Filter ✕",
+    "storySeriesCollections": "Story Series & Collections",
+    "episodes": "Episodes"
   },
   "ImpactHero": {
     "badge": "Engaging Multimedia Content",
@@ -111,7 +115,29 @@
     "access": "Access",
     "allAccess": "All Access",
     "free": "Free",
-    "premium": "Premium"
+    "premium": "Premium",
+    "source": "Source",
+    "allSources": "All Sources",
+    "official": "Official",
+    "community": "Community",
+    "exploreRegions": "Explore the Regions",
+    "the24Regions": "The 24 Regions",
+    "mapHint": "Interactively hover to reveal. Click any province to filter the master gallery.",
+    "filteringByProvince": "Filtering by Province",
+    "clearFilter": "Clear ✕",
+    "collectionLabel": "Collection",
+    "visionsOf": "Visions of {gov}",
+    "allOfTunisia": "All of Tunisia",
+    "regions": "Regions",
+    "unveilingCollection": "Unveiling the collection…",
+    "dunesAreEmpty": "The dunes are empty",
+    "adjustFilters": "Try adjusting your filters or clearing the search to find what you seek.",
+    "photoCollections": "Photo Collections",
+    "items": "items",
+    "episodes": "Episodes",
+    "currentFocus": "Current Focus",
+    "resetFilter": "Reset Filter ✕",
+    "storySeriesCollections": "Story Series & Collections"
   },
   "UserDashboard": {
     "greeting": {
@@ -283,6 +309,47 @@
     "layout": {
       "redirecting": "Redirecting..."
     },
+    "uploads": {
+      "title": "My Uploads",
+      "subtitle": "Monitor and manage your uploaded photos and videos",
+      "uploadNew": "Upload New",
+      "searchPlaceholder": "Search your uploads...",
+      "filterByStatus": "Filter by status",
+      "allStatus": "All Status",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "yourUploads": "Your Uploads",
+      "noUploadsTitle": "No uploads yet",
+      "noUploadsSubtitle": "Start sharing your photos and videos with the community",
+      "uploadFirst": "Upload Your First Photo",
+      "preview": "Preview",
+      "tableTitle": "Title",
+      "status": "Status",
+      "type": "Type",
+      "price": "Price",
+      "date": "Date",
+      "actions": "Actions",
+      "personalPrice": "Personal",
+      "commercialPrice": "Commercial",
+      "editUpload": "Edit Upload",
+      "editDescription": "Update the details of your upload. You cannot change the photo/video file itself.",
+      "titleLabel": "Title",
+      "descriptionLabel": "Description",
+      "governorateLabel": "Governorate",
+      "personalPriceTND": "Personal Price (TND)",
+      "commercialPriceTND": "Commercial Price (TND)",
+      "saveChanges": "Save Changes",
+      "deleteUpload": "Delete Upload",
+      "deleteConfirm": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "updateSuccess": "Upload updated successfully!",
+      "updateFailed": "Failed to update upload",
+      "deleteSuccess": "Upload deleted successfully!",
+      "deleteFailed": "Failed to delete upload",
+      "loadFailed": "Failed to load your uploads"
+    },
     "quota": {
       "title": "Your Active Quotas",
       "activePack": "{count} Active {count, plural, =1 {Pack} other {Packs}}",
@@ -338,7 +405,34 @@
       "photosTounesna": "Tounesna",
       "orders": "Orders",
       "inquiries": "Messages",
-      "overview": "Overview"
+      "overview": "Overview",
+      "logout": "Logout"
+    },
+    "governorates": {
+      "ariana": "Ariana",
+      "beja": "Beja",
+      "benArous": "Ben Arous",
+      "bizerte": "Bizerte",
+      "gabes": "Gabes",
+      "gafsa": "Gafsa",
+      "jendouba": "Jendouba",
+      "kairouan": "Kairouan",
+      "kasserine": "Kasserine",
+      "kebili": "Kebili",
+      "kef": "Kef",
+      "mahdia": "Mahdia",
+      "manouba": "Manouba",
+      "medenine": "Medenine",
+      "monastir": "Monastir",
+      "nabeul": "Nabeul",
+      "sfax": "Sfax",
+      "sidiBouzid": "Sidi Bouzid",
+      "siliana": "Siliana",
+      "sousse": "Sousse",
+      "tataouine": "Tataouine",
+      "tozeur": "Tozeur",
+      "tunis": "Tunis",
+      "zaghouan": "Zaghouan"
     },
     "home": {
       "title": "Dashboard Overview",
@@ -352,7 +446,33 @@
       "videoPlatform": "In video platform",
       "tounesnaPhotos": "Tounesna Photos",
       "photoGallery": "In photo gallery",
-      "videos": "Videos"
+      "videos": "Videos",
+      "overviewDescription": "Complete platform overview",
+      "monthlyRevenue": "Monthly Revenue",
+      "sixMonthsTND": "Last 6 months (TND)",
+      "revenueLabel": "Revenue (TND)",
+      "monthlyDownloads": "Monthly Downloads",
+      "sixMonths": "Last 6 months",
+      "downloadsLabel": "Downloads",
+      "newUsers": "New Users",
+      "registrationsPerMonth": "Registrations per month",
+      "newUsersLabel": "New users",
+      "contentDistribution": "Content Distribution",
+      "byMediaType": "By media type",
+      "noData": "No data available",
+      "recentOrders": "Recent Orders",
+      "fiveRecentPaid": "Last 5 paid orders",
+      "noOrders": "No orders yet",
+      "article": "item",
+      "articles": "items",
+      "paid": "paid",
+      "topContent": "Top Content",
+      "mostDownloaded": "Most downloaded",
+      "noContent": "No content found",
+      "downloadsShort": "downl.",
+      "currency": {
+        "tnd": "DT"
+      }
     },
     "users": {
       "title": "User Management",
@@ -363,6 +483,11 @@
         "status": "Status",
         "quotas": "Active Packs & Quotas",
         "actions": "Actions"
+      },
+      "noUsersFound": "No users found.",
+      "roles": {
+        "user": "User",
+        "admin": "Admin"
       },
       "status": {
         "active": "Active",
@@ -469,6 +594,23 @@
         "deleteFailed": "Failed to delete pack",
         "saveSuccess": "Pack saved successfully",
         "saveFailed": "Failed to save pack"
+      },
+      "untitledPhoto": "Untitled Photo",
+      "untitledVideo": "Untitled Video",
+      "mediaCollection": "Media Collection",
+      "itemsSelected": "{count} items selected",
+      "selectMedia": "Select Photos & Videos",
+      "mediaPickerTitle": "Select Content for Pack",
+      "mediaPickerDescription": "Choose the photos and videos you want to include in this static collection.",
+      "searchMediaPlaceholder": "Search by title...",
+      "noMediaFound": "No media found matching your search.",
+      "done": "Done ({count} selected)",
+      "types": {
+        "photo": "Photo",
+        "video": "Video"
+      },
+      "currency": {
+        "tnd": "DT"
       }
     },
     "photos": {
@@ -534,6 +676,9 @@
         "updateFailed": "Failed to update photo",
         "saveSuccess": "Photo saved successfully",
         "saveFailed": "Failed to save photo"
+      },
+      "currency": {
+        "tnd": "DT"
       }
     },
     "content": {
@@ -549,16 +694,7 @@
         "approved": "Approved",
         "rejected": "Rejected"
       },
-      "table": {
-        "title": "Title",
-        "user": "User",
-        "type": "Type",
-        "status": "Status",
-        "date": "Date",
-        "actions": "Actions",
-        "noContent": "No content found",
-        "unknown": "Unknown"
-      },
+
       "actions": {
         "edit": "Edit",
         "delete": "Delete"
@@ -571,11 +707,27 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter content description",
         "type": "Type",
+        "typePlaceholder": "e.g. video, reel, documentary, podcast...",
         "saveChanges": "Save Changes",
         "deleteContent": "Delete Content",
         "deleteDescription": "Are you sure you want to delete {title}? This action cannot be undone.",
         "cancel": "Cancel",
         "delete": "Delete"
+      },
+      "table": {
+        "title": "Title",
+        "user": "User",
+        "type": "Type",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions",
+        "noContent": "No content found",
+        "unknown": "Unknown",
+        "approve": "Approve",
+        "reject": "Reject",
+        "approved": "Approved",
+        "pending": "Pending",
+        "rejected": "Rejected"
       },
       "messages": {
         "fetchFailed": "Failed to load content",
@@ -600,7 +752,16 @@
         "unknown": "Unknown"
       },
       "messages": {
-        "fetchFailed": "Failed to fetch orders"
+        "fetchFailed": "Failed to fetch orders",
+        "noOrders": "No orders found"
+      },
+      "status": {
+        "paid": "Paid",
+        "pending": "Pending",
+        "failed": "Failed"
+      },
+      "currency": {
+        "tnd": "DT"
       }
     },
     "playlists": {
@@ -612,13 +773,16 @@
       "messages": {
         "fetchFailed": "Failed to load playlists",
         "contentFailed": "Failed to load available content",
+        "photosFailed": "Failed to load available photos",
         "saveSuccess": "Playlist saved successfully",
         "saveFailed": "Failed to save playlist",
         "deleteConfirm": "Are you sure you want to delete this playlist?",
         "deleteSuccess": "Playlist deleted successfully",
         "deleteFailed": "Failed to delete playlist",
         "noPlaylists": "No playlists found",
-        "noSearchResults": "No playlists found matching your search."
+        "noSearchResults": "No playlists found matching your search.",
+        "itemAlreadyAdded": "Item already in playlist",
+        "photoAlreadyAdded": "Photo already in playlist"
       },
       "form": {
         "title": "Playlist Title",
@@ -633,19 +797,67 @@
         "themes": "Themes (comma separated)",
         "tags": "Tags (comma separated)",
         "active": "Active",
+        "section": "Section",
         "content": "Playlist Content",
         "addContent": "Add Content",
         "selectContent": "Select Content to Add",
-        "noItems": "No items in this playlist yet. Select content above to add."
+        "noItems": "No items in this playlist yet. Select content above to add.",
+        "photoItems": "Photo Items",
+        "selectPhoto": "Select photo...",
+        "noPhotoItems": "No photo items yet. Select photos above to add."
+      },
+      "sections": {
+        "impact": "Impact",
+        "tounesna": "Tounesna"
       },
       "table": {
         "name": "Playlist Name",
+        "section": "Section",
         "type": "Type",
         "items": "Items",
         "status": "Status",
         "actions": "Actions",
         "active": "Active",
-        "inactive": "Inactive"
+        "inactive": "Inactive",
+        "item": "item",
+        "itemsPlural": "items"
+      }
+    },
+    "inquiries": {
+      "title": "Messages",
+      "description": "Manage messages sent from the contact form.",
+      "searchPlaceholder": "Search messages...",
+      "table": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "date": "Date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "pending": "Pending",
+        "read": "Read",
+        "replied": "Replied",
+        "archived": "Archived"
+      },
+      "dialog": {
+        "from": "From:",
+        "adminNotes": "Admin Notes",
+        "adminNotesPlaceholder": "Add internal notes about this inquiry...",
+        "markAsReplied": "Mark as Replied",
+        "archive": "Archive",
+        "saveNotes": "Save Notes"
+      },
+      "messages": {
+        "loading": "Loading messages...",
+        "noSearchResults": "No messages found matching your search.",
+        "noInquiries": "No messages found.",
+        "fetchFailed": "Failed to load inquiries",
+        "updateSuccess": "Inquiry updated",
+        "updateFailed": "Failed to update inquiry",
+        "deleteConfirm": "Are you sure you want to delete this inquiry?",
+        "deleteSuccess": "Inquiry deleted",
+        "deleteFailed": "Failed to delete inquiry"
       }
     },
     "upload": {
@@ -705,6 +917,26 @@
             "reel": "Reel",
             "podcast": "Podcast",
             "documentary": "Documentary"
+          },
+          "pricingTitle": "License Pricing",
+          "personalLicense": "Personal License (TND)",
+          "personalDescription": "For personal projects, blogs, non-commercial use",
+          "commercialLicense": "Commercial License (TND)",
+          "commercialDescription": "For business, advertising, commercial projects",
+          "pricingNote": "Set both to 0 for free content. Leave Commercial at 0 to offer only Personal license.",
+          "attributionDefault": "Tounesna Official Content",
+          "messages": {
+            "selectFile": "Please select a {type} file",
+            "selectThumbnail": "Please select a thumbnail image for the video",
+            "preparing": "Preparing upload...",
+            "uploading": "Uploading to server...",
+            "updating": "Updating photo...",
+            "saving": "Saving changes...",
+            "waitMessage": "Please don't close this page"
+          },
+          "overlay": {
+            "updating": "Updating Photo...",
+            "uploading": "Uploading Photo..."
           }
         },
         "video": {
@@ -726,19 +958,28 @@
           "free": "Free",
           "premium": "Premium",
           "price": "Price (TND)",
+          "pricingTitle": "License Pricing",
+          "personalLicense": "Personal License (TND)",
+          "personalDescription": "For personal projects, blogs, non-commercial use",
+          "commercialLicense": "Commercial License (TND)",
+          "commercialDescription": "For business, advertising, commercial projects",
+          "pricingNote": "Set both to 0 for free content. Leave Commercial at 0 to offer only Personal license.",
           "visibility": "Visibility",
           "public": "Public",
           "private": "Private",
-          "instagram": "Instagram Username (for Reels)",
+          "instagram": "Instagram Username",
           "requiredForReels": "Required for Reels",
           "instagramInfo": "This will allow viewers to follow the creator directly on Instagram.",
-          "file": "Video/Audio File *",
+          "typePlaceholder": "e.g. video, reel, podcast, documentary...",
+          "file": "Media File",
           "thumbnail": "Thumbnail Image",
+          "fileInfo": "MP4, WEBM, MP3 up to 500MB",
+          "thumbnailInfo": "JPG, PNG up to 5MB",
           "submit": "Upload Content",
           "uploading": "Uploading...",
-          "selectFile": "Please select a video file",
-          "success": "Video uploaded successfully!",
-          "failed": "Failed to upload video",
+          "selectFile": "Please select a file",
+          "success": "Content uploaded successfully",
+          "failed": "Failed to upload content",
           "youth": "Youth",
           "womenArtisans": "Women Artisans",
           "environment": "Environment",
@@ -822,17 +1063,56 @@
   "Cart": {
     "title": "Shopping Cart",
     "empty": "Your cart is empty",
+    "emptyTitle": "Your Cart is Empty",
+    "emptyDescription": "Looks like you haven't added any items yet.",
     "total": "Total",
     "checkout": "Proceed to Checkout",
+    "proceedToCheckout": "Proceed to Checkout",
     "remove": "Remove",
-    "continueShopping": "Continue Shopping"
+    "continueShopping": "Continue Shopping",
+    "shoppingCart": "Shopping Cart",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "taxEstimated": "Tax (Estimated)",
+    "commercial": "Commercial",
+    "personal": "Personal",
+    "noImg": "No Img"
   },
   "Checkout": {
-    "title": "Checkout",
+    "title": "Secure Checkout",
     "orderSummary": "Order Summary",
     "paymentMethod": "Payment Method",
     "placeOrder": "Place Order",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "free": "Free",
+    "total": "Total",
+    "secureCheckout": "Secure Checkout",
+    "secureDescription": "Complete your order securely. We protect your data with state-of-the-art encryption.",
+    "paymentDetails": "Payment Details",
+    "secureTransaction": "256-bit secure encrypted transaction",
+    "personalInformation": "Personal Information",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "cardDetails": "Card Details",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvc": "CVC",
+    "payWithAmount": "Pay {amount} TND",
+    "safeSecurePayment": "Safe & Secure Payment",
+    "safeSecureDescription": "Your transactions are encrypted and protected by advanced fraud detection.",
+    "orderSummarySubtitle": "Includes all applicable taxes and fees",
+    "emptyTitle": "Your cart is empty",
+    "emptyDescription": "Add some items before checking out.",
+    "returnHome": "Return Home",
+    "successMessage": "Order placed successfully!",
+    "failedMessage": "Payment failed. Please try again.",
+    "invalidEmail": "Invalid email address",
+    "nameTooShort": "Name is too short",
+    "cardNumberRequired": "Card number is required",
+    "expiryRequired": "Expiry date is required",
+    "cvcRequired": "CVC is required"
   },
   "Orders": {
     "title": "My Orders",
@@ -908,7 +1188,10 @@
     "sideTitle1": "Videos, Reels, and Podcasts",
     "reelsBadge": "Project Story",
     "sideTitle2": "Women artisans, youth, environment",
-    "podcastBadge": "Impact Story"
+    "podcastBadge": "Impact Story",
+    "cnbeesLabel": "Support on CnBees",
+    "cnbeesBannerText": "Support this project and its creators directly through crowdfunding on CnBees.",
+    "cnbeesCta": "Support Now"
   },
   "License": {
     "personal": "Personal",
@@ -939,5 +1222,18 @@
     "orBuySeparately": "Or purchase individually",
     "alreadyOwned": "Already Owned",
     "alreadyOwnedDesc": "You have already purchased or redeemed this item."
+  },
+  "UserProfile": {
+    "notFound": "User not found",
+    "goBack": "Go Back",
+    "back": "Back",
+    "officialContributor": "Official Contributor",
+    "officialCreator": "Official Creator",
+    "communityCreator": "Community Creator",
+    "joined": "Joined {date}",
+    "uploads": "Uploads",
+    "gallery": "Gallery",
+    "noUploadsTitle": "No uploads yet",
+    "noUploadsDesc": "This creator hasn't shared any photos."
   }
 }

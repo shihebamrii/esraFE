@@ -131,6 +131,7 @@ export default function TounesnaPage() {
     type: p.landscapeType,
     source: p.source || 'community', // 'official' or 'community'
     creatorName: p.creatorName,
+    creatorId: p.createdBy,
   }));
 
   const govNameToId: Record<string, string> = {
@@ -200,7 +201,7 @@ export default function TounesnaPage() {
               <div className="h-10 w-10 rounded-xl bg-[#ffcc1a] flex items-center justify-center">
                 <ImageIcon className="h-5 w-5 text-[#6a0d2e]" />
               </div>
-              <h2 className="text-2xl lg:text-3xl font-serif font-bold text-[#6a0d2e]">Photo Collections</h2>
+              <h2 className="text-2xl lg:text-3xl font-serif font-bold text-[#6a0d2e]">{t("photoCollections")}</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -221,7 +222,7 @@ export default function TounesnaPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#6a0d2e] via-[#6a0d2e]/40 to-transparent" />
                     <div className="absolute bottom-5 left-5 right-5">
                       <Badge className="bg-[#ffcc1a] text-[#6a0d2e] mb-2 border-none text-[10px] font-bold uppercase">
-                        {pl.type.replace('_', ' ')} • {(pl.photoItems?.length || 0)} items
+                        {pl.type.replace('_', ' ')} • {(pl.photoItems?.length || 0)} {t("items")}
                       </Badge>
                       <h3 className="text-xl font-serif font-bold text-white mb-1 group-hover:text-[#ffcc1a] transition-colors">{pl.title}</h3>
                       <p className="text-sm text-white/70 line-clamp-1">{pl.description}</p>
@@ -281,14 +282,14 @@ export default function TounesnaPage() {
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-[#ffcc1a] text-sm">✦</span>
                 <span className="text-[10px] tracking-[0.35em] uppercase text-[#6a0d2e] font-bold">
-                  اكتشف الولايات — Explore
+                  {t("exploreRegions")}
                 </span>
               </div>
               <h2 className="text-3xl lg:text-4xl font-serif text-[#6a0d2e] leading-tight drop-shadow-md">
-                The 24 Regions
+                {t("the24Regions")}
               </h2>
               <p className="text-[#6a0d2e]/50 text-sm mt-3 max-w-xs font-light leading-relaxed">
-                Interactively hover to reveal. Click any province to filter the master gallery.
+                {t("mapHint")}
               </p>
             </div>
 
@@ -296,14 +297,14 @@ export default function TounesnaPage() {
             {filterGov !== "all" && (
               <div className="absolute bottom-6 inset-x-6 z-20 bg-gradient-to-r from-[#ffcc1a] to-[#e6b300] text-[#6a0d2e] rounded-2xl p-5 flex items-center justify-between shadow-[0_15px_40px_rgba(255,204,26,0.3)] animate-in slide-in-from-bottom-5">
                 <div>
-                  <span className="text-[10px] tracking-[0.2em] uppercase font-bold opacity-60">Filtering by Province</span>
+                  <span className="text-[10px] tracking-[0.2em] uppercase font-bold opacity-60">{t("filteringByProvince")}</span>
                   <p className="text-xl font-bold font-serif">{filterGov}</p>
                 </div>
                 <button
                   onClick={() => setFilterGov("all")}
                   className="text-[#6a0d2e] hover:bg-white/20 text-xs font-bold uppercase tracking-wider border border-[#6a0d2e]/10 rounded-full px-5 py-2.5 transition-all shadow-sm"
                 >
-                  Clear ✕
+                  {t("clearFilter")}
                 </button>
               </div>
             )}
@@ -335,11 +336,11 @@ export default function TounesnaPage() {
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-[#ffcc1a] text-sm">✦</span>
                 <span className="text-[10px] tracking-[0.35em] uppercase text-[#6a0d2e] font-bold">
-                  المجموعة — Collection
+                  {t("collectionLabel")}
                 </span>
               </div>
               <h2 className="text-3xl lg:text-4xl font-serif text-[#6a0d2e] drop-shadow-md">
-                {filterGov !== "all" ? `Visions of ${filterGov}` : "All of Tunisia"}
+                {filterGov !== "all" ? t("visionsOf", { gov: filterGov }) : t("allOfTunisia")}
               </h2>
             </div>
 
@@ -441,7 +442,7 @@ export default function TounesnaPage() {
                   <span className="block text-[#6a0d2e] text-2xl lg:text-3xl font-serif leading-none drop-shadow-sm">
                     {filterGov !== "all" ? 1 : governorates.length}
                   </span>
-                  <span className="uppercase text-[9px] tracking-[0.25em] font-bold mt-2 block opacity-60">Regions</span>
+                  <span className="uppercase text-[9px] tracking-[0.25em] font-bold mt-2 block opacity-60">{t("regions")}</span>
                 </div>
               </div>
             </div>
@@ -450,7 +451,7 @@ export default function TounesnaPage() {
             {loading && photos.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-40 text-[#6a0d2e]/50">
                 <Loader2 className="h-12 w-12 animate-spin mb-6 text-[#ffcc1a]" />
-                <p className="tracking-[0.25em] uppercase text-[11px] font-bold">Unveiling the collection…</p>
+                <p className="tracking-[0.25em] uppercase text-[11px] font-bold">{t("unveilingCollection")}</p>
               </div>
             ) : adaptedPhotos.length > 0 ? (
               <div className="pb-20">
@@ -459,8 +460,8 @@ export default function TounesnaPage() {
             ) : (
               <div className="flex flex-col items-center justify-center text-center py-40 text-[#6a0d2e]/60 border border-dashed border-white/60 bg-white/40 rounded-3xl backdrop-blur-md shadow-sm">
                 <span className="block text-6xl mb-6 drop-shadow-md">🏜️</span>
-                <p className="text-base tracking-widest uppercase font-bold text-[#6a0d2e]">The dunes are empty</p>
-                <p className="text-sm mt-3 opacity-70">Try adjusting your filters or clearing the search to find what you seek.</p>
+                <p className="text-base tracking-widest uppercase font-bold text-[#6a0d2e]">{t("dunesAreEmpty")}</p>
+                <p className="text-sm mt-3 opacity-70">{t("adjustFilters")}</p>
               </div>
             )}
           </div>

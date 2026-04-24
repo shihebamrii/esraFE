@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Music, Youtube } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -110,17 +110,20 @@ export function Footer() {
                {f("connect")}
              </h4>
              <div className="flex gap-5">
-                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
+                <a href="https://www.instagram.com/cnbees" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
+                <a href="https://www.facebook.com/profile.php?id=61556463218596" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
+                <a href="https://www.youtube.com/@CnBees.Tunisia" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
                   <Youtube className="w-5 h-5" />
+                </a>
+                <a href="https://www.tiktok.com/@cnbees" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
+                  <Music className="w-5 h-5" />
+                </a>
+                <a href="https://www.linkedin.com/company/cnbees/posts/?feedView=all" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 hover:-translate-y-1 transition-all duration-300">
+                  <Linkedin className="w-5 h-5" />
                 </a>
              </div>
           </div>

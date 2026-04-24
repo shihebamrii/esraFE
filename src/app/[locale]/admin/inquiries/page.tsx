@@ -39,6 +39,7 @@ interface Inquiry {
 }
 
 export default function AdminInquiriesPage() {
+  const t = useTranslations("AdminDashboard.inquiries");
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -65,7 +66,7 @@ export default function AdminInquiriesPage() {
         setInquiries(response.data.data.inquiries);
       }
     } catch (error) {
-      toast.error("Failed to load inquiries");
+      toast.error(t("messages.fetchFailed"));
     } finally {
       setLoading(false);
     }
@@ -81,38 +82,38 @@ export default function AdminInquiriesPage() {
       const response = await api.patch(`/admin/inquiries/${id}`, { status, adminNotes });
       
       if (response.data.status === 'success') {
-        toast.success("Inquiry updated");
+        toast.success(t("messages.updateSuccess"));
         fetchInquiries();
         setSelectedInquiry(null);
       }
     } catch (error) {
-      toast.error("Failed to update inquiry");
+      toast.error(t("messages.updateFailed"));
     } finally {
       setIsUpdating(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this inquiry?")) return;
+    if (!confirm(t("messages.deleteConfirm"))) return;
 
     try {
       const response = await api.delete(`/admin/inquiries/${id}`);
       
       if (response.status === 204 || response.data?.status === 'success') {
-        toast.success("Inquiry deleted");
+        toast.success(t("messages.deleteSuccess"));
         fetchInquiries();
       }
     } catch (error) {
-      toast.error("Failed to delete inquiry");
+      toast.error(t("messages.deleteFailed"));
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending': return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pending</Badge>;
-      case 'read': return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Read</Badge>;
-      case 'replied': return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Replied</Badge>;
-      case 'archived': return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Archived</Badge>;
+      case 'pending': return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">{t("status.pending")}</Badge>;
+      case 'read': return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">{t("status.read")}</Badge>;
+      case 'replied': return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">{t("status.replied")}</Badge>;
+      case 'archived': return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">{t("status.archived")}</Badge>;
       default: return <Badge>{status}</Badge>;
     }
   };
@@ -121,13 +122,13 @@ export default function AdminInquiriesPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-[#1f3a5f]">Messages</h1>
-          <p className="text-[#1f3a5f]/60">Manage messages sent from the contact form.</p>
+          <h1 className="text-3xl font-black text-[#1f3a5f]">{t("title")}</h1>
+          <p className="text-[#1f3a5f]/60">{t("description")}</p>
         </div>
         <div className="relative w-full md:w-72">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search messages..."
+            placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -139,22 +140,22 @@ export default function AdminInquiriesPage() {
         <Table>
           <TableHeader className="bg-[#fff9e6]/50">
             <TableRow>
-              <TableHead className="font-bold">Sender</TableHead>
-              <TableHead className="font-bold">Subject</TableHead>
-              <TableHead className="font-bold">Date</TableHead>
-              <TableHead className="font-bold">Status</TableHead>
-              <TableHead className="text-right font-bold">Actions</TableHead>
+              <TableHead className="font-bold">{t("table.sender")}</TableHead>
+              <TableHead className="font-bold">{t("table.subject")}</TableHead>
+              <TableHead className="font-bold">{t("table.date")}</TableHead>
+              <TableHead className="font-bold">{t("table.status")}</TableHead>
+              <TableHead className="text-right font-bold">{t("table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-10">Loading messages...</TableCell>
+                <TableCell colSpan={5} className="text-center py-10">{t("messages.loading")}</TableCell>
               </TableRow>
             ) : filteredInquiries.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10">
-                  {search ? "No messages found matching your search." : "No messages found."}
+                  {search ? t("messages.noSearchResults") : t("messages.noInquiries")}
                 </TableCell>
               </TableRow>
             ) : (
@@ -216,7 +217,7 @@ export default function AdminInquiriesPage() {
                   <div>
                     <DialogTitle className="text-xl font-bold">{selectedInquiry.subject}</DialogTitle>
                     <DialogDescription>
-                      From: {selectedInquiry.name} ({selectedInquiry.email})
+                      {t("dialog.from")} {selectedInquiry.name} ({selectedInquiry.email})
                     </DialogDescription>
                   </div>
                 </div>
@@ -230,11 +231,11 @@ export default function AdminInquiriesPage() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-bold text-[#1f3a5f]/70 ml-1">Admin Notes</label>
+                  <label className="text-sm font-bold text-[#1f3a5f]/70 ml-1">{t("dialog.adminNotes")}</label>
                   <Textarea 
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    placeholder="Add internal notes about this inquiry..."
+                    placeholder={t("dialog.adminNotesPlaceholder")}
                     className="min-h-[100px] rounded-2xl border-[#1f3a5f]/10"
                   />
                 </div>
@@ -249,7 +250,7 @@ export default function AdminInquiriesPage() {
                     disabled={isUpdating}
                     className="rounded-xl border-green-200 text-green-700 hover:bg-green-50"
                   >
-                    <Reply size={16} className="mr-2" /> Mark as Replied
+                    <Reply size={16} className="mr-2" /> {t("dialog.markAsReplied")}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -258,7 +259,7 @@ export default function AdminInquiriesPage() {
                     disabled={isUpdating}
                     className="rounded-xl"
                   >
-                    Archive
+                    {t("dialog.archive")}
                   </Button>
                 </div>
                 <Button 
@@ -266,7 +267,7 @@ export default function AdminInquiriesPage() {
                   disabled={isUpdating}
                   className="rounded-xl bg-[#1f3a5f]"
                 >
-                  Save Notes
+                  {t("dialog.saveNotes")}
                 </Button>
               </DialogFooter>
             </>
