@@ -362,6 +362,30 @@
       "failedToFetch": "Failed to fetch user packs"
     }
   },
+  "ImpactBrief": {
+    "badge": "Discover Impact",
+    "titleLine1": "Content with",
+    "titleHighlight": "Impact",
+    "description": "Impact is BeeStory's module dedicated to environmental and social projects across Tunisia. Discover documentaries, reels, and podcasts that tell the stories of youth initiatives, women artisans, and environmental changemakers in all 24 regions.",
+    "documentaries": "Documentaries",
+    "reels": "Reels & Shorts",
+    "podcasts": "Podcasts",
+    "cta": "Explore Impact Projects",
+    "featuredBadge": "Featured Project",
+    "featuredTitle": "Environmental & Social Stories",
+    "hoursContent": "Hours of Content"
+  },
+  "TounesnaBrief": {
+    "badge": "Explore Tounesna",
+    "titleLine1": "Tunisia's Natural",
+    "titleHighlight": "Heritage",
+    "description": "Tounesna showcases the natural and touristic heritage of Tunisia's 24 governorates. Explore an interactive map, browse high-quality photos from official and community contributors, and discover landscapes from the Mediterranean coast to the Saharan dunes.",
+    "regions24": "24 Governorates",
+    "photoGallery": "Photo Gallery",
+    "interactiveMap": "Interactive Map",
+    "cta": "Explore the Map",
+    "explore": "Explore"
+  },
   "AboutUs": {
     "badge": "Our Story",
     "titleLine1": "Preserving the",

@@ -58,7 +58,7 @@ export function AboutUsSection() {
                className="relative rounded-3xl overflow-hidden shadow-2xl"
              >
                 <img
-                  src="/images/tunisia_hero_bg1.png"
+                  src="/collab.png"
                   alt="About BeeStory"
                   className="w-full h-auto object-cover"
                 />

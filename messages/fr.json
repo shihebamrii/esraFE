@@ -362,6 +362,30 @@
       "failedToFetch": "Échec du chargement des packs utilisateur"
     }
   },
+  "ImpactBrief": {
+    "badge": "Découvrir Impact",
+    "titleLine1": "Contenus à",
+    "titleHighlight": "Impact",
+    "description": "Impact est le module de BeeStory dédié aux projets environnementaux et sociaux à travers la Tunisie. Découvrez des documentaires, réels et podcasts qui racontent les histoires d'initiatives de jeunes, de femmes artisanes et d'acteurs du changement environnemental dans les 24 régions.",
+    "documentaries": "Documentaires",
+    "reels": "Réels & Shorts",
+    "podcasts": "Podcasts",
+    "cta": "Explorer les Projets Impact",
+    "featuredBadge": "Projet en vedette",
+    "featuredTitle": "Histoires Environnementales & Sociales",
+    "hoursContent": "Heures de Contenu"
+  },
+  "TounesnaBrief": {
+    "badge": "Explorer Tounesna",
+    "titleLine1": "Patrimoine Naturel",
+    "titleHighlight": "Tunisien",
+    "description": "Tounesna met en valeur le patrimoine naturel et touristique des 24 gouvernorats de la Tunisie. Explorez une carte interactive, parcourez des photos de haute qualité provenant de contributeurs officiels et communautaires, et découvrez des paysages de la côte méditerranéenne aux dunes du Sahara.",
+    "regions24": "24 Gouvernorats",
+    "photoGallery": "Galerie Photos",
+    "interactiveMap": "Carte Interactive",
+    "cta": "Explorer la Carte",
+    "explore": "Explorer"
+  },
   "AboutUs": {
     "badge": "Notre Histoire",
     "titleLine1": "Préserver l'",

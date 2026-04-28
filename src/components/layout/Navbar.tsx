@@ -18,6 +18,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { SearchBar } from "@/components/layout/SearchBar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -197,27 +198,12 @@ export function Navbar() {
 
         {/* Search Bar - Hidden on Admin Pages */}
         {!isAdminPage && (
-          <div className="hidden lg:flex relative w-64">
-            <div className="relative w-full group">
-              <Search
-                className={cn(
-                  "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300",
-                  isScrolled || isDashboard
-                    ? "text-muted-foreground group-focus-within:text-violet-500 group-focus-within:scale-110"
-                    : "text-white/60 group-focus-within:text-white group-focus-within:scale-110"
-                )}
-              />
-              <input
-                type="text"
-                placeholder={t("search")}
-                className={cn(
-                  "w-full rounded-xl py-2 pl-10 pr-4 text-sm transition-all duration-500 outline-none border",
-                  isScrolled || isDashboard
-                    ? "bg-muted/30 border-border/50 text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
-                    : "bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/30 backdrop-blur-sm focus:w-[110%] -translate-x-0 focus:-translate-x-[5%]"
-                )}
-              />
-            </div>
+          <div className="hidden lg:flex relative">
+            <SearchBar
+              isHeroPage={isHeroPage}
+              isScrolled={isScrolled}
+              isDashboard={isDashboard}
+            />
           </div>
         )}
 
@@ -442,14 +428,7 @@ export function Navbar() {
                 transition={{ delay: 0.4 }}
                 className="mt-8 pt-8 border-t border-border/50"
               >
-                <div className="relative group">
-                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder={t("search")}
-                    className="w-full rounded-2xl py-4 pl-14 pr-6 text-lg bg-muted/30 border-border/50 text-foreground placeholder:text-muted-foreground outline-none focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/5 transition-all duration-300"
-                  />
-                </div>
+                <SearchBar isMobile />
               </motion.div>
 
               <motion.div 
